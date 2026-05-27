@@ -8,5 +8,5 @@ export const SETTINGS = {
   significance_threshold: 2,
   max_articles_per_theme: 10,
 
-  cache_ttl_hours: 3,
+  cache_ttl_hours: 1,
 };

@@ -37,7 +37,7 @@ Create a root `.env` file. Do not commit it.
 ```bash
 PORT=3001
 NODE_ENV=development
-CACHE_TTL_HOURS=3
+CACHE_TTL_HOURS=1
 
 ANTHROPIC_API_KEY=your_anthropic_api_key
 NEWS_API_KEY=your_newsapi_key
