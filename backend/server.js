@@ -10,6 +10,7 @@ import { buildMockDashboard } from "./services/mockData.js";
 import { fetchPrices, enrichWatchlistWithContext } from "./services/prices.js";
 import { fetchNewsAndProcess } from "./services/news.js";
 import { generateWeeklyBrief } from "./services/brief.js";
+import { generateResearchQueue } from "./services/researchQueue.js";
 import {
   readCache,
   writeCache,
@@ -69,10 +70,14 @@ const runFullSync = async () => {
     aiConcurrency: IS_VERCEL ? 4 : 5,
     rawArticlesByTheme,
   });
-  const weeklyBrief = await generateWeeklyBrief(
-    classifiedArticles,
-    themePulse
-  );
+  const [weeklyBrief, researchQueue] = await Promise.all([
+    generateWeeklyBrief(classifiedArticles, themePulse),
+    generateResearchQueue(
+      classifiedArticles,
+      themePulse,
+      watchlistWithPrices
+    ),
+  ]);
 
   const liveData = {
     isMock: false,
@@ -82,6 +87,7 @@ const runFullSync = async () => {
     themePulse,
     watchlist: watchlistWithPrices,
     weeklyBrief,
+    researchQueue,
   };
 
   writeCache(liveData);

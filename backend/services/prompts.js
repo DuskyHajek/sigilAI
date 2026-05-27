@@ -174,3 +174,37 @@ Sentence 4 (optional): One specific actionable implication — "watch X", "this 
 Tone: direct, analytical, zero hedging. Write like a senior analyst briefing a CIO before a Monday call.
 No bullet points. No headers. No "this week" or "as of". Just the brief.
 `;
+
+export const buildResearchQueuePrompt = (signals) => `
+You are helping a junior analyst decide what to research next after a dashboard sync.
+
+Below is structured output already collected from NewsAPI headlines, theme scoring, and watchlist notes.
+Turn it into a practical research queue — not investment advice, not hype.
+
+SIGNALS FROM THIS SYNC:
+${JSON.stringify(signals, null, 2)}
+
+Return ONLY valid JSON:
+
+{
+  "items": [
+    {
+      "action": "Check X against Y",
+      "keywords": ["keyword1", "keyword2"],
+      "theme": "warfare",
+      "tickers": ["KTOS"]
+    }
+  ]
+}
+
+Rules:
+- Produce 3 to 7 items only
+- Each "action" is one short imperative sentence: what to read, verify, compare, or google next
+- "keywords" = 2-5 concrete search terms (companies, products, policy terms, metrics)
+- "theme" = one theme id when relevant, else null. Valid ids: datacenters, application, robotics, warfare, space, biotech, adversarial
+- "tickers" = relevant watchlist tickers when applicable, else []
+- Prioritize themes with higher activity or clearer news signals
+- Include at least one item that challenges or tests the thesis, not only bullish follow-ups
+- Be specific. Bad: "Monitor AI trends". Good: "Compare AI agent enterprise adoption headlines with PATH and CSU.TO workflow moats"
+- Do not repeat the same action twice
+`;

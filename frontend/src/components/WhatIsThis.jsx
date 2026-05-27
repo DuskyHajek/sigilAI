@@ -1,4 +1,4 @@
-import { Activity, ArrowRight, Brain, FileText, LineChart, Newspaper, Sparkles } from "lucide-react";
+import { Activity, ArrowRight, Brain, FileText, LineChart, Newspaper, SearchCheck, Sparkles } from "lucide-react";
 
 const PANELS = [
   {
@@ -15,6 +15,11 @@ const PANELS = [
     icon: Sparkles,
     label: "03 · Watchlist",
     text: "20 relevant public names with price data and a short note tied to that company angle.",
+  },
+  {
+    icon: SearchCheck,
+    label: "04 · Research Queue",
+    text: "3–7 follow-ups on what to read, verify, or search next based on this sync.",
   },
 ];
 
@@ -46,7 +51,7 @@ const WhatIsThis = () => {
           deserves a closer analyst look.
         </p>
 
-        <div className="mt-5 grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="mt-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           {PANELS.map(({ icon: Icon, label, text }) => (
             <div
               key={label}

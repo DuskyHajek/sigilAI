@@ -142,10 +142,51 @@ const mockChange = (ticker) => {
 export const getMockWeeklyBrief = () =>
   "Physical constraints dominate the Supernova thesis this week, led by Nvidia's Blackwell timeline validation and Freeport-McMoRan signaling acute structural copper deficits for power grid expansions. In warfare, record backlogs at AeroVironment and new drone contracts for Kratos demonstrate that the economic asymmetry of cheap attritable weapons is gaining rapid defense procurement traction. Meanwhile, the application layer continues to undergo valuation pressure, highlighting the risk of thin-wrapper enterprise software as competitors easily replicate user interfaces. Analysts should watch rising deepfake fraud waves, which are shifting defensive budgets toward zero-trust cybersecurity architectures.";
 
+export const getMockResearchQueue = () => ({
+  items: [
+    {
+      action:
+        "Compare HBM memory supply headlines with SK Hynix and Micron capacity commentary.",
+      keywords: ["HBM supply", "SK Hynix", "Micron", "datacenter memory"],
+      theme: "datacenters",
+      tickers: ["000660.KS", "MU"],
+    },
+    {
+      action:
+        "Check whether AI agent / enterprise SaaS news supports PATH and CSU.TO workflow moats.",
+      keywords: ["AI agents", "vertical SaaS", "UiPath", "Constellation Software"],
+      theme: "application",
+      tickers: ["PATH", "CSU.TO"],
+    },
+    {
+      action:
+        "Verify attrition drone procurement stories against KTOS and AVAV backlog trends.",
+      keywords: ["loitering munitions", "Kratos", "AeroVironment", "NATO drones"],
+      theme: "warfare",
+      tickers: ["KTOS", "AVAV"],
+    },
+    {
+      action:
+        "Look for counter-signals on thin-wrapper SaaS disruption before leaning bullish on application names.",
+      keywords: ["SaaS churn", "AI coding", "software moat"],
+      theme: "application",
+      tickers: [],
+    },
+    {
+      action:
+        "Scan latest deepfake / AI fraud headlines and map them to CRWD vs PANW positioning.",
+      keywords: ["deepfake fraud", "AI cybersecurity", "CrowdStrike", "Palo Alto"],
+      theme: "adversarial",
+      tickers: ["CRWD", "PANW"],
+    },
+  ],
+});
+
 export const buildMockDashboard = () => ({
   isMock: true,
   lastUpdated: new Date().toISOString(),
   themePulse: getMockThemePulse(),
   watchlist: getMockWatchlist(),
   weeklyBrief: getMockWeeklyBrief(),
+  researchQueue: getMockResearchQueue(),
 });

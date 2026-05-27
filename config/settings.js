@@ -3,6 +3,7 @@ export const SETTINGS = {
   stock_context_max_tokens: 100,
   theme_pulse_max_tokens: 150,
   weekly_brief_max_tokens: 500,
+  research_queue_max_tokens: 450,
 
   significance_threshold: 2,
   max_articles_per_theme: 10,

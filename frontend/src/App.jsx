@@ -5,6 +5,7 @@ import Watchlist from "./components/Watchlist";
 import WeeklyBrief from "./components/WeeklyBrief";
 import Header from "./components/Header";
 import WhatIsThis from "./components/WhatIsThis";
+import ResearchQueue from "./components/ResearchQueue";
 import { fetchDashboard, fetchHealth, triggerSync } from "./api";
 
 function App() {
@@ -101,6 +102,11 @@ function App() {
                 <Watchlist watchlistData={data?.watchlist} />
               </div>
             </div>
+
+            <ResearchQueue
+              researchQueue={data?.researchQueue}
+              isMock={data?.isMock}
+            />
 
             <footer className="text-center pb-4 pt-2">
               <p className="text-[11px] font-mono text-slate-600">
