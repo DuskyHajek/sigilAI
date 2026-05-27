@@ -1,247 +1,181 @@
 # Supernova Dashboard — Maintenance Playbook
-### How to change anything without breaking everything
 
-> This document answers: "I want to change X — what do I touch and in what order?"
+## Golden rule
 
----
+Use the current implementation as the source of truth:
 
-## The golden rule
+- Thesis, theme, keyword, color, and watchlist runtime config: `config/thesis.js`
+- Token budgets, significance threshold, article limits, cache TTL: `config/settings.js`
+- Prompts and AI output formats: `backend/services/prompts.js`
+- Backend API and sync orchestration: `backend/server.js`
+- UI layout: `frontend/src/App.jsx` and `frontend/src/components/`
 
-**One change, one file.** The dashboard is designed so that:
-- Thesis content lives in `01_thesis_config.md` (and mirrored in `config/thesis.js`)
-- All prompts live in `services/prompts.js`
-- All API keys live in `.env`
-- UI layout lives in `frontend/src/components/`
+When thesis logic changes, update both `config/thesis.js` and `backend/services/prompts.js` unless the prompt is later refactored to generate directly from config.
 
-If you find yourself changing the same information in two places, the architecture has drifted and needs refactoring.
+## Add a watchlist stock
 
----
+1. Open `config/thesis.js`.
+2. Add a ticker object to `WATCHLIST`.
+3. Include `ticker`, `company`, `aliases`, `theme`, `angle`, and `priority`.
+4. Make sure `theme` matches one of the 7 theme IDs.
+5. Restart the backend or click **Sync live data**.
 
-## Common tasks
+Example:
 
-### Add a new stock to the watchlist
-
-**Time: 5 minutes**
-
-1. Open `config/thesis.js`
-2. Find the right theme section (e.g., `themes.warfare.tickers`)
-3. Add the new ticker object:
 ```javascript
 {
   ticker: "KTOS",
-  company: "Kratos Defense & Security",
-  angle: "Attritable jet drones — pure play",
-  priority: "core",  // "core" | "watch" | "speculative"
-  theme: "warfare"
+  company: "Kratos Defense",
+  aliases: ["Kratos", "Valkyrie", "attritable"],
+  theme: "warfare",
+  angle: "Attritable jet drones — pure play on asymmetry",
+  priority: "core",
 }
 ```
-4. Save the file
-5. Restart backend (`npm run dev` in `/backend`) or click **Sync Engine** in the UI
-6. The stock will appear in the watchlist on next price fetch cycle
 
-**Priority levels explained:**
-- `core` — always shown, never filtered out
-- `watch` — shown by default, can be filtered
-- `speculative` — hidden by default, toggle "Show Speculative" to see
+The current UI shows all configured watchlist names. `priority` is available in the payload but is not currently used as a visible filter.
 
----
+## Remove a watchlist stock
 
-### Remove a stock from the watchlist
+1. Delete the object from `WATCHLIST` in `config/thesis.js`.
+2. Restart the backend or run a sync.
+3. The next dashboard payload will reflect the smaller watchlist.
 
-1. Open `config/thesis.js`
-2. Delete the ticker object from the relevant theme section
-3. Restart backend
+## Change theme thesis or keywords
 
-The stock will disappear from UI and will no longer be fetched.
+1. Open `config/thesis.js`.
+2. Edit the relevant theme object:
+   - `short_description` for UI display;
+   - `long_description` for theme pulse context;
+   - `news_keywords` for NewsAPI searches;
+   - `bull_signals` and `bear_signals` for reference.
+3. If the thesis logic changed meaningfully, also update `SYSTEM_PROMPT` in `backend/services/prompts.js`.
+4. Run a fresh sync.
 
----
+## Tune relevance filtering
 
-### Change the thesis description for a theme
+Open `config/settings.js`.
 
-This affects: the AI system prompt, the theme hover tooltip in the heatmap, and the theme description in Panel 1.
-
-1. Open `config/thesis.js`
-2. Find the theme by its ID
-3. Edit `short_description` (shown in UI) and/or `long_description` (used in AI prompt)
-4. **Also update** `services/prompts.js` → `SYSTEM_PROMPT` if the thesis logic has meaningfully changed
-5. Restart backend
-6. New system prompt takes effect on next Claude API call
-
----
-
-### Add a new news keyword to a theme
-
-If you notice a theme is missing relevant news (e.g., "warfare" isn't catching articles about autonomous submarines):
-
-1. Open `config/thesis.js`
-2. Find the theme, edit `news_keywords` array:
-```javascript
-news_keywords: [
-  "drone warfare",
-  "autonomous drone military",
-  "autonomous submarine",  // ← add here
-  ...
-]
-```
-3. Restart backend
-4. Next sync will use the new keywords
-
-**Note:** NewsAPI free tier allows complex queries. Keywords are joined with `OR` in the query string.
-
----
-
-### Change how often data refreshes
-
-In `backend/config/settings.js`:
+Current knobs:
 
 ```javascript
 export const SETTINGS = {
-  news_refresh_hours: 3,        // How often to fetch new articles
-  price_refresh_minutes: 30,    // How often to update stock prices
-  weekly_brief_day: 'monday',   // What day to auto-generate the brief
-  weekly_brief_hour: 8,         // What hour (UTC) to generate it
-  significance_threshold: 3,    // Min significance score to show in UI (1-5)
-  max_articles_per_theme: 10,   // Max articles to classify per theme per cycle
+  classification_max_tokens: 300,
+  stock_context_max_tokens: 100,
+  theme_pulse_max_tokens: 150,
+  weekly_brief_max_tokens: 500,
+  research_queue_max_tokens: 450,
+
+  significance_threshold: 2,
+  max_articles_per_theme: 10,
+
+  cache_ttl_hours: 3,
 };
 ```
 
----
+Useful changes:
 
-### Update the AI system prompt
+- Increase `significance_threshold` to reduce noisy articles.
+- Decrease `max_articles_per_theme` to make sync faster and cheaper.
+- Increase token budgets only when outputs are being truncated.
 
-Do this when the fund thesis evolves, you add a new theme, or you want the AI to analyze differently.
+## Update prompts
 
-1. Open `services/prompts.js`
-2. Edit the `SYSTEM_PROMPT` constant
-3. Add a row to the "Prompt versioning" table in `02_prompt_library.md`:
-```
-| 2026-06-01 | SYSTEM_PROMPT | Added robotics sub-theme for underwater drones | Thesis expansion |
-```
-4. Restart backend
+All prompt builders live in `backend/services/prompts.js`.
 
-**Warning:** Changing the system prompt changes how ALL articles, ALL stock context lines, and the weekly brief are generated. Test on a small batch first before full sync.
+Current prompt surfaces:
 
----
+- `SYSTEM_PROMPT`
+- `buildClassifyPrompt`
+- `buildStockContextPrompt`
+- `buildThemePulsePrompt`
+- `buildWeeklyBriefPrompt`
+- `buildResearchQueuePrompt`
 
-### Add a completely new theme (e.g., "Energy Infrastructure")
+After changing a prompt:
 
-**Time: 30 minutes**
+1. Keep output format requirements explicit.
+2. Update `docs/02_prompt_library.md` if the change affects future tuning.
+3. Test with one sync before relying on the output.
 
-1. Open `config/thesis.js`, add new theme object following the existing pattern
-2. Add theme to `services/prompts.js` → `SYSTEM_PROMPT` themes list
-3. Add theme ID to the `news_keywords` map
-4. Add tickers for the new theme
-5. In `frontend/src/components/ThemePulse.jsx`, the theme should appear automatically if the component reads from config (check that it does)
-6. Optionally add a new filter pill in `frontend/src/components/Watchlist.jsx`
+## Manual sync behavior
 
----
+The app does not run background cron jobs. Sync happens when the user clicks **Sync live data**, which calls `POST /api/sync`.
 
-### Change the weekly brief schedule
+Full sync does:
 
-In `backend/services/brief.js` or in `vercel.json` (for Vercel cron):
+1. Fetch NewsAPI headlines.
+2. Classify selected articles with Claude.
+3. Build theme pulse scores.
+4. Fetch Yahoo chart prices.
+5. Generate watchlist context lines.
+6. Generate the analyst brief.
+7. Generate the research queue.
+8. Write cache.
 
-```json
-{
-  "crons": [
-    {
-      "path": "/api/generate-brief",
-      "schedule": "0 8 * * 1"
-    }
-  ]
-}
-```
-This runs every Monday at 08:00 UTC. Standard cron syntax.
+On Vercel, the backend uses lighter sync limits and the frontend aborts after 55 seconds. If hosted sync fails repeatedly, run locally with the same env vars to inspect logs and then redeploy.
 
----
+## Cache behavior
+
+Local cache:
+
+- Path: `backend/data/cache.json`
+- Generated automatically.
+- Safe to delete when you want a fresh mock/live payload.
+
+Remote cache:
+
+- Supported through Vercel KV or Upstash Redis REST env vars:
+  - `KV_REST_API_URL`
+  - `KV_REST_API_TOKEN`
+  - `UPSTASH_REDIS_REST_URL`
+  - `UPSTASH_REDIS_REST_TOKEN`
+- Optional key override: `DASHBOARD_CACHE_KEY`
+
+On Vercel without remote cache, the app falls back to `/tmp/supernova-cache.json`. That is temporary and can disappear between function instances.
 
 ## API key rotation
 
-When you need to rotate API keys (security practice, or key gets compromised):
+Local:
 
-**Local development:**
-1. Update `.env` file
-2. Restart backend
+1. Update root `.env`.
+2. Restart the backend.
+3. Check `GET /api/health`.
 
-**Vercel production:**
-1. Go to Vercel dashboard → your project → Settings → Environment Variables
-2. Update the key
-3. Redeploy (Vercel → Deployments → Redeploy latest)
+Vercel:
 
-**Never commit `.env` to Git.** The `.gitignore` should exclude it. Double-check before pushing.
+1. Update environment variables in the Vercel project.
+2. Redeploy.
+3. Check `/api/health` and run a manual sync.
 
----
-
-## Deploying changes to production
-
-After making any code change:
-
-```bash
-# 1. Test locally first
-npm run dev  # in /backend
-npm run dev  # in /frontend (separate terminal)
-
-# 2. If tests pass, commit
-git add .
-git commit -m "describe what you changed"
-
-# 3. Push to GitHub
-git push origin main
-
-# 4. Vercel auto-deploys on push to main
-# Watch the build log at vercel.com/dashboard
-```
-
-If Vercel build fails, check:
-- Missing environment variables (most common)
-- npm package not installed (`package.json` missing a dependency)
-- Build command incorrect in `vercel.json`
-
----
-
-## Monitoring the live dashboard
-
-**Check if data is fresh:**
-- Look at "Last Sync" timestamp in top right of dashboard UI
-- If more than `news_refresh_hours` old → backend cron may have failed
-
-**Check API usage:**
-- NewsAPI: newsapi.org dashboard → API usage (free tier = 100 req/day)
-- Anthropic: console.anthropic.com → Usage → watch for unexpected spikes
-- Yahoo Finance: unofficial API, no dashboard, but monitor for 429 errors in backend logs
-
-**If the dashboard goes offline:**
-1. Check Vercel deployment logs
-2. Check if API keys have expired or been rate-limited
-3. The dashboard should fall back to cached data and show "OFFLINE // MOCK MODE" banner automatically
-
----
-
-## Cost management
-
-Expected monthly costs for normal usage:
-
-| Service | Free tier | Expected usage | Monthly cost |
-|---|---|---|---|
-| NewsAPI | 100 req/day | ~30 req/day (3h refresh × 10 themes) | $0 |
-| Anthropic Claude | Pay per token | ~50K tokens/day (classifications + contexts + brief) | ~$2-5 |
-| Vercel | Free hobby tier | Within free limits | $0 |
-| Yahoo Finance | Unofficial, free | Free | $0 |
-
-**To reduce Claude API costs:**
-- Increase `news_refresh_hours` from 3 to 6 or 12
-- Reduce `max_articles_per_theme` from 10 to 5
-- Only generate stock context lines for `priority: "core"` tickers
-
----
+Never commit `.env`.
 
 ## Troubleshooting
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| All themes show 0 activity | NewsAPI key invalid or rate limited | Check `.env` key, check newsapi.org dashboard |
-| Stock prices show — | Yahoo Finance rate limit | Wait 30 min, or switch to Alpha Vantage API |
-| AI insights show "Error generating insight" | Anthropic API key invalid or zero balance | Check console.anthropic.com, add balance |
-| Weekly brief not generating | Cron job not running on Vercel | Check vercel.json cron config, check Vercel logs |
-| Dashboard shows stale data | Cache not refreshing | Click "Sync Engine" manually, check cron schedule |
-| Claude returning malformed JSON | Prompt edge case | Check backend logs for raw response, adjust prompt |
-| Build fails on Vercel | Missing env var or package | Check build log, verify all vars set in Vercel dashboard |
+| Header shows `DEMO DATA` | Missing `ANTHROPIC_API_KEY` or `NEWS_API_KEY` | Add env vars and restart/redeploy. |
+| Sync fails quickly | Bad key or external API error | Check backend logs and `/api/health`. |
+| Sync times out on Vercel | Function duration limit | Retry once, reduce article limits, or sync locally. |
+| Prices show `unavailable` | Yahoo endpoint failed | Retry later; cached Yahoo values are used when available. |
+| Watchlist notes are generic | Weak headline match or no direct company news | Improve `aliases` in `WATCHLIST` or theme keywords. |
+| Theme pulse feels noisy | Significance threshold too low | Raise `significance_threshold` in `config/settings.js`. |
+| Deployed data disappears | No remote KV configured | Add Vercel KV or Upstash REST env vars. |
+| Claude returns malformed JSON | Prompt edge case | Inspect backend logs and tighten the JSON-only prompt. |
+
+## Before deploying changes
+
+Run at least:
+
+```bash
+npm run build --prefix frontend
+npm run lint --prefix frontend
+```
+
+For backend syntax checks, use:
+
+```bash
+node --check backend/server.js
+```
+
+Then deploy through the normal GitHub/Vercel flow.

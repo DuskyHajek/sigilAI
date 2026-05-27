@@ -156,6 +156,7 @@ const Watchlist = ({ watchlistData }) => {
             const isPositive = change >= 0;
             const label = THEME_LABELS[stock.theme];
             const isExpanded = expandedTicker === stock.ticker;
+            const displayName = stock.company || stock.name || stock.ticker;
 
             return (
               <div
@@ -165,7 +166,10 @@ const Watchlist = ({ watchlistData }) => {
                 <div className="grid grid-cols-1 xl:grid-cols-[minmax(150px,0.75fr)_minmax(0,1.45fr)_minmax(118px,auto)] gap-3 xl:items-center">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 min-w-0">
-                      <span className="font-mono text-[18px] font-bold text-slate-100 group-hover:text-sigil-gold transition-colors">
+                      <span className="text-[16px] font-bold text-slate-100 group-hover:text-sigil-gold transition-colors truncate">
+                        {displayName}
+                      </span>
+                      <span className="px-1.5 py-0.5 rounded border border-slate-800 bg-slate-950/70 text-[10px] font-mono text-slate-500 shrink-0">
                         {stock.ticker}
                       </span>
                       <span
@@ -176,10 +180,6 @@ const Watchlist = ({ watchlistData }) => {
                       </span>
                     </div>
                     <div className="mt-0.5 flex items-center gap-1.5 min-w-0">
-                      <span className="text-[11px] text-slate-400 truncate max-w-[150px]">
-                        {stock.name}
-                      </span>
-                      <span className="text-slate-700">·</span>
                       <span className="text-[10px] text-slate-500 truncate">
                         {stock.angle}
                       </span>

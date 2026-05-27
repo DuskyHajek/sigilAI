@@ -1,16 +1,35 @@
-# React + Vite
+# Supernova Dashboard Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + Vite frontend for the Sigil Supernova dashboard.
 
-Currently, two official plugins are available:
+## Scripts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Run from the repo root with `--prefix frontend`, or from this directory directly.
 
-## React Compiler
+```bash
+npm run dev
+npm run build
+npm run lint
+npm run preview
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Runtime API
 
-## Expanding the ESLint configuration
+The frontend calls the backend through relative routes:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- `GET /api/health`
+- `GET /api/dashboard`
+- `POST /api/sync`
+
+In local development, Vite proxies API requests to the Express backend. In production, Vercel routes `/api/*` to `backend/server.js`.
+
+## Main files
+
+- `src/App.jsx` - dashboard composition and sync state.
+- `src/api.js` - API helpers.
+- `src/components/Header.jsx` - mode badge, sync button, last sync.
+- `src/components/WhatIsThis.jsx` - product explainer.
+- `src/components/WeeklyBrief.jsx` - analyst brief.
+- `src/components/ThemePulse.jsx` - 7 theme pulse cards.
+- `src/components/Watchlist.jsx` - ticker list, filters, price/context rows.
+- `src/components/ResearchQueue.jsx` - follow-up analyst checklist.
