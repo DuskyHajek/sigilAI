@@ -1,8 +1,21 @@
 import { SearchCheck } from "lucide-react";
 import { THEMES } from "@config/thesis.js";
 
-const themeLabel = (themeId) =>
-  THEMES.find((theme) => theme.id === themeId)?.display_name || themeId;
+const getTheme = (themeId) => THEMES.find((theme) => theme.id === themeId);
+
+const cleanAction = (action) =>
+  String(action || "")
+    .replace(/^Review\s+(.+?)\s+news\s+against\s+the\s+thesis\s+[-—]\s+/i, "")
+    .replace(/^Read\s+and\s+verify:\s+/i, "")
+    .replace(/\.\.+/g, ".")
+    .trim();
+
+const cleanKeyword = (keyword) => {
+  const value = String(keyword || "").trim();
+  if (!value || value.length < 3) return null;
+  if (/^(and|the|this|that|with|from)$/i.test(value)) return null;
+  return value;
+};
 
 const ResearchQueue = ({ researchQueue, isMock }) => {
   const items = researchQueue?.items || [];
@@ -29,27 +42,48 @@ const ResearchQueue = ({ researchQueue, isMock }) => {
         </p>
       </div>
 
-      <ol className="space-y-3">
-        {items.map((item, index) => (
-          <li
-            key={`${item.action}-${index}`}
-            className="rounded-xl border border-slate-900 bg-slate-950/40 p-3 md:p-4"
-          >
-            <div className="flex gap-3">
-              <span className="text-[11px] font-mono text-sigil-gold/80 shrink-0 pt-0.5">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="text-sm text-slate-100 leading-relaxed">
-                  {item.action}
-                </p>
+      <ol className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+        {items.map((item, index) => {
+          const theme = getTheme(item.theme);
+          const themeColor = theme?.color_hex || "#D6A742";
+          const keywords = (item.keywords || [])
+            .map(cleanKeyword)
+            .filter(Boolean)
+            .slice(0, 3);
 
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {item.theme && (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono border border-slate-700 text-slate-400">
-                      {themeLabel(item.theme)}
+          return (
+            <li
+              key={`${item.action}-${index}`}
+              className="relative overflow-hidden rounded-xl border border-slate-900 bg-slate-950/40 p-3.5"
+            >
+              <div
+                className="absolute left-0 top-0 h-full w-1"
+                style={{ backgroundColor: themeColor }}
+              />
+              <div className="pl-2">
+                <div className="mb-2 flex items-center gap-2 flex-wrap">
+                  <span className="text-[11px] font-mono text-sigil-gold/80">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  {theme && (
+                    <span
+                      className="px-2 py-0.5 rounded-full text-[10px] font-mono border"
+                      style={{
+                        color: themeColor,
+                        borderColor: `${themeColor}55`,
+                        backgroundColor: `${themeColor}12`,
+                      }}
+                    >
+                      {theme.display_name}
                     </span>
                   )}
+                </div>
+
+                <p className="text-sm text-slate-100 leading-relaxed">
+                  {cleanAction(item.action)}
+                </p>
+
+                <div className="mt-3 flex flex-wrap gap-1.5">
                   {(item.tickers || []).map((ticker) => (
                     <span
                       key={ticker}
@@ -58,7 +92,7 @@ const ResearchQueue = ({ researchQueue, isMock }) => {
                       {ticker}
                     </span>
                   ))}
-                  {(item.keywords || []).map((keyword) => (
+                  {keywords.map((keyword) => (
                     <span
                       key={keyword}
                       className="px-2 py-0.5 rounded-full text-[10px] font-mono border border-slate-800 text-slate-500 bg-slate-900/60"
@@ -68,9 +102,9 @@ const ResearchQueue = ({ researchQueue, isMock }) => {
                   ))}
                 </div>
               </div>
-            </div>
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ol>
     </section>
   );
