@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Sparkles, ArrowUpRight, ArrowDownRight, Filter } from "lucide-react";
 import { THEMES } from "@config/thesis.js";
 
@@ -7,11 +7,21 @@ const THEME_LABELS = Object.fromEntries(
     t.id,
     {
       name: t.display_name.replace(/^Physical |^Future of /, "").split(" ")[0],
-      color: "border",
       colorHex: t.color_hex,
     },
   ])
 );
+
+const FILTER_SHORT_NAMES = {
+  all: "All",
+  datacenters: "Datacenters",
+  application: "App Layer",
+  robotics: "Robotics",
+  warfare: "Warfare",
+  space: "Space",
+  biotech: "Biotech",
+  adversarial_ai: "Adv. AI",
+};
 
 const themeBadgeStyle = (themeId) => {
   const theme = THEMES.find((t) => t.id === themeId);
@@ -66,33 +76,30 @@ const Watchlist = ({ watchlistData }) => {
 
   return (
     <div className="glass-panel border-gold-glow p-6 rounded-2xl flex flex-col h-full">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <h2 className="text-xl font-semibold text-slate-100 flex items-center gap-2">
-            <Sparkles size={20} className="text-sigil-gold" />
+      <div className="mb-5">
+        <div className="flex items-center gap-2 mb-1">
+          <Sparkles size={18} className="text-sigil-gold shrink-0" />
+          <h2 className="text-xl font-semibold text-slate-100">
             Watchlist Intelligence
           </h2>
-          <p className="text-xs text-slate-400 mt-1">
-            {watchlistData.length} Supernova tickers with prices & thesis-specific
-            insight overlays
-          </p>
         </div>
+        <p className="text-xs text-slate-400 mb-4">
+          {watchlistData.length} Supernova tickers with prices & thesis-specific insight overlays
+        </p>
 
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
-          <Filter size={14} className="text-slate-500 shrink-0" />
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <Filter size={12} className="text-slate-500 shrink-0 mr-0.5" />
           {themeFilters.map((theme) => (
             <button
               key={theme}
               onClick={() => setSelectedTheme(theme)}
-              className={`px-3 py-1 rounded-full text-xs font-medium border capitalize transition-all shrink-0 ${
+              className={`px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all ${
                 selectedTheme === theme
                   ? "bg-sigil-gold/10 text-sigil-gold border-sigil-gold/40"
                   : "bg-slate-900/40 text-slate-400 border-slate-800 hover:text-slate-300 hover:border-slate-700"
               }`}
             >
-              {theme === "all"
-                ? "All Sectors"
-                : THEMES.find((t) => t.id === theme)?.display_name || theme}
+              {FILTER_SHORT_NAMES[theme] ?? theme}
             </button>
           ))}
         </div>
@@ -117,7 +124,7 @@ const Watchlist = ({ watchlistData }) => {
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <div className="flex flex-col">
-                      <span className="font-mono text-sm font-bold text-slate-100 group-hover:text-sigil-gold transition-colors">
+                      <span className="font-mono text-[18px] font-bold text-slate-100 group-hover:text-sigil-gold transition-colors">
                         {stock.ticker}
                       </span>
                       <span className="text-[11px] text-slate-400 truncate max-w-[150px]">
@@ -133,9 +140,16 @@ const Watchlist = ({ watchlistData }) => {
                   </div>
 
                   <div className="flex items-center gap-4 shrink-0">
-                    <span className="text-sm font-mono font-bold text-slate-200">
-                      {formatPrice(stock.price, stock.ticker)}
-                    </span>
+                    <div className="flex flex-col items-end gap-0.5">
+                      <span className="text-[16px] font-mono font-bold text-slate-200">
+                        {formatPrice(stock.price, stock.ticker)}
+                      </span>
+                      {stock.priceSource === "mock" && (
+                        <span className="text-[9px] font-mono text-amber-400/90 uppercase">
+                          demo price
+                        </span>
+                      )}
+                    </div>
                     <span
                       className={`px-2 py-0.5 rounded text-[11px] font-mono font-bold flex items-center gap-0.5 border ${
                         isPositive
@@ -157,10 +171,10 @@ const Watchlist = ({ watchlistData }) => {
 
                 <div className="bg-slate-950/60 rounded-lg p-2.5 border border-slate-900/60 group-hover:border-slate-850 transition-colors">
                   <div className="flex items-start gap-2">
-                    <span className="text-[9px] font-bold text-sigil-gold uppercase tracking-wider mt-0.5 border border-sigil-gold/30 px-1 rounded shrink-0">
+                    <span className="text-[10px] font-bold text-sigil-gold uppercase tracking-wider mt-0.5 border border-sigil-gold/30 bg-sigil-gold/10 px-2 py-1 rounded shrink-0">
                       SIGIL AI
                     </span>
-                    <p className="text-xs text-slate-300 leading-relaxed font-sans">
+                    <p className="text-[13px] text-slate-200 leading-relaxed font-sans border-l border-sigil-gold/20 pl-3 py-1">
                       {stock.context}
                     </p>
                   </div>

@@ -56,7 +56,8 @@ const runFullSync = async () => {
   );
 
   const { themePulse, classifiedArticles } = await fetchNewsAndProcess();
-  const watchlistWithPrices = await fetchPrices();
+  const { watchlist: watchlistWithPrices, livePriceCount, total } =
+    await fetchPrices();
   await enrichWatchlistWithContext(watchlistWithPrices, classifiedArticles, {
     maxStocks: IS_VERCEL ? 6 : undefined,
   });
@@ -67,6 +68,8 @@ const runFullSync = async () => {
 
   const liveData = {
     isMock: false,
+    pricesLive: livePriceCount === total,
+    livePriceCount,
     lastUpdated: now.toISOString(),
     themePulse,
     watchlist: watchlistWithPrices,

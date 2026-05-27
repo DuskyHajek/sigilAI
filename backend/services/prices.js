@@ -33,6 +33,7 @@ export const fetchPrices = async () => {
         priority: item.priority,
         price: quote.regularMarketPrice || quote.regularMarketPreviousClose || 0,
         change52w: change,
+        priceSource: "yahoo",
         context: "",
       };
     } catch (error) {
@@ -41,8 +42,8 @@ export const fetchPrices = async () => {
         error.message
       );
       const matchedMock = mockWatchlist.find((m) => m.ticker === item.ticker);
-      return (
-        matchedMock || {
+      return {
+        ...(matchedMock || {
           ticker: item.ticker,
           name: item.company,
           company: item.company,
@@ -53,12 +54,15 @@ export const fetchPrices = async () => {
           price: 0,
           change52w: 0,
           context: "Unable to retrieve price or thesis updates.",
-        }
-      );
+        }),
+        priceSource: "mock",
+      };
     }
   };
 
-  return Promise.all(WATCHLIST.map(fetchStock));
+  const watchlist = await Promise.all(WATCHLIST.map(fetchStock));
+  const livePriceCount = watchlist.filter((s) => s.priceSource === "yahoo").length;
+  return { watchlist, livePriceCount, total: watchlist.length };
 };
 
 export const enrichWatchlistWithContext = async (

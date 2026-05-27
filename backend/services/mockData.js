@@ -80,33 +80,35 @@ export const getMockWatchlist = () =>
     priority: item.priority,
     price: mockPrice(item.ticker),
     change52w: mockChange(item.ticker),
+    priceSource: "mock",
     context:
       MOCK_CONTEXTS[item.ticker] ||
       "No thesis-relevant developments in the last 7 days.",
   }));
 
+// Approximate demo prices (post-split era). Updated when Yahoo is unavailable.
 const mockPrice = (ticker) => {
   const prices = {
-    NVDA: 935.42,
-    "000660.KS": 185200,
-    MU: 118.25,
-    AMAT: 215.6,
-    FCX: 52.12,
-    "CSU.TO": 3750.4,
-    PATH: 12.45,
-    VEEV: 228.5,
-    ISRG: 395.8,
-    CGNX: 42.15,
-    KTOS: 22.85,
-    AVAV: 184.95,
-    "RHM.DE": 522.4,
-    RKLB: 5.65,
-    ASTS: 28.4,
-    EXAS: 68.2,
-    RXRX: 9.14,
-    CRWD: 345.18,
-    PANW: 312.75,
-    S: 24.6,
+    NVDA: 214.0,
+    "000660.KS": 198500,
+    MU: 98.5,
+    AMAT: 178.2,
+    FCX: 44.8,
+    "CSU.TO": 4120.0,
+    PATH: 11.2,
+    VEEV: 218.4,
+    ISRG: 542.0,
+    CGNX: 38.6,
+    KTOS: 48.3,
+    AVAV: 168.5,
+    "RHM.DE": 485.0,
+    RKLB: 24.8,
+    ASTS: 32.5,
+    EXAS: 62.4,
+    RXRX: 7.8,
+    CRWD: 398.0,
+    PANW: 358.0,
+    S: 22.4,
   };
   return prices[ticker] ?? 100;
 };
