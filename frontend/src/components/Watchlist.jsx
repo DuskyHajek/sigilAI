@@ -163,12 +163,14 @@ const Watchlist = ({ watchlistData }) => {
                 key={stock.ticker}
                 className="glass-panel glass-panel-hover rounded-xl border border-slate-900 p-3 group"
               >
-                <div className="grid grid-cols-1 xl:grid-cols-[minmax(150px,0.75fr)_minmax(0,1.45fr)_minmax(118px,auto)] gap-3 xl:items-center">
+                <div className="grid grid-cols-1 xl:grid-cols-[minmax(220px,0.95fr)_minmax(0,1.35fr)_minmax(118px,auto)] gap-3 xl:items-center">
                   <div className="min-w-0">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="text-[16px] font-bold text-slate-100 group-hover:text-sigil-gold transition-colors truncate">
+                    <div className="min-w-0">
+                      <p className="text-[16px] font-bold text-slate-100 group-hover:text-sigil-gold transition-colors leading-snug break-words">
                         {displayName}
-                      </span>
+                      </p>
+                    </div>
+                    <div className="mt-1.5 flex items-center gap-2 min-w-0 flex-wrap">
                       <span className="px-1.5 py-0.5 rounded border border-slate-800 bg-slate-950/70 text-[10px] font-mono text-slate-500 shrink-0">
                         {stock.ticker}
                       </span>
@@ -179,7 +181,7 @@ const Watchlist = ({ watchlistData }) => {
                         {label?.name || stock.theme}
                       </span>
                     </div>
-                    <div className="mt-0.5 flex items-center gap-1.5 min-w-0">
+                    <div className="mt-1 flex items-center gap-1.5 min-w-0">
                       <span className="text-[10px] text-slate-500 truncate">
                         {stock.angle}
                       </span>
