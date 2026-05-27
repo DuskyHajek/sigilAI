@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ServerCrash } from "lucide-react";
+import { AlertTriangle, ServerCrash } from "lucide-react";
 import ThemePulse from "./components/ThemePulse";
 import Watchlist from "./components/Watchlist";
 import WeeklyBrief from "./components/WeeklyBrief";
@@ -13,11 +13,13 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [syncState, setSyncState] = useState("idle");
   const [error, setError] = useState(null);
+  const [syncNotice, setSyncNotice] = useState(null);
 
   const loadDashboardData = async () => {
     try {
       setLoading(true);
       setError(null);
+      setSyncNotice(null);
       const dashboardData = await fetchDashboard();
       setData(dashboardData);
     } catch (err) {
@@ -33,6 +35,7 @@ function App() {
     try {
       setSyncState("syncing");
       setError(null);
+      setSyncNotice(null);
       const dashboardData = await triggerSync();
       const health = await fetchHealth().catch(() => null);
 
@@ -43,6 +46,24 @@ function App() {
       }
 
       setData(dashboardData);
+
+      if (dashboardData.cacheOnly && dashboardData.syncOk === false) {
+        setSyncNotice(
+          dashboardData.hint ||
+            "Live sync is temporarily unavailable, likely because the NewsAPI daily limit has been reached. Showing the latest cached dashboard data."
+        );
+        setSyncState("error");
+        setTimeout(() => setSyncState("idle"), 3000);
+        return;
+      }
+
+      if (dashboardData.cacheOnly || dashboardData.syncSkipped) {
+        setSyncNotice(
+          dashboardData.message ||
+            "Showing cached dashboard data because it is still fresh."
+        );
+      }
+
       setSyncState("success");
       setTimeout(() => setSyncState("idle"), 2000);
     } catch (err) {
@@ -76,6 +97,13 @@ function App() {
           <div className="glass-panel border-rose-500/20 p-4 rounded-xl flex items-center gap-3 text-rose-400 text-sm">
             <ServerCrash size={18} className="shrink-0" />
             <span>{error}</span>
+          </div>
+        )}
+
+        {syncNotice && (
+          <div className="glass-panel border-amber-500/20 bg-amber-500/5 p-4 rounded-xl flex items-center gap-3 text-amber-300 text-sm">
+            <AlertTriangle size={18} className="shrink-0" />
+            <span>{syncNotice}</span>
           </div>
         )}
 
