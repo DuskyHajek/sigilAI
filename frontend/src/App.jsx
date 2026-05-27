@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
 import { AlertTriangle, ServerCrash } from "lucide-react";
 import ThemePulse from "./components/ThemePulse";
 import Watchlist from "./components/Watchlist";
@@ -6,6 +7,7 @@ import WeeklyBrief from "./components/WeeklyBrief";
 import Header from "./components/Header";
 import WhatIsThis from "./components/WhatIsThis";
 import ResearchQueue from "./components/ResearchQueue";
+import MasteryGuide from "./pages/MasteryGuide";
 import { fetchDashboard, fetchHealth, triggerSync } from "./api";
 
 function App() {
@@ -90,62 +92,70 @@ function App() {
         lastUpdated={data?.lastUpdated}
       />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex flex-col gap-6">
-        <WhatIsThis />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex flex-col gap-6">
+              <WhatIsThis />
 
-        {error && (
-          <div className="glass-panel border-rose-500/20 p-4 rounded-xl flex items-center gap-3 text-rose-400 text-sm">
-            <ServerCrash size={18} className="shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
+              {error && (
+                <div className="glass-panel border-rose-500/20 p-4 rounded-xl flex items-center gap-3 text-rose-400 text-sm">
+                  <ServerCrash size={18} className="shrink-0" />
+                  <span>{error}</span>
+                </div>
+              )}
 
-        {syncNotice && (
-          <div className="glass-panel border-amber-500/20 bg-amber-500/5 p-4 rounded-xl flex items-center gap-3 text-amber-300 text-sm">
-            <AlertTriangle size={18} className="shrink-0" />
-            <span>{syncNotice}</span>
-          </div>
-        )}
+              {syncNotice && (
+                <div className="glass-panel border-amber-500/20 bg-amber-500/5 p-4 rounded-xl flex items-center gap-3 text-amber-300 text-sm">
+                  <AlertTriangle size={18} className="shrink-0" />
+                  <span>{syncNotice}</span>
+                </div>
+              )}
 
-        {loading ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
-            <div className="lg:col-span-1 glass-panel p-6 rounded-2xl shimmer min-h-[300px]"></div>
-            <div className="lg:col-span-2 glass-panel p-6 rounded-2xl shimmer min-h-[500px]"></div>
-            <div className="lg:col-span-3 glass-panel p-6 rounded-2xl shimmer min-h-[150px]"></div>
-          </div>
-        ) : (
-          <>
-            <div className="w-full">
-              <WeeklyBrief
-                weeklyBriefText={data?.weeklyBrief}
-                isMock={data?.isMock}
-                generatedAt={data?.lastUpdated}
-              />
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-              <div className="lg:col-span-1 h-full">
-                <ThemePulse themeData={data?.themePulse} />
-              </div>
-              <div className="lg:col-span-2 h-full">
-                <Watchlist watchlistData={data?.watchlist} />
-              </div>
-            </div>
+              {loading ? (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
+                  <div className="lg:col-span-1 glass-panel p-6 rounded-2xl shimmer min-h-[300px]"></div>
+                  <div className="lg:col-span-2 glass-panel p-6 rounded-2xl shimmer min-h-[500px]"></div>
+                  <div className="lg:col-span-3 glass-panel p-6 rounded-2xl shimmer min-h-[150px]"></div>
+                </div>
+              ) : (
+                <>
+                  <div className="w-full">
+                    <WeeklyBrief
+                      weeklyBriefText={data?.weeklyBrief}
+                      isMock={data?.isMock}
+                      generatedAt={data?.lastUpdated}
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+                    <div className="lg:col-span-1 h-full">
+                      <ThemePulse themeData={data?.themePulse} />
+                    </div>
+                    <div className="lg:col-span-2 h-full">
+                      <Watchlist watchlistData={data?.watchlist} />
+                    </div>
+                  </div>
 
-            <ResearchQueue
-              researchQueue={data?.researchQueue}
-              isMock={data?.isMock}
-            />
+                  <ResearchQueue
+                    researchQueue={data?.researchQueue}
+                    isMock={data?.isMock}
+                  />
 
-            <footer className="text-center pb-4 pt-2">
-              <p className="text-[11px] font-mono text-slate-600">
-                Application demo · Supernova thesis encoded in{" "}
-                <span className="text-slate-500">config/thesis.js</span> · AI
-                prompts in <span className="text-slate-500">services/prompts.js</span>
-              </p>
-            </footer>
-          </>
-        )}
-      </main>
+                  <footer className="text-center pb-4 pt-2">
+                    <p className="text-[11px] font-mono text-slate-600">
+                      Application demo · Supernova thesis encoded in{" "}
+                      <span className="text-slate-500">config/thesis.js</span> · AI
+                      prompts in <span className="text-slate-500">services/prompts.js</span>
+                    </p>
+                  </footer>
+                </>
+              )}
+            </main>
+          }
+        />
+        <Route path="/mastery-guide" element={<MasteryGuide />} />
+      </Routes>
     </div>
   );
 }

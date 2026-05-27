@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import { RefreshCw, Cpu, Check, X } from "lucide-react";
 import { fetchHealth } from "../api";
 
@@ -93,6 +94,34 @@ const Header = ({ onSync, syncState, lastUpdated }) => {
             </p>
           </div>
         </div>
+
+          <nav className="flex items-center gap-1 ml-auto mr-3">
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) =>
+                `px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                  isActive
+                    ? "bg-sigil-gold/15 text-sigil-gold border border-sigil-gold/30"
+                    : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/60"
+                }`
+              }
+            >
+              DASHBOARD
+            </NavLink>
+            <NavLink
+              to="/mastery-guide"
+              className={({ isActive }) =>
+                `px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                  isActive
+                    ? "bg-sigil-gold/15 text-sigil-gold border border-sigil-gold/30"
+                    : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/60"
+                }`
+              }
+            >
+              RESEARCH GUIDE
+            </NavLink>
+          </nav>
 
           <button
             onClick={onSync}
