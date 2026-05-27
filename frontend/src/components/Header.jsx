@@ -60,6 +60,7 @@ const Header = ({ onSync, syncState, lastUpdated }) => {
   return (
     <header className="border-b border-slate-900 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col gap-3">
+        {/* Top row: branding + sync button */}
         <div className="flex items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
           <div className="p-2 rounded-xl bg-sigil-gold/10 border border-sigil-gold/30 text-sigil-gold shadow-lg shadow-sigil-gold/5">
@@ -95,34 +96,6 @@ const Header = ({ onSync, syncState, lastUpdated }) => {
           </div>
         </div>
 
-          <nav className="flex items-center gap-1 ml-auto mr-3">
-            <NavLink
-              to="/"
-              end
-              className={({ isActive }) =>
-                `px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
-                  isActive
-                    ? "bg-sigil-gold/15 text-sigil-gold border border-sigil-gold/30"
-                    : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/60"
-                }`
-              }
-            >
-              DASHBOARD
-            </NavLink>
-            <NavLink
-              to="/mastery-guide"
-              className={({ isActive }) =>
-                `px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
-                  isActive
-                    ? "bg-sigil-gold/15 text-sigil-gold border border-sigil-gold/30"
-                    : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/60"
-                }`
-              }
-            >
-              RESEARCH GUIDE
-            </NavLink>
-          </nav>
-
           <button
             onClick={onSync}
             disabled={syncState === "syncing"}
@@ -141,6 +114,35 @@ const Header = ({ onSync, syncState, lastUpdated }) => {
             <span>{syncLabel()}</span>
           </button>
         </div>
+
+        {/* Bottom row: nav links */}
+        <nav className="flex items-center gap-1 border-t border-slate-800/50 pt-2">
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) =>
+              `px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                isActive
+                  ? "bg-sigil-gold/15 text-sigil-gold border border-sigil-gold/30"
+                  : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/60"
+              }`
+            }
+          >
+            DASHBOARD
+          </NavLink>
+          <NavLink
+            to="/mastery-guide"
+            className={({ isActive }) =>
+              `px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                isActive
+                  ? "bg-sigil-gold/15 text-sigil-gold border border-sigil-gold/30"
+                  : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/60"
+              }`
+            }
+          >
+            RESEARCH GUIDE
+          </NavLink>
+        </nav>
       </div>
     </header>
   );
