@@ -27,8 +27,17 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-const isLiveConfigured = () =>
-  !!(process.env.ANTHROPIC_API_KEY && process.env.NEWS_API_KEY);
+const getApiKeys = () => ({
+  anthropic: process.env.ANTHROPIC_API_KEY?.trim() || "",
+  news: process.env.NEWS_API_KEY?.trim() || "",
+});
+
+const isLiveConfigured = () => {
+  const { anthropic, news } = getApiKeys();
+  return !!(anthropic && news);
+};
+
+const IS_VERCEL = !!process.env.VERCEL;
 
 const runFullSync = async () => {
   const now = new Date();
@@ -42,11 +51,15 @@ const runFullSync = async () => {
     return mockData;
   }
 
-  console.log("Running in LIVE MODE. Querying external APIs...");
+  console.log(
+    `Running in LIVE MODE. Querying external APIs...${IS_VERCEL ? " (Vercel lite sync)" : ""}`
+  );
 
   const { themePulse, classifiedArticles } = await fetchNewsAndProcess();
   const watchlistWithPrices = await fetchPrices();
-  await enrichWatchlistWithContext(watchlistWithPrices, classifiedArticles);
+  await enrichWatchlistWithContext(watchlistWithPrices, classifiedArticles, {
+    maxStocks: IS_VERCEL ? 6 : undefined,
+  });
   const weeklyBrief = await generateWeeklyBrief(
     classifiedArticles,
     themePulse
@@ -83,10 +96,16 @@ const api = express.Router();
 api.get("/health", (req, res) => {
   const cache = readCache();
   const live = isLiveConfigured();
+  const keys = getApiKeys();
 
   res.json({
     status: "ok",
     mode: live ? "LIVE" : "MOCK",
+    keysPresent: {
+      anthropic: !!keys.anthropic,
+      news: !!keys.news,
+    },
+    vercel: IS_VERCEL,
     lastSync: cache?.lastUpdated || null,
     cacheAge: getCacheAgeHours(cache),
     cacheStale: cache
@@ -106,14 +125,16 @@ api.get("/dashboard", (req, res) => {
 api.post("/sync", async (req, res) => {
   try {
     const data = await runFullSync();
-    res.json(data);
+    res.json({ ...data, syncOk: true });
   } catch (error) {
     console.error("Sync failed:", error);
-    const cache = readCache();
-    if (cache) {
-      return res.json({ ...cache, isFallback: true, syncError: error.message });
-    }
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      error: error.message,
+      syncOk: false,
+      hint: IS_VERCEL
+        ? "Vercel has a short function timeout. Retry once; if it still fails, run sync locally."
+        : "Check API keys and external API availability.",
+    });
   }
 });
 

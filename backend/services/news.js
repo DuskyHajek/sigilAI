@@ -13,7 +13,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, "../../.env") });
 
-const NEWS_API_KEY = process.env.NEWS_API_KEY;
+const NEWS_API_KEY = process.env.NEWS_API_KEY?.trim();
+const IS_VERCEL = !!process.env.VERCEL;
+const MAX_PER_THEME = IS_VERCEL ? 1 : SETTINGS.max_articles_per_theme;
+const MAX_TO_CLASSIFY = IS_VERCEL ? 5 : 40;
 
 export const fetchThemeNews = async (themeId) => {
   if (!NEWS_API_KEY) {
@@ -123,12 +126,12 @@ export const fetchNewsAndProcess = async () => {
     let shouldInclude = false;
     for (const t of article.searchedThemes) {
       themeCounts[t] = themeCounts[t] || 0;
-      if (themeCounts[t] < SETTINGS.max_articles_per_theme) {
+      if (themeCounts[t] < MAX_PER_THEME) {
         themeCounts[t]++;
         shouldInclude = true;
       }
     }
-    if (shouldInclude) {
+    if (shouldInclude && selectedArticles.length < MAX_TO_CLASSIFY) {
       selectedArticles.push(article);
     }
   }
@@ -174,15 +177,19 @@ export const fetchNewsAndProcess = async () => {
     );
 
     if (themeArticles.length > 0) {
-      try {
-        console.log(`Generating Theme Pulse score for: ${theme.id}`);
-        themePulse[theme.id] = await getThemePulseScore(theme, themeArticles);
-      } catch (err) {
-        console.error(
-          `Failed to get pulse score for ${theme.id}:`,
-          err.message
-        );
+      if (IS_VERCEL) {
         themePulse[theme.id] = programmaticPulseFallback(themeArticles);
+      } else {
+        try {
+          console.log(`Generating Theme Pulse score for: ${theme.id}`);
+          themePulse[theme.id] = await getThemePulseScore(theme, themeArticles);
+        } catch (err) {
+          console.error(
+            `Failed to get pulse score for ${theme.id}:`,
+            err.message
+          );
+          themePulse[theme.id] = programmaticPulseFallback(themeArticles);
+        }
       }
     } else {
       themePulse[theme.id] = {

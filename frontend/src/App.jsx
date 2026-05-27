@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { ServerCrash, ShieldAlert } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ServerCrash } from "lucide-react";
 import ThemePulse from "./components/ThemePulse";
 import Watchlist from "./components/Watchlist";
 import WeeklyBrief from "./components/WeeklyBrief";
 import Header from "./components/Header";
-import { fetchDashboard, triggerSync } from "./api";
+import WhatIsThis from "./components/WhatIsThis";
+import { fetchDashboard, fetchHealth, triggerSync } from "./api";
 
 function App() {
   const [data, setData] = useState(null);
@@ -32,6 +33,14 @@ function App() {
       setSyncState("syncing");
       setError(null);
       const dashboardData = await triggerSync();
+      const health = await fetchHealth().catch(() => null);
+
+      if (health?.mode === "LIVE" && dashboardData.isMock) {
+        throw new Error(
+          "Sync returned demo data. API keys may be missing on this deployment."
+        );
+      }
+
       setData(dashboardData);
       setSyncState("success");
       setTimeout(() => setSyncState("idle"), 2000);
@@ -44,7 +53,11 @@ function App() {
   };
 
   useEffect(() => {
-    loadDashboardData();
+    // Defer initial state updates so the effect body stays pure.
+    const t = setTimeout(() => {
+      void loadDashboardData();
+    }, 0);
+    return () => clearTimeout(t);
   }, []);
 
   return (
@@ -55,18 +68,9 @@ function App() {
         lastUpdated={data?.lastUpdated}
       />
 
-      {data && data.isMock && (
-        <div className="bg-amber-500/5 border-b border-amber-500/10 text-amber-500 px-4 py-2 text-center text-xs font-mono flex items-center justify-center gap-2">
-          <ShieldAlert size={14} />
-          <span>
-            Running with thesis-compliant simulated data. Provide{" "}
-            <strong>ANTHROPIC_API_KEY</strong> & <strong>NEWS_API_KEY</strong>{" "}
-            in <code>.env</code> to stream live data.
-          </span>
-        </div>
-      )}
-
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex flex-col gap-6">
+        <WhatIsThis />
+
         {error && (
           <div className="glass-panel border-rose-500/20 p-4 rounded-xl flex items-center gap-3 text-rose-400 text-sm">
             <ServerCrash size={18} className="shrink-0" />
@@ -82,6 +86,13 @@ function App() {
           </div>
         ) : (
           <>
+            <div className="w-full">
+              <WeeklyBrief
+                weeklyBriefText={data?.weeklyBrief}
+                isMock={data?.isMock}
+                generatedAt={data?.lastUpdated}
+              />
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
               <div className="lg:col-span-1 h-full">
                 <ThemePulse themeData={data?.themePulse} />
@@ -89,12 +100,6 @@ function App() {
               <div className="lg:col-span-2 h-full">
                 <Watchlist watchlistData={data?.watchlist} />
               </div>
-            </div>
-            <div className="w-full">
-              <WeeklyBrief
-                weeklyBriefText={data?.weeklyBrief}
-                isMock={data?.isMock}
-              />
             </div>
           </>
         )}

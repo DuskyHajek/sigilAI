@@ -63,8 +63,12 @@ export const fetchPrices = async () => {
 
 export const enrichWatchlistWithContext = async (
   watchlist,
-  classifiedArticles
+  classifiedArticles,
+  options = {}
 ) => {
+  const maxStocks = options.maxStocks ?? watchlist.length;
+  let generated = 0;
+
   for (const stock of watchlist) {
     const configItem =
       WATCHLIST.find((w) => w.ticker === stock.ticker) || stock;
@@ -72,7 +76,8 @@ export const enrichWatchlistWithContext = async (
     const headlines = stockNews.map((a) => a.title);
 
     try {
-      if (headlines.length > 0) {
+      if (headlines.length > 0 && generated < maxStocks) {
+        generated++;
         console.log(
           `Generating AI context for ${stock.ticker} (${headlines.length} matched articles)`
         );
