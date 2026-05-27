@@ -4,24 +4,24 @@ const PANELS = [
   {
     icon: FileText,
     label: "01 · Analyst Brief",
-    text: "Start here — a 3-sentence CIO note: top signal, secondary watch, counter-thesis risk.",
+    text: "Start here — a short AI summary of the strongest signals found in the current news pull.",
   },
   {
     icon: Activity,
     label: "02 · Theme Pulse",
-    text: "Which themes are active today — and is the news good or bad for the Supernova thesis?",
+    text: "Compares each sector thesis with recent headlines: active, supportive, neutral, or challenged.",
   },
   {
     icon: Sparkles,
     label: "03 · Watchlist",
-    text: "20 curated tickers. Price + one SIGIL AI line on why this week matters for each angle.",
+    text: "20 relevant public names with price data and a short note tied to that company angle.",
   },
 ];
 
 const DATA_FLOW = [
   { icon: Newspaper, name: "NewsAPI", detail: "Headlines per theme" },
   { icon: LineChart, name: "Yahoo", detail: "Live prices" },
-  { icon: Brain, name: "Claude", detail: "Thesis-filtered analysis" },
+  { icon: Brain, name: "Claude", detail: "Summaries + scoring" },
 ];
 
 const WhatIsThis = () => {
@@ -35,15 +35,15 @@ const WhatIsThis = () => {
         </p>
 
         <h2 className="text-lg md:text-xl font-semibold text-white leading-snug max-w-3xl">
-          Not a news feed. A thesis lens on disruptive tech — built around Sigil&apos;s
-          7-theme framework.
+          A small live demo for tracking Sigil&apos;s Supernova themes across news,
+          prices, and watchlist companies.
         </h2>
 
         <p className="mt-2 text-sm text-slate-400 max-w-3xl leading-relaxed">
-          Every headline is classified, scored, and explained through the Supernova
-          investment memo — the same way an analyst would filter signal from noise.
-          Click{" "}
-          <span className="text-sigil-gold font-medium">Sync</span> to pull fresh data.
+          It pulls recent headlines, compares them with the thesis notes in the
+          config, and asks Claude for short summaries. The point is not perfect
+          research automation — it is a quick, transparent way to monitor what
+          deserves a closer analyst look.
         </p>
 
         <div className="mt-5 grid grid-cols-1 md:grid-cols-3 gap-3">

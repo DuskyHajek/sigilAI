@@ -3,9 +3,13 @@ import { THEMES, THEME_COLORS, THEME_ICONS } from "@config/thesis.js";
 import "../styles/theme-cards.css";
 
 const getScoreDisplay = (score) => {
-  if (score >= 2) return { arrow: "↑", color: "#2ec98a", label: "bullish" };
-  if (score <= -2) return { arrow: "↓", color: "#f06060", label: "bearish" };
-  return { arrow: "→", color: "#f5b84a", label: "neutral" };
+  if (score >= 2) {
+    return { arrow: "↑", color: "#2ec98a", label: "supportive" };
+  }
+  if (score <= -2) {
+    return { arrow: "↓", color: "#f06060", label: "challenged" };
+  }
+  return { arrow: "→", color: "#f5b84a", label: "mixed / neutral" };
 };
 
 const ThemePulse = ({ themeData }) => {
@@ -21,18 +25,19 @@ const ThemePulse = ({ themeData }) => {
         </p>
         <h2 className="text-xl font-semibold text-slate-100 flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-sigil-gold inline-block animate-pulse" />
-          Theme Pulse
+          Thesis vs News
         </h2>
         <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-          Live read on all 7 Supernova themes. Click a card for the analyst note.
+          A rough read on whether recent headlines support or challenge each
+          Supernova sector thesis.
         </p>
 
         <div className="mt-3 flex flex-wrap gap-2 text-[10px] font-mono">
           <span className="px-2 py-1 rounded-md bg-slate-900/80 border border-slate-800 text-slate-400">
-            <span className="text-slate-300">ACTIVITY</span> bar · news volume (1–10)
+            <span className="text-slate-300">ACTIVITY</span> · headline volume (1–10)
           </span>
           <span className="px-2 py-1 rounded-md bg-slate-900/80 border border-slate-800 text-slate-400">
-            <span className="text-emerald-400">± THESIS</span> · good or bad for the thesis (−5 to +5)
+            <span className="text-emerald-400">THESIS FIT</span> · support/challenge (−5 to +5)
           </span>
         </div>
       </div>
@@ -72,10 +77,10 @@ const ThemePulse = ({ themeData }) => {
                     <div
                       className="theme-card__score flex flex-col items-end"
                       style={{ color: score.color }}
-                      title={`Thesis signal: ${score.label}`}
+                      title={`News read: ${score.label}`}
                     >
                       <span className="text-[9px] font-mono opacity-70 uppercase tracking-wide">
-                        Thesis
+                        Fit
                       </span>
                       <span>
                         {score.arrow}{" "}
@@ -104,10 +109,16 @@ const ThemePulse = ({ themeData }) => {
                     : "max-h-0"
                 }`}
               >
-                <p className="text-slate-400 font-mono text-[11px] leading-relaxed">
-                  <span className="text-sigil-gold font-bold">SIGNAL · </span>
-                  {data.reason}
-                </p>
+                <div className="space-y-1.5">
+                  <p className="text-slate-500 font-mono text-[10px] leading-relaxed">
+                    <span className="text-sigil-gold font-bold">THESIS · </span>
+                    {theme.short_description}
+                  </p>
+                  <p className="text-slate-400 font-mono text-[11px] leading-relaxed">
+                    <span className="text-sigil-gold font-bold">NEWS · </span>
+                    {data.reason}
+                  </p>
+                </div>
               </div>
             </div>
           );

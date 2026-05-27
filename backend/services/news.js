@@ -64,6 +64,9 @@ const getThemePulseScore = async (theme, articles) => {
 const programmaticPulseFallback = (articles, reasonPrefix = "Calculated from") => {
   const count = articles.length;
   const activity_score = Math.min(10, Math.max(2, count * 2));
+  const topArticle = [...articles].sort(
+    (a, b) => (b.significance || 0) - (a.significance || 0)
+  )[0];
 
   let sentimentSum = 0;
   articles.forEach((a) => {
@@ -79,7 +82,9 @@ const programmaticPulseFallback = (articles, reasonPrefix = "Calculated from") =
     thesis_score,
     reason:
       count > 0
-        ? `${reasonPrefix} ${count} news item${count === 1 ? "" : "s"}.`
+        ? topArticle?.one_line ||
+          topArticle?.title ||
+          `${reasonPrefix} ${count} news item${count === 1 ? "" : "s"}.`
         : "No significant news updates monitored today.",
   };
 };
@@ -131,10 +136,13 @@ const selectArticlesForClassification = (articles, maxTotal) => {
 
 const rawPulseFromHeadlines = (articles) => {
   const count = articles.length;
+  const topArticle = articles[0];
   return {
     activity_score: Math.min(10, Math.max(2, count * 2)),
     thesis_score: 0,
-    reason: `${count} headline${count === 1 ? "" : "s"} tracked this week`,
+    reason:
+      topArticle?.title ||
+      `${count} headline${count === 1 ? "" : "s"} tracked this week`,
   };
 };
 

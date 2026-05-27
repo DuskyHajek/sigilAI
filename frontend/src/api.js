@@ -34,7 +34,8 @@ export const triggerSync = async () => {
   } catch (err) {
     if (err.name === "AbortError") {
       throw new Error(
-        "Sync timed out after 55s. On Vercel, retry once or run sync locally."
+        "Sync timed out after 55s. On Vercel, retry once or run sync locally.",
+        { cause: err }
       );
     }
     throw err;

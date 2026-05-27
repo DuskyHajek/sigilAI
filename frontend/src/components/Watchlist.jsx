@@ -47,6 +47,7 @@ const Watchlist = ({ watchlistData }) => {
     selectedTheme === "all"
       ? watchlistData
       : watchlistData.filter((item) => item.theme === selectedTheme);
+  const isAllView = selectedTheme === "all";
 
   const formatPrice = (price, ticker, currency) => {
     if (!price || price === 0) return "N/A";
@@ -87,9 +88,8 @@ const Watchlist = ({ watchlistData }) => {
           </h2>
         </div>
         <p className="text-xs text-slate-400 mb-4 leading-relaxed">
-          {watchlistData.length} thesis-curated names · live price ·{" "}
-          <span className="text-sigil-gold/90">SIGIL AI</span> = one line on why
-          this week matters for that stock&apos;s angle
+          {watchlistData.length} public names mapped to the thesis. Filter by
+          theme for easier reading, or scan all names in compact view.
         </p>
 
         <div className="flex items-center gap-1.5 flex-wrap">
@@ -110,7 +110,11 @@ const Watchlist = ({ watchlistData }) => {
         </div>
       </div>
 
-      <div className="overflow-y-auto flex-1 max-h-[580px] pr-2 space-y-3">
+      <div
+        className={`overflow-y-auto flex-1 max-h-[580px] pr-2 ${
+          isAllView ? "grid grid-cols-1 xl:grid-cols-2 gap-3" : "space-y-3"
+        }`}
+      >
         {filteredData.length === 0 ? (
           <div className="text-center py-10 text-slate-500 text-sm">
             No tickers loaded under this category.
@@ -124,7 +128,9 @@ const Watchlist = ({ watchlistData }) => {
             return (
               <div
                 key={stock.ticker}
-                className="glass-panel glass-panel-hover p-4 rounded-xl border border-slate-900 flex flex-col gap-3 group"
+                className={`glass-panel glass-panel-hover rounded-xl border border-slate-900 flex flex-col gap-3 group ${
+                  isAllView ? "p-3" : "p-4"
+                }`}
               >
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
@@ -144,7 +150,7 @@ const Watchlist = ({ watchlistData }) => {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-4 shrink-0">
+                  <div className="flex items-center gap-3 shrink-0">
                     <div className="flex flex-col items-end gap-0.5">
                       <span className="text-[16px] font-mono font-bold text-slate-200">
                         {formatPrice(stock.price, stock.ticker, stock.currency)}
@@ -187,9 +193,14 @@ const Watchlist = ({ watchlistData }) => {
                 <div className="bg-slate-950/60 rounded-lg p-2.5 border border-slate-900/60 group-hover:border-slate-850 transition-colors">
                   <div className="flex items-start gap-2">
                     <span className="text-[10px] font-bold text-sigil-gold uppercase tracking-wider mt-0.5 border border-sigil-gold/30 bg-sigil-gold/10 px-2 py-1 rounded shrink-0">
-                      SIGIL AI
+                      Note
                     </span>
-                    <p className="text-[13px] text-slate-200 leading-relaxed font-sans border-l border-sigil-gold/20 pl-3 py-1">
+                    <p
+                      className={`text-[13px] text-slate-200 leading-relaxed font-sans border-l border-sigil-gold/20 pl-3 py-1 ${
+                        isAllView ? "line-clamp-2" : ""
+                      }`}
+                      title={stock.context}
+                    >
                       {stock.context}
                     </p>
                   </div>
