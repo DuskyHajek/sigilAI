@@ -5,6 +5,7 @@ import {
   ArrowDownRight,
   Filter,
   Search,
+  ChevronDown,
 } from "lucide-react";
 import { THEMES } from "@config/thesis.js";
 
@@ -42,6 +43,7 @@ const themeBadgeStyle = (themeId) => {
 const Watchlist = ({ watchlistData }) => {
   const [selectedTheme, setSelectedTheme] = useState("all");
   const [query, setQuery] = useState("");
+  const [expandedTicker, setExpandedTicker] = useState(null);
   const stocks = useMemo(() => watchlistData || [], [watchlistData]);
 
   const themeFilters = ["all", ...THEMES.map((t) => t.id)];
@@ -103,8 +105,8 @@ const Watchlist = ({ watchlistData }) => {
         </div>
         <p className="text-xs text-slate-400 mb-4 leading-relaxed">
           {stocks.length} public names mapped to the thesis. Search or
-          filter by theme, then open the full idea later if something looks
-          worth researching.
+          filter by theme, then expand a note when something looks worth
+          researching.
         </p>
 
         <div className="flex flex-col gap-3">
@@ -143,7 +145,7 @@ const Watchlist = ({ watchlistData }) => {
         </div>
       </div>
 
-      <div className="overflow-y-auto flex-1 max-h-[620px] pr-2 space-y-2">
+      <div className="overflow-y-auto flex-1 max-h-[70vh] lg:max-h-[620px] pr-2 space-y-2">
         {filteredData.length === 0 ? (
           <div className="text-center py-10 text-slate-500 text-sm">
             No tickers match this view.
@@ -153,6 +155,7 @@ const Watchlist = ({ watchlistData }) => {
             const change = stock.change52w ?? stock.change30d ?? 0;
             const isPositive = change >= 0;
             const label = THEME_LABELS[stock.theme];
+            const isExpanded = expandedTicker === stock.ticker;
 
             return (
               <div
@@ -185,15 +188,41 @@ const Watchlist = ({ watchlistData }) => {
 
                   <div className="min-w-0 rounded-lg bg-slate-950/60 border border-slate-900/60 px-3 py-2">
                     <div className="flex items-start gap-2 min-w-0">
-                      <span className="text-[10px] font-bold text-sigil-gold uppercase tracking-wider mt-0.5 shrink-0">
-                        Note
-                      </span>
-                      <p
-                        className="watchlist-note-text text-[13px] text-slate-200 leading-relaxed font-sans min-w-0"
-                        title={stock.context}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setExpandedTicker(isExpanded ? null : stock.ticker)
+                        }
+                        className="text-[10px] font-bold text-sigil-gold uppercase tracking-wider mt-0.5 shrink-0 rounded border border-sigil-gold/20 px-2 py-0.5 hover:bg-sigil-gold/10"
+                        aria-expanded={isExpanded}
+                        aria-label={`${isExpanded ? "Collapse" : "Expand"} ${stock.ticker} note`}
                       >
-                        {stock.context}
-                      </p>
+                        Note
+                      </button>
+                      <div className="min-w-0 flex-1">
+                        <p
+                          className={`text-[13px] text-slate-200 leading-relaxed font-sans ${
+                            isExpanded ? "" : "watchlist-note-text"
+                          }`}
+                        >
+                          {stock.context}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setExpandedTicker(isExpanded ? null : stock.ticker)
+                          }
+                          className="mt-1 inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-wide text-slate-500 hover:text-sigil-gold"
+                        >
+                          {isExpanded ? "Collapse" : "Full note"}
+                          <ChevronDown
+                            size={12}
+                            className={`transition-transform ${
+                              isExpanded ? "rotate-180" : ""
+                            }`}
+                          />
+                        </button>
+                      </div>
                     </div>
                   </div>
 
