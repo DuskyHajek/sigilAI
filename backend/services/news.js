@@ -20,6 +20,67 @@ const MAX_PER_THEME = IS_VERCEL ? 3 : SETTINGS.max_articles_per_theme;
 const MAX_TO_CLASSIFY = IS_VERCEL ? 21 : 40;
 const MIN_PER_THEME = 1;
 const CLASSIFY_CONCURRENCY = IS_VERCEL ? 4 : 5;
+const LOOKBACK_DAYS = 7;
+
+const quoteKeyword = (keyword) =>
+  keyword.includes(" ") ? `"${keyword}"` : keyword;
+
+const getFromDate = () => {
+  const date = new Date();
+  date.setDate(date.getDate() - LOOKBACK_DAYS);
+  return date.toISOString().slice(0, 10);
+};
+
+const fetchNewsQuery = async (query, pageSize) => {
+  const params = new URLSearchParams({
+    q: query,
+    searchIn: "title,description",
+    language: "en",
+    sortBy: "publishedAt",
+    pageSize: String(pageSize),
+    from: getFromDate(),
+    apiKey: NEWS_API_KEY,
+  });
+
+  const response = await fetch(
+    `https://newsapi.org/v2/everything?${params.toString()}`,
+    {
+      headers: { "User-Agent": "SupernovaDashboard/1.0" },
+    }
+  );
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`NewsAPI error (${response.status}): ${errText}`);
+  }
+
+  const data = await response.json();
+  return (data.articles || []).filter(
+    (article) =>
+      article.title &&
+      article.url &&
+      article.title !== "[Removed]" &&
+      article.description !== "[Removed]"
+  );
+};
+
+const dedupeArticles = (articles) => {
+  const seen = new Set();
+  return articles.filter((article) => {
+    const key = article.url || article.title;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+};
+
+const fallbackQueriesByTheme = {
+  application: [
+    '"AI agents" OR "AI agent" OR "agentic AI"',
+    '"AI coding" OR "GitHub Copilot" OR "Cursor AI" OR "Claude Code" OR "OpenAI Codex"',
+    '"enterprise AI" OR "AI automation" OR "vertical SaaS" OR "SaaS AI"',
+  ],
+};
 
 export const fetchThemeNews = async (themeId) => {
   if (!NEWS_API_KEY) {
@@ -31,20 +92,25 @@ export const fetchThemeNews = async (themeId) => {
     throw new Error(`Unknown theme: ${themeId}`);
   }
 
-  const keywords = theme.news_keywords.join(" OR ");
-  const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(keywords)}&sortBy=publishedAt&pageSize=${SETTINGS.max_articles_per_theme}&apiKey=${NEWS_API_KEY}`;
+  const primaryQuery = theme.news_keywords.map(quoteKeyword).join(" OR ");
+  const articles = await fetchNewsQuery(
+    primaryQuery,
+    SETTINGS.max_articles_per_theme
+  );
 
-  const response = await fetch(url, {
-    headers: { "User-Agent": "SupernovaDashboard/1.0" },
-  });
-
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(`NewsAPI error (${response.status}): ${errText}`);
+  if (articles.length >= MAX_PER_THEME || !fallbackQueriesByTheme[themeId]) {
+    return articles;
   }
 
-  const data = await response.json();
-  return data.articles || [];
+  const fallbackResults = await mapWithConcurrency(
+    fallbackQueriesByTheme[themeId],
+    2,
+    (query) => fetchNewsQuery(query, 5)
+  );
+
+  return dedupeArticles([...articles, ...fallbackResults.flat()]).sort(
+    (a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)
+  );
 };
 
 const classifyArticle = async (article) => {

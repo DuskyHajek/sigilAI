@@ -1,5 +1,11 @@
-import { useState } from "react";
-import { Sparkles, ArrowUpRight, ArrowDownRight, Filter } from "lucide-react";
+import { useMemo, useState } from "react";
+import {
+  Sparkles,
+  ArrowUpRight,
+  ArrowDownRight,
+  Filter,
+  Search,
+} from "lucide-react";
 import { THEMES } from "@config/thesis.js";
 
 const THEME_LABELS = Object.fromEntries(
@@ -35,19 +41,27 @@ const themeBadgeStyle = (themeId) => {
 
 const Watchlist = ({ watchlistData }) => {
   const [selectedTheme, setSelectedTheme] = useState("all");
+  const [query, setQuery] = useState("");
+  const stocks = useMemo(() => watchlistData || [], [watchlistData]);
+
+  const themeFilters = ["all", ...THEMES.map((t) => t.id)];
+
+  const filteredData = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return stocks.filter((item) => {
+      const matchesTheme =
+        selectedTheme === "all" || item.theme === selectedTheme;
+      const matchesQuery =
+        !q ||
+        [item.ticker, item.name, item.company, item.context]
+          .filter(Boolean)
+          .some((value) => value.toLowerCase().includes(q));
+
+      return matchesTheme && matchesQuery;
+    });
+  }, [query, selectedTheme, stocks]);
 
   if (!watchlistData) return null;
-
-  const themeFilters = [
-    "all",
-    ...THEMES.map((t) => t.id),
-  ];
-
-  const filteredData =
-    selectedTheme === "all"
-      ? watchlistData
-      : watchlistData.filter((item) => item.theme === selectedTheme);
-  const isAllView = selectedTheme === "all";
 
   const formatPrice = (price, ticker, currency) => {
     if (!price || price === 0) return "N/A";
@@ -88,36 +102,51 @@ const Watchlist = ({ watchlistData }) => {
           </h2>
         </div>
         <p className="text-xs text-slate-400 mb-4 leading-relaxed">
-          {watchlistData.length} public names mapped to the thesis. Filter by
-          theme for easier reading, or scan all names in compact view.
+          {stocks.length} public names mapped to the thesis. Search or
+          filter by theme, then open the full idea later if something looks
+          worth researching.
         </p>
 
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <Filter size={12} className="text-slate-500 shrink-0 mr-0.5" />
-          {themeFilters.map((theme) => (
-            <button
-              key={theme}
-              onClick={() => setSelectedTheme(theme)}
-              className={`px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all ${
-                selectedTheme === theme
-                  ? "bg-sigil-gold/10 text-sigil-gold border-sigil-gold/40"
-                  : "bg-slate-900/40 text-slate-400 border-slate-800 hover:text-slate-300 hover:border-slate-700"
-              }`}
-            >
-              {FILTER_SHORT_NAMES[theme] ?? theme}
-            </button>
-          ))}
+        <div className="flex flex-col gap-3">
+          <div className="relative">
+            <Search
+              size={14}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600"
+            />
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search ticker, company, or note..."
+              className="w-full rounded-xl border border-slate-800 bg-slate-950/60 py-2 pl-9 pr-3 text-sm text-slate-200 outline-none transition-colors placeholder:text-slate-600 focus:border-sigil-gold/40"
+            />
+          </div>
+
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <Filter size={12} className="text-slate-500 shrink-0 mr-0.5" />
+            {themeFilters.map((theme) => (
+              <button
+                key={theme}
+                onClick={() => setSelectedTheme(theme)}
+                className={`px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all ${
+                  selectedTheme === theme
+                    ? "bg-sigil-gold/10 text-sigil-gold border-sigil-gold/40"
+                    : "bg-slate-900/40 text-slate-400 border-slate-800 hover:text-slate-300 hover:border-slate-700"
+                }`}
+              >
+                {FILTER_SHORT_NAMES[theme] ?? theme}
+              </button>
+            ))}
+            <span className="ml-auto text-[11px] font-mono text-slate-600">
+              {filteredData.length}/{stocks.length}
+            </span>
+          </div>
         </div>
       </div>
 
-      <div
-        className={`overflow-y-auto flex-1 max-h-[580px] pr-2 ${
-          isAllView ? "grid grid-cols-1 xl:grid-cols-2 gap-3" : "space-y-3"
-        }`}
-      >
+      <div className="overflow-y-auto flex-1 max-h-[620px] pr-2 space-y-2">
         {filteredData.length === 0 ? (
           <div className="text-center py-10 text-slate-500 text-sm">
-            No tickers loaded under this category.
+            No tickers match this view.
           </div>
         ) : (
           filteredData.map((stock) => {
@@ -128,51 +157,52 @@ const Watchlist = ({ watchlistData }) => {
             return (
               <div
                 key={stock.ticker}
-                className={`glass-panel glass-panel-hover rounded-xl border border-slate-900 flex flex-col gap-3 group ${
-                  isAllView ? "p-3" : "p-4"
-                }`}
+                className="glass-panel glass-panel-hover rounded-xl border border-slate-900 p-3 group"
               >
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="flex flex-col">
+                <div className="grid grid-cols-1 xl:grid-cols-[minmax(150px,0.75fr)_minmax(0,1.45fr)_minmax(118px,auto)] gap-3 xl:items-center">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 min-w-0">
                       <span className="font-mono text-[18px] font-bold text-slate-100 group-hover:text-sigil-gold transition-colors">
                         {stock.ticker}
                       </span>
+                      <span
+                        className="px-2 py-0.5 rounded text-[10px] font-medium border capitalize shrink-0"
+                        style={themeBadgeStyle(stock.theme)}
+                      >
+                        {label?.name || stock.theme}
+                      </span>
+                    </div>
+                    <div className="mt-0.5 flex items-center gap-1.5 min-w-0">
                       <span className="text-[11px] text-slate-400 truncate max-w-[150px]">
                         {stock.name}
                       </span>
+                      <span className="text-slate-700">·</span>
+                      <span className="text-[10px] text-slate-500 truncate">
+                        {stock.angle}
+                      </span>
                     </div>
-                    <span
-                      className="px-2 py-0.5 rounded text-[10px] font-medium border capitalize"
-                      style={themeBadgeStyle(stock.theme)}
-                    >
-                      {label?.name || stock.theme}
-                    </span>
                   </div>
 
-                  <div className="flex items-center gap-3 shrink-0">
-                    <div className="flex flex-col items-end gap-0.5">
-                      <span className="text-[16px] font-mono font-bold text-slate-200">
-                        {formatPrice(stock.price, stock.ticker, stock.currency)}
+                  <div className="min-w-0 rounded-lg bg-slate-950/60 border border-slate-900/60 px-3 py-2">
+                    <div className="flex items-start gap-2 min-w-0">
+                      <span className="text-[10px] font-bold text-sigil-gold uppercase tracking-wider mt-0.5 shrink-0">
+                        Note
                       </span>
-                      {stock.priceSource === "mock" && (
-                        <span className="text-[9px] font-mono text-amber-400/90 uppercase">
-                          demo price
-                        </span>
-                      )}
-                      {stock.priceSource === "yahoo_cached" && (
-                        <span className="text-[9px] font-mono text-slate-500 uppercase">
-                          cached
-                        </span>
-                      )}
-                      {stock.priceSource === "unavailable" && (
-                        <span className="text-[9px] font-mono text-rose-400/90 uppercase">
-                          unavailable
-                        </span>
-                      )}
+                      <p
+                        className="watchlist-note-text text-[13px] text-slate-200 leading-relaxed font-sans min-w-0"
+                        title={stock.context}
+                      >
+                        {stock.context}
+                      </p>
                     </div>
+                  </div>
+
+                  <div className="flex xl:flex-col items-end justify-between xl:justify-center gap-1 shrink-0">
+                    <span className="text-[16px] font-mono font-bold text-slate-200 whitespace-nowrap">
+                      {formatPrice(stock.price, stock.ticker, stock.currency)}
+                    </span>
                     <span
-                      className={`px-2 py-0.5 rounded text-[11px] font-mono font-bold flex items-center gap-0.5 border ${
+                      className={`px-2 py-0.5 rounded text-[11px] font-mono font-bold flex items-center gap-0.5 border whitespace-nowrap ${
                         isPositive
                           ? "text-bullish bg-bullish/5 border-bullish/20"
                           : "text-bearish bg-bearish/5 border-bearish/20"
@@ -187,22 +217,21 @@ const Watchlist = ({ watchlistData }) => {
                       {isPositive ? "+" : ""}
                       {change}%
                     </span>
-                  </div>
-                </div>
-
-                <div className="bg-slate-950/60 rounded-lg p-2.5 border border-slate-900/60 group-hover:border-slate-850 transition-colors">
-                  <div className="flex items-start gap-2">
-                    <span className="text-[10px] font-bold text-sigil-gold uppercase tracking-wider mt-0.5 border border-sigil-gold/30 bg-sigil-gold/10 px-2 py-1 rounded shrink-0">
-                      Note
-                    </span>
-                    <p
-                      className={`text-[13px] text-slate-200 leading-relaxed font-sans border-l border-sigil-gold/20 pl-3 py-1 ${
-                        isAllView ? "line-clamp-2" : ""
-                      }`}
-                      title={stock.context}
-                    >
-                      {stock.context}
-                    </p>
+                    {stock.priceSource !== "yahoo" && (
+                      <span
+                        className={`text-[9px] font-mono uppercase ${
+                          stock.priceSource === "unavailable"
+                            ? "text-rose-400/90"
+                            : "text-slate-500"
+                        }`}
+                      >
+                        {stock.priceSource === "mock"
+                          ? "demo"
+                          : stock.priceSource === "yahoo_cached"
+                            ? "cached"
+                            : "unavailable"}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

@@ -69,6 +69,8 @@ Classify and score this article. Return ONLY valid JSON, no other text, no markd
 
 Rules:
 - "themes": array of applicable theme IDs from: ["datacenters","application","robotics","warfare","space","biotech","adversarial"]. Empty array if not relevant.
+- Tag "application" for AI agents, AI coding tools, copilots, enterprise AI adoption, workflow automation, SaaS AI, vertical software, or software moat disruption.
+- If an article fits more than one theme, include every relevant theme rather than forcing a single label.
 - "sentiment": relative to the Supernova thesis (bullish = good for thesis, bearish = bad for thesis)
 - "significance": integer 1-5. 1=background noise, 2=worth noting, 3=notable, 4=important, 5=major development
 - "one_line": one sentence (max 20 words) explaining why this matters for the thesis. null if not relevant.
