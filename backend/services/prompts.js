@@ -79,12 +79,16 @@ export const buildStockContextPrompt = (
   ticker,
   companyName,
   theme,
-  recentHeadlines
+  companyAngle,
+  recentHeadlines,
+  matchType = "direct"
 ) => `
 Generate a Sigil AI insight line for this watchlist position.
 
 COMPANY: ${companyName} (${ticker})
 THESIS THEME: ${theme}
+INVESTMENT ANGLE: ${companyAngle}
+HEADLINE MATCH: ${matchType} (${matchType === "direct" ? "company-specific news" : matchType === "theme" ? "sector news — tie to this company's angle" : "sector headlines — infer relevance to this angle"})
 
 RECENT HEADLINES (last 7 days):
 ${
@@ -95,10 +99,11 @@ ${
 
 Write ONE sentence, maximum 25 words.
 Requirements:
-- Must reference something specific from the headlines above (not generic commentary)
+- Must connect the headlines to this company's specific investment angle
 - Must explain why it matters for the Supernova investment thesis
 - Must not start with the company name or ticker
 - Must not include phrases like "this week", "recently", "according to"
+- If headlines are sector-level only, explain the implication for this specific company angle
 - If no meaningful news: write exactly "No thesis-relevant developments in the last 7 days."
 
 Output the sentence only. No preamble.

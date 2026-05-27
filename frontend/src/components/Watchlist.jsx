@@ -48,21 +48,21 @@ const Watchlist = ({ watchlistData }) => {
       ? watchlistData
       : watchlistData.filter((item) => item.theme === selectedTheme);
 
-  const formatPrice = (price, ticker) => {
-    if (price === 0) return "N/A";
-    if (ticker.endsWith(".KS")) {
+  const formatPrice = (price, ticker, currency) => {
+    if (!price || price === 0) return "N/A";
+    if (currency === "KRW" || ticker.endsWith(".KS")) {
       return new Intl.NumberFormat("ko-KR", {
         style: "currency",
         currency: "KRW",
       }).format(price);
     }
-    if (ticker.endsWith(".TO")) {
+    if (currency === "CAD" || ticker.endsWith(".TO")) {
       return new Intl.NumberFormat("en-CA", {
         style: "currency",
         currency: "CAD",
       }).format(price);
     }
-    if (ticker.endsWith(".DE")) {
+    if (currency === "EUR" || ticker.endsWith(".DE")) {
       return new Intl.NumberFormat("de-DE", {
         style: "currency",
         currency: "EUR",
@@ -70,7 +70,7 @@ const Watchlist = ({ watchlistData }) => {
     }
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "USD",
+      currency: currency || "USD",
     }).format(price);
   };
 
@@ -142,11 +142,21 @@ const Watchlist = ({ watchlistData }) => {
                   <div className="flex items-center gap-4 shrink-0">
                     <div className="flex flex-col items-end gap-0.5">
                       <span className="text-[16px] font-mono font-bold text-slate-200">
-                        {formatPrice(stock.price, stock.ticker)}
+                        {formatPrice(stock.price, stock.ticker, stock.currency)}
                       </span>
                       {stock.priceSource === "mock" && (
                         <span className="text-[9px] font-mono text-amber-400/90 uppercase">
                           demo price
+                        </span>
+                      )}
+                      {stock.priceSource === "yahoo_cached" && (
+                        <span className="text-[9px] font-mono text-slate-500 uppercase">
+                          cached
+                        </span>
+                      )}
+                      {stock.priceSource === "unavailable" && (
+                        <span className="text-[9px] font-mono text-rose-400/90 uppercase">
+                          unavailable
                         </span>
                       )}
                     </div>

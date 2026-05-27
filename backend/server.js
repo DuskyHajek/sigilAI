@@ -55,15 +55,19 @@ const runFullSync = async () => {
     `Running in LIVE MODE. Querying external APIs...${IS_VERCEL ? " (Vercel lite sync)" : ""}`
   );
 
-  const [{ themePulse, classifiedArticles }, priceResult] = await Promise.all([
-    fetchNewsAndProcess(),
-    fetchPrices(),
-  ]);
+  const previousCache = readCache();
+
+  const [{ themePulse, classifiedArticles, rawArticlesByTheme }, priceResult] =
+    await Promise.all([
+      fetchNewsAndProcess(),
+      fetchPrices({ previousWatchlist: previousCache?.watchlist }),
+    ]);
   const { watchlist: watchlistWithPrices, livePriceCount, total } = priceResult;
 
   await enrichWatchlistWithContext(watchlistWithPrices, classifiedArticles, {
-    maxStocks: IS_VERCEL ? 12 : undefined,
-    aiConcurrency: IS_VERCEL ? 3 : 5,
+    maxStocks: IS_VERCEL ? 20 : undefined,
+    aiConcurrency: IS_VERCEL ? 4 : 5,
+    rawArticlesByTheme,
   });
   const weeklyBrief = await generateWeeklyBrief(
     classifiedArticles,

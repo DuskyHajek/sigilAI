@@ -16,9 +16,10 @@ dotenv.config({ path: path.join(__dirname, "../../.env") });
 
 const NEWS_API_KEY = process.env.NEWS_API_KEY?.trim();
 const IS_VERCEL = !!process.env.VERCEL;
-const MAX_PER_THEME = IS_VERCEL ? 2 : SETTINGS.max_articles_per_theme;
-const MAX_TO_CLASSIFY = IS_VERCEL ? 10 : 40;
-const CLASSIFY_CONCURRENCY = IS_VERCEL ? 3 : 5;
+const MAX_PER_THEME = IS_VERCEL ? 3 : SETTINGS.max_articles_per_theme;
+const MAX_TO_CLASSIFY = IS_VERCEL ? 21 : 40;
+const MIN_PER_THEME = 1;
+const CLASSIFY_CONCURRENCY = IS_VERCEL ? 4 : 5;
 
 export const fetchThemeNews = async (themeId) => {
   if (!NEWS_API_KEY) {
@@ -60,14 +61,14 @@ const getThemePulseScore = async (theme, articles) => {
   return callClaudeJSON(prompt, SETTINGS.theme_pulse_max_tokens);
 };
 
-const programmaticPulseFallback = (articles) => {
+const programmaticPulseFallback = (articles, reasonPrefix = "Calculated from") => {
   const count = articles.length;
-  const activity_score = Math.min(10, Math.max(1, count * 2));
+  const activity_score = Math.min(10, Math.max(2, count * 2));
 
   let sentimentSum = 0;
   articles.forEach((a) => {
-    if (a.sentiment === "bullish") sentimentSum += a.significance;
-    if (a.sentiment === "bearish") sentimentSum -= a.significance;
+    if (a.sentiment === "bullish") sentimentSum += a.significance || 2;
+    if (a.sentiment === "bearish") sentimentSum -= a.significance || 2;
   });
 
   const averageSentiment = count > 0 ? sentimentSum / count : 0;
@@ -76,18 +77,79 @@ const programmaticPulseFallback = (articles) => {
   return {
     activity_score,
     thesis_score,
-    reason: `Calculated from ${count} news items.`,
+    reason:
+      count > 0
+        ? `${reasonPrefix} ${count} news item${count === 1 ? "" : "s"}.`
+        : "No significant news updates monitored today.",
+  };
+};
+
+const selectArticlesForClassification = (articles, maxTotal) => {
+  const selected = [];
+  const selectedUrls = new Set();
+  const themeCounts = Object.fromEntries(THEMES.map((theme) => [theme.id, 0]));
+
+  const tryAdd = (article) => {
+    if (selected.length >= maxTotal || selectedUrls.has(article.url)) {
+      return false;
+    }
+    selected.push(article);
+    selectedUrls.add(article.url);
+    return true;
+  };
+
+  // Pass 1: guarantee at least MIN_PER_THEME per theme
+  for (const theme of THEMES) {
+    for (const article of articles) {
+      if (themeCounts[theme.id] >= MIN_PER_THEME) break;
+      if (!article.searchedThemes.includes(theme.id)) continue;
+      if (tryAdd(article)) {
+        themeCounts[theme.id]++;
+      }
+    }
+  }
+
+  // Pass 2: fill remaining slots fairly across themes
+  for (const article of articles) {
+    if (selected.length >= maxTotal) break;
+    if (selectedUrls.has(article.url)) continue;
+
+    let shouldInclude = false;
+    for (const themeId of article.searchedThemes) {
+      if (themeCounts[themeId] < MAX_PER_THEME) {
+        themeCounts[themeId]++;
+        shouldInclude = true;
+      }
+    }
+    if (shouldInclude) {
+      tryAdd(article);
+    }
+  }
+
+  return selected;
+};
+
+const rawPulseFromHeadlines = (articles) => {
+  const count = articles.length;
+  return {
+    activity_score: Math.min(10, Math.max(2, count * 2)),
+    thesis_score: 0,
+    reason: `${count} headline${count === 1 ? "" : "s"} tracked this week`,
   };
 };
 
 export const fetchNewsAndProcess = async () => {
   console.log("Starting NewsAPI fetching for all 7 themes...");
   const allArticlesMap = {};
+  const rawArticlesByTheme = Object.fromEntries(
+    THEMES.map((theme) => [theme.id, []])
+  );
 
   for (const theme of THEMES) {
     try {
       console.log(`Fetching news for theme: ${theme.id}`);
       const articles = await fetchThemeNews(theme.id);
+      rawArticlesByTheme[theme.id] = articles.slice(0, MAX_PER_THEME);
 
       articles.forEach((article) => {
         if (!allArticlesMap[article.url]) {
@@ -121,22 +183,10 @@ export const fetchNewsAndProcess = async () => {
     (a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)
   );
 
-  const selectedArticles = [];
-  const themeCounts = {};
-
-  for (const article of deDuplicatedArticles) {
-    let shouldInclude = false;
-    for (const t of article.searchedThemes) {
-      themeCounts[t] = themeCounts[t] || 0;
-      if (themeCounts[t] < MAX_PER_THEME) {
-        themeCounts[t]++;
-        shouldInclude = true;
-      }
-    }
-    if (shouldInclude && selectedArticles.length < MAX_TO_CLASSIFY) {
-      selectedArticles.push(article);
-    }
-  }
+  const selectedArticles = selectArticlesForClassification(
+    deDuplicatedArticles,
+    MAX_TO_CLASSIFY
+  );
 
   console.log(
     `Selected ${selectedArticles.length} articles for Claude intelligence analysis...`
@@ -199,6 +249,10 @@ export const fetchNewsAndProcess = async () => {
           themePulse[theme.id] = programmaticPulseFallback(themeArticles);
         }
       }
+    } else if ((rawArticlesByTheme[theme.id] || []).length > 0) {
+      themePulse[theme.id] = rawPulseFromHeadlines(
+        rawArticlesByTheme[theme.id]
+      );
     } else {
       themePulse[theme.id] = {
         activity_score: 1,
@@ -208,5 +262,5 @@ export const fetchNewsAndProcess = async () => {
     }
   }
 
-  return { themePulse, classifiedArticles };
+  return { themePulse, classifiedArticles, rawArticlesByTheme };
 };
