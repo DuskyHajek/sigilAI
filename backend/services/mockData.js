@@ -1,0 +1,149 @@
+import { WATCHLIST } from "../../config/thesis.js";
+
+export const getMockThemePulse = () => ({
+  datacenters: {
+    activity_score: 9,
+    thesis_score: 4,
+    reason: "Blackwell ramp validates physical bottleneck thesis",
+  },
+  application: {
+    activity_score: 6,
+    thesis_score: -1,
+    reason: "Thin-wrapper SaaS churn rising",
+  },
+  robotics: {
+    activity_score: 5,
+    thesis_score: 2,
+    reason: "Industrial cobot adoption accelerating",
+  },
+  warfare: {
+    activity_score: 8,
+    thesis_score: 5,
+    reason: "Attritable drone contracts expanding",
+  },
+  space: {
+    activity_score: 7,
+    thesis_score: 3,
+    reason: "Launch cadence and constellation buildout",
+  },
+  biotech: {
+    activity_score: 5,
+    thesis_score: 2,
+    reason: "AI diagnostics pipeline momentum",
+  },
+  adversarial: {
+    activity_score: 8,
+    thesis_score: 4,
+    reason: "Deepfake fraud driving security budgets",
+  },
+});
+
+const MOCK_CONTEXTS = {
+  NVDA:
+    "Blackwell shipping timelines confirmed on schedule, reinforcing physical GPU supply limits as the primary barrier to competitor entry.",
+  "000660.KS":
+    "SK Hynix secures exclusive HBM3e supply agreement for H2 2026, widening memory access bottlenecks for competing hyperscalers.",
+  MU: "Micron's Q3 results exceed capacity expectations, demonstrating that advanced DRAM density demand remains structurally undersupplied.",
+  AMAT:
+    "Applied Materials signals rising bookings for advanced EUV patterning, solidifying control over foundational lithography bottlenecks.",
+  FCX: "Freeport signals tight copper supply amid massive grid upgrades, illustrating the physical commodity limits of datacenter buildouts.",
+  "CSU.TO":
+    "Constellation acquires niche logistics ERPs with deep operational databases, showing how vertical data moats survive LLM disruption.",
+  PATH: "UiPath pivots to agentic process automation, illustrating workflow integration value over thin-wrapper SaaS.",
+  VEEV: "Veeva expands life-sciences cloud modules, leveraging regulatory lock-in as horizontal SaaS faces AI commoditization pressure.",
+  ISRG:
+    "da Vinci 5 procedure volumes beat guidance, validating regulated hardware moats over pure-software robotics plays.",
+  CGNX: "Cognex wins new machine-vision contracts in warehouse automation, confirming the component layer thesis over humanoid hype.",
+  KTOS: "Kratos secures $112M Air Force contract for target drones, validating attritable fleet economics in defense procurement.",
+  AVAV: "AeroVironment posts record backlog on European loitering-munition demand, proving tactical drone asymmetry at scale.",
+  "RHM.DE":
+    "Rheinmetall expands artillery shell capacity, showing European industrial manufacturing — not software — is the NATO ramp bottleneck.",
+  RKLB: "Rocket Lab executes successful Neutron hot-fire test, positioning as the key alternative launch provider to SpaceX.",
+  ASTS: "AST SpaceMobile advances direct-to-cell satellite tests, a high-beta bet on orbital broadband bypassing terrestrial towers.",
+  EXAS: "Cologuard adoption accelerates with AI-assisted pathology reads, strengthening diagnostics-over-drug-discovery positioning.",
+  RXRX:
+    "Recursion partners with Sanofi on lead optimization, compressing discovery timelines but highlighting high execution risk.",
+  CRWD:
+    "CrowdStrike posts 33% ARR growth driven by autonomous agent threat detection, validating AI-native defensive platforms.",
+  PANW: "Palo Alto introduces zero-trust AI agents for network boundaries, capturing share amid rising adversarial threat vectors.",
+  S: "SentinelOne gains enterprise wins on AI-powered endpoint detection, challenging incumbents on autonomous response speed.",
+};
+
+export const getMockWatchlist = () =>
+  WATCHLIST.map((item) => ({
+    ticker: item.ticker,
+    name: item.company,
+    company: item.company,
+    aliases: item.aliases,
+    theme: item.theme,
+    angle: item.angle,
+    priority: item.priority,
+    price: mockPrice(item.ticker),
+    change52w: mockChange(item.ticker),
+    context:
+      MOCK_CONTEXTS[item.ticker] ||
+      "No thesis-relevant developments in the last 7 days.",
+  }));
+
+const mockPrice = (ticker) => {
+  const prices = {
+    NVDA: 935.42,
+    "000660.KS": 185200,
+    MU: 118.25,
+    AMAT: 215.6,
+    FCX: 52.12,
+    "CSU.TO": 3750.4,
+    PATH: 12.45,
+    VEEV: 228.5,
+    ISRG: 395.8,
+    CGNX: 42.15,
+    KTOS: 22.85,
+    AVAV: 184.95,
+    "RHM.DE": 522.4,
+    RKLB: 5.65,
+    ASTS: 28.4,
+    EXAS: 68.2,
+    RXRX: 9.14,
+    CRWD: 345.18,
+    PANW: 312.75,
+    S: 24.6,
+  };
+  return prices[ticker] ?? 100;
+};
+
+const mockChange = (ticker) => {
+  const changes = {
+    NVDA: 14.2,
+    "000660.KS": 9.8,
+    MU: 12.5,
+    AMAT: 4.3,
+    FCX: 16.9,
+    "CSU.TO": 5.6,
+    PATH: -8.9,
+    VEEV: 2.1,
+    ISRG: 3.1,
+    CGNX: 6.4,
+    KTOS: 18.7,
+    AVAV: 22.1,
+    "RHM.DE": 25.4,
+    RKLB: -5.2,
+    ASTS: 11.3,
+    EXAS: 4.8,
+    RXRX: -14.7,
+    CRWD: -2.4,
+    PANW: 1.8,
+    S: 7.2,
+  };
+  return changes[ticker] ?? 0;
+};
+
+export const getMockWeeklyBrief = () =>
+  "Physical constraints dominate the Supernova thesis this week, led by Nvidia's Blackwell timeline validation and Freeport-McMoRan signaling acute structural copper deficits for power grid expansions. In warfare, record backlogs at AeroVironment and new drone contracts for Kratos demonstrate that the economic asymmetry of cheap attritable weapons is gaining rapid defense procurement traction. Meanwhile, the application layer continues to undergo valuation pressure, highlighting the risk of thin-wrapper enterprise software as competitors easily replicate user interfaces. Analysts should watch rising deepfake fraud waves, which are shifting defensive budgets toward zero-trust cybersecurity architectures.";
+
+export const buildMockDashboard = () => ({
+  isMock: true,
+  lastUpdated: new Date().toISOString(),
+  themePulse: getMockThemePulse(),
+  watchlist: getMockWatchlist(),
+  weeklyBrief: getMockWeeklyBrief(),
+});
