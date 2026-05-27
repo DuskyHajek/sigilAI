@@ -21,6 +21,7 @@ const MAX_TO_CLASSIFY = IS_VERCEL ? 21 : 40;
 const MIN_PER_THEME = 1;
 const CLASSIFY_CONCURRENCY = IS_VERCEL ? 4 : 5;
 const LOOKBACK_DAYS = 7;
+const FALLBACK_QUERIES_PER_THEME = IS_VERCEL ? 1 : 3;
 
 const quoteKeyword = (keyword) =>
   keyword.includes(" ") ? `"${keyword}"` : keyword;
@@ -144,8 +145,13 @@ export const fetchThemeNews = async (themeId) => {
     return articles;
   }
 
+  const fallbackQueries = fallbackQueriesByTheme[themeId].slice(
+    0,
+    FALLBACK_QUERIES_PER_THEME
+  );
+
   const fallbackResults = await mapWithConcurrency(
-    fallbackQueriesByTheme[themeId],
+    fallbackQueries,
     2,
     async (query) => {
       try {

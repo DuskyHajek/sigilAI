@@ -16,6 +16,7 @@ import {
   writeCache,
   getCacheAgeHours,
   getCacheBackend,
+  isCacheStale,
 } from "./services/cache.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -98,6 +99,9 @@ const isCacheShapeValid = (cache) =>
   cache?.watchlist?.length === WATCHLIST.length &&
   Object.keys(cache?.themePulse || {}).length === 7;
 
+const isUsableLiveCache = (cache) =>
+  cache && isCacheShapeValid(cache) && cache.isMock === false;
+
 const getDashboardFromCache = async () => {
   const cache = await readCache();
   if (cache && isCacheShapeValid(cache)) return cache;
@@ -144,10 +148,36 @@ api.get("/dashboard", async (req, res) => {
 
 api.post("/sync", async (req, res) => {
   try {
+    const cached = await readCache();
+    const force = req.query.force === "true";
+
+    if (!force && isUsableLiveCache(cached) && !isCacheStale(cached)) {
+      return res.json({
+        ...cached,
+        syncOk: true,
+        syncSkipped: true,
+        cacheOnly: true,
+        message: `Using cached dashboard data because it is still within the ${SETTINGS.cache_ttl_hours}h cache window.`,
+      });
+    }
+
     const data = await runFullSync();
     res.json({ ...data, syncOk: true });
   } catch (error) {
     console.error("Sync failed:", error);
+
+    const cached = await readCache();
+    if (isUsableLiveCache(cached)) {
+      return res.json({
+        ...cached,
+        syncOk: false,
+        cacheOnly: true,
+        syncError: error.message,
+        hint:
+          "Live sync failed, so the latest cached live dashboard data is being shown. This often happens when NewsAPI daily quota is exhausted.",
+      });
+    }
+
     res.status(500).json({
       error: error.message,
       syncOk: false,
