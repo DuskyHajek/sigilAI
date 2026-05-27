@@ -225,6 +225,29 @@ export const THEMES = [
   },
 ];
 
+// Fixed identity mapping used by ThemePulse cards.
+// These are intentionally independent of live data sentiment scores.
+export const THEME_COLORS = {
+  datacenters: "teal",
+  application: "red",
+  robotics: "amber",
+  warfare: "coral",
+  space: "blue",
+  biotech: "mint",
+  adversarial: "purple",
+};
+
+// Tabler icon names (webfont: `ti` + `ti-<name>`).
+export const THEME_ICONS = {
+  datacenters: "ti-server-2",
+  application: "ti-layers-subtract",
+  robotics: "ti-robot",
+  warfare: "ti-target-arrow",
+  space: "ti-satellite",
+  biotech: "ti-dna",
+  adversarial: "ti-shield-lock",
+};
+
 export const WATCHLIST = [
   {
     ticker: "NVDA",

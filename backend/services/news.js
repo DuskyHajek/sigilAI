@@ -8,6 +8,7 @@ import {
   buildThemePulsePrompt,
 } from "./prompts.js";
 import { callClaudeJSON } from "./llm.js";
+import { mapWithConcurrency } from "./concurrency.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,8 +16,9 @@ dotenv.config({ path: path.join(__dirname, "../../.env") });
 
 const NEWS_API_KEY = process.env.NEWS_API_KEY?.trim();
 const IS_VERCEL = !!process.env.VERCEL;
-const MAX_PER_THEME = IS_VERCEL ? 1 : SETTINGS.max_articles_per_theme;
-const MAX_TO_CLASSIFY = IS_VERCEL ? 5 : 40;
+const MAX_PER_THEME = IS_VERCEL ? 2 : SETTINGS.max_articles_per_theme;
+const MAX_TO_CLASSIFY = IS_VERCEL ? 10 : 40;
+const CLASSIFY_CONCURRENCY = IS_VERCEL ? 3 : 5;
 
 export const fetchThemeNews = async (themeId) => {
   if (!NEWS_API_KEY) {
@@ -140,31 +142,37 @@ export const fetchNewsAndProcess = async () => {
     `Selected ${selectedArticles.length} articles for Claude intelligence analysis...`
   );
 
-  const classifiedArticles = [];
-  for (const article of selectedArticles) {
-    try {
-      console.log(`Classifying: "${article.title.substring(0, 50)}..."`);
-      const classification = await classifyArticle(article);
+  const classifiedArticles = (
+    await mapWithConcurrency(
+      selectedArticles,
+      CLASSIFY_CONCURRENCY,
+      async (article) => {
+        try {
+          console.log(`Classifying: "${article.title.substring(0, 50)}..."`);
+          const classification = await classifyArticle(article);
 
-      if (
-        classification.relevant &&
-        classification.significance >= SETTINGS.significance_threshold
-      ) {
-        classifiedArticles.push({
-          ...article,
-          themes: classification.themes,
-          sentiment: classification.sentiment,
-          significance: classification.significance,
-          one_line: classification.one_line,
-        });
+          if (
+            classification.relevant &&
+            classification.significance >= SETTINGS.significance_threshold
+          ) {
+            return {
+              ...article,
+              themes: classification.themes,
+              sentiment: classification.sentiment,
+              significance: classification.significance,
+              one_line: classification.one_line,
+            };
+          }
+        } catch (err) {
+          console.error(
+            `Failed to classify article "${article.title}":`,
+            err.message
+          );
+        }
+        return null;
       }
-    } catch (err) {
-      console.error(
-        `Failed to classify article "${article.title}":`,
-        err.message
-      );
-    }
-  }
+    )
+  ).filter(Boolean);
 
   console.log(
     `Successfully classified ${classifiedArticles.length} thesis-relevant articles (sig >= ${SETTINGS.significance_threshold}).`

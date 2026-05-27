@@ -55,11 +55,15 @@ const runFullSync = async () => {
     `Running in LIVE MODE. Querying external APIs...${IS_VERCEL ? " (Vercel lite sync)" : ""}`
   );
 
-  const { themePulse, classifiedArticles } = await fetchNewsAndProcess();
-  const { watchlist: watchlistWithPrices, livePriceCount, total } =
-    await fetchPrices();
+  const [{ themePulse, classifiedArticles }, priceResult] = await Promise.all([
+    fetchNewsAndProcess(),
+    fetchPrices(),
+  ]);
+  const { watchlist: watchlistWithPrices, livePriceCount, total } = priceResult;
+
   await enrichWatchlistWithContext(watchlistWithPrices, classifiedArticles, {
-    maxStocks: IS_VERCEL ? 6 : undefined,
+    maxStocks: IS_VERCEL ? 12 : undefined,
+    aiConcurrency: IS_VERCEL ? 3 : 5,
   });
   const weeklyBrief = await generateWeeklyBrief(
     classifiedArticles,
@@ -114,6 +118,8 @@ api.get("/health", (req, res) => {
     cacheStale: cache
       ? getCacheAgeHours(cache) >= SETTINGS.cache_ttl_hours
       : true,
+    pricesLive: cache?.pricesLive ?? null,
+    livePriceCount: cache?.livePriceCount ?? null,
   });
 });
 

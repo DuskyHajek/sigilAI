@@ -1,0 +1,264 @@
+@import url("https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css");
+
+/* Color system — exact hex values (dark mode) */
+:root {
+  /* Datacenters — Teal */
+  --theme-teal-bg: #071a13;
+  --theme-teal-border: #0d3322;
+  --theme-teal-icon: #0d2a1e;
+  --theme-teal-accent: #2ec98a;
+  --theme-teal-name: #7eded8;
+  --theme-teal-bar: #1d9e75;
+
+  /* Application Layer — Red */
+  --theme-red-bg: #180808;
+  --theme-red-border: #330f0f;
+  --theme-red-icon: #2a0d0d;
+  --theme-red-accent: #f06060;
+  --theme-red-name: #ffaaaa;
+  --theme-red-bar: #e24b4a;
+
+  /* Robotics — Amber */
+  --theme-amber-bg: #1a1100;
+  --theme-amber-border: #352200;
+  --theme-amber-icon: #2a1c00;
+  --theme-amber-accent: #f5b84a;
+  --theme-amber-name: #ffd080;
+  --theme-amber-bar: #ef9f27;
+
+  /* Warfare — Coral */
+  --theme-coral-bg: #1a0e09;
+  --theme-coral-border: #351a10;
+  --theme-coral-icon: #2a1409;
+  --theme-coral-accent: #f07050;
+  --theme-coral-name: #ffb898;
+  --theme-coral-bar: #d85a30;
+
+  /* Space — Blue */
+  --theme-blue-bg: #06101a;
+  --theme-blue-border: #0d2035;
+  --theme-blue-icon: #0a1e33;
+  --theme-blue-accent: #5aaef5;
+  --theme-blue-name: #90c8ff;
+  --theme-blue-bar: #378add;
+
+  /* Biotech — Mint */
+  --theme-mint-bg: #061510;
+  --theme-mint-border: #0c2a1e;
+  --theme-mint-icon: #0a2018;
+  --theme-mint-accent: #5DCAA5;
+  --theme-mint-name: #a0e8cc;
+  --theme-mint-bar: #5DCAA5;
+
+  /* Adversarial AI — Purple */
+  --theme-purple-bg: #0f0d1a;
+  --theme-purple-border: #1e1835;
+  --theme-purple-icon: #1c1633;
+  --theme-purple-accent: #a89af5;
+  --theme-purple-name: #c8bcff;
+  --theme-purple-bar: #7F77DD;
+}
+
+/* Base card */
+.theme-card {
+  border-radius: 10px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.theme-card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.theme-card__icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 15px;
+}
+
+.theme-card__meta {
+  flex: 1;
+}
+
+.theme-card__name {
+  font-size: 12px;
+  font-weight: 500;
+  margin: 0 0 2px;
+  line-height: 1.2;
+}
+
+.theme-card__desc {
+  font-size: 10px;
+  color: #5a6a60;
+  margin: 0;
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.theme-card__score {
+  font-size: 13px;
+  font-weight: 500;
+  font-family: "IBM Plex Mono", monospace;
+  white-space: nowrap;
+  padding: 2px 0;
+}
+
+.theme-card__footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.theme-card__bar-label {
+  font-size: 9px;
+  color: #4a5a50;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.theme-card__bar {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.theme-card__bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+/* ─── Teal (Datacenters) ─── */
+.theme-card--teal {
+  background: #071a13;
+  border-color: #0d3322;
+}
+.theme-card--teal .theme-card__icon {
+  background: #0d2a1e;
+  color: #2ec98a;
+}
+.theme-card--teal .theme-card__name {
+  color: #7eded8;
+}
+.theme-card--teal .theme-card__bar-fill {
+  background: #1d9e75;
+}
+
+/* ─── Red (Application Layer) ─── */
+.theme-card--red {
+  background: #180808;
+  border-color: #330f0f;
+}
+.theme-card--red .theme-card__icon {
+  background: #2a0d0d;
+  color: #f06060;
+}
+.theme-card--red .theme-card__name {
+  color: #ffaaaa;
+}
+.theme-card--red .theme-card__bar-fill {
+  background: #e24b4a;
+}
+
+/* ─── Amber (Robotics) ─── */
+.theme-card--amber {
+  background: #1a1100;
+  border-color: #352200;
+}
+.theme-card--amber .theme-card__icon {
+  background: #2a1c00;
+  color: #f5b84a;
+}
+.theme-card--amber .theme-card__name {
+  color: #ffd080;
+}
+.theme-card--amber .theme-card__bar-fill {
+  background: #ef9f27;
+}
+
+/* ─── Coral (Warfare) ─── */
+.theme-card--coral {
+  background: #1a0e09;
+  border-color: #351a10;
+}
+.theme-card--coral .theme-card__icon {
+  background: #2a1409;
+  color: #f07050;
+}
+.theme-card--coral .theme-card__name {
+  color: #ffb898;
+}
+.theme-card--coral .theme-card__bar-fill {
+  background: #d85a30;
+}
+
+/* ─── Blue (Space) ─── */
+.theme-card--blue {
+  background: #06101a;
+  border-color: #0d2035;
+}
+.theme-card--blue .theme-card__icon {
+  background: #0a1e33;
+  color: #5aaef5;
+}
+.theme-card--blue .theme-card__name {
+  color: #90c8ff;
+}
+.theme-card--blue .theme-card__bar-fill {
+  background: #378add;
+}
+
+/* ─── Mint (Biotech) ─── */
+.theme-card--mint {
+  background: #061510;
+  border-color: #0c2a1e;
+}
+.theme-card--mint .theme-card__icon {
+  background: #0a2018;
+  color: #5dcaa5;
+}
+.theme-card--mint .theme-card__name {
+  color: #a0e8cc;
+}
+.theme-card--mint .theme-card__bar-fill {
+  background: #5dcaa5;
+}
+
+/* ─── Purple (Adversarial AI) ─── */
+.theme-card--purple {
+  background: #0f0d1a;
+  border-color: #1e1835;
+}
+.theme-card--purple .theme-card__icon {
+  background: #1c1633;
+  color: #a89af5;
+}
+.theme-card--purple .theme-card__name {
+  color: #c8bcff;
+}
+.theme-card--purple .theme-card__bar-fill {
+  background: #7f77dd;
+}
+
+.theme-pulse-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+

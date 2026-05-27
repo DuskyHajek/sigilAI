@@ -1,38 +1,11 @@
-import React, { useState } from "react";
-import {
-  Database,
-  AppWindow,
-  Bot,
-  ShieldAlert,
-  Rocket,
-  Dna,
-  Fingerprint,
-  Server,
-  Layers,
-  Cpu,
-  Globe,
-  Activity,
-  Lock,
-  TrendingUp,
-  TrendingDown,
-  Minus,
-} from "lucide-react";
-import { THEMES } from "@config/thesis.js";
+import { useState } from "react";
+import { THEMES, THEME_COLORS, THEME_ICONS } from "@config/thesis.js";
+import "../styles/theme-cards.css";
 
-const ICON_MAP = {
-  server: Server,
-  layers: Layers,
-  cpu: Cpu,
-  shield: ShieldAlert,
-  globe: Globe,
-  activity: Activity,
-  lock: Lock,
-  database: Database,
-  appwindow: AppWindow,
-  bot: Bot,
-  rocket: Rocket,
-  dna: Dna,
-  fingerprint: Fingerprint,
+const getScoreDisplay = (score) => {
+  if (score >= 2) return { arrow: "↑", color: "#2ec98a" }; // bullish
+  if (score <= -2) return { arrow: "↓", color: "#f06060" }; // bearish
+  return { arrow: "→", color: "#f5b84a" }; // neutral
 };
 
 const ThemePulse = ({ themeData }) => {
@@ -54,113 +27,54 @@ const ThemePulse = ({ themeData }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
+      <div className="theme-pulse-grid">
         {THEMES.map((theme) => {
           const data = themeData[theme.id] || {
             activity_score: 1,
             thesis_score: 0,
             reason: "No updates detected.",
           };
-          const IconComponent = ICON_MAP[theme.icon] || Database;
+
+          const color = THEME_COLORS[theme.id] ?? "teal";
+          const icon = THEME_ICONS[theme.id] ?? "ti-server-2";
+
+          const score = getScoreDisplay(data.thesis_score);
           const isExpanded = expandedTheme === theme.id;
-
-          let sentimentColorClass = "text-slate-400";
-          let sentimentBgClass = "bg-slate-900/40 border-slate-800";
-          let glowColor = "rgba(100, 116, 139, 0.15)";
-          let SentimentIcon = Minus;
-
-          if (data.thesis_score >= 2) {
-            sentimentColorClass = "text-bullish";
-            sentimentBgClass = "bg-bullish/5 border-bullish/30";
-            glowColor = `rgba(16, 185, 129, ${0.05 + data.activity_score / 20})`;
-            SentimentIcon = TrendingUp;
-          } else if (data.thesis_score <= -2) {
-            sentimentColorClass = "text-bearish";
-            sentimentBgClass = "bg-bearish/5 border-bearish/30";
-            glowColor = `rgba(244, 63, 94, ${0.05 + data.activity_score / 20})`;
-            SentimentIcon = TrendingDown;
-          }
-
-          const pulseStyle = {
-            "--pulse-color": glowColor,
-            borderColor:
-              data.thesis_score >= 2
-                ? `rgba(16, 185, 129, ${0.1 + data.activity_score / 15})`
-                : data.thesis_score <= -2
-                  ? `rgba(244, 63, 94, ${0.1 + data.activity_score / 15})`
-                  : theme.color_hex + "33",
-            boxShadow: `0 0 ${8 + data.activity_score * 2}px ${glowColor}`,
-          };
+          const activityPct = Math.max(
+            0,
+            Math.min(100, (data.activity_score / 10) * 100)
+          );
 
           return (
             <div
               key={theme.id}
-              style={pulseStyle}
-              onClick={() =>
-                setExpandedTheme(isExpanded ? null : theme.id)
-              }
-              className={`p-4 rounded-xl border transition-all duration-300 cursor-pointer ${
-                isExpanded
-                  ? "bg-slate-900/60"
-                  : "bg-slate-950/40 hover:bg-slate-900/30"
-              } flex flex-col`}
+              onClick={() => setExpandedTheme(isExpanded ? null : theme.id)}
+              className={`theme-card theme-card--${color} cursor-pointer`}
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`p-2 rounded-lg bg-slate-900 border border-slate-800 ${sentimentColorClass}`}
-                    style={{ color: theme.color_hex }}
-                  >
-                    <IconComponent size={18} />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-slate-200">
-                      {theme.display_name}
-                    </h3>
-                    <p className="text-[11px] text-slate-400">
-                      {theme.short_description.substring(0, 50)}...
-                    </p>
-                  </div>
+              <div className="theme-card__header">
+                <div className="theme-card__icon">
+                  <i className={`ti ${icon}`} aria-hidden="true" />
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="flex flex-col items-end">
-                    <span className="text-[10px] text-slate-400 uppercase tracking-wider">
-                      Activity
-                    </span>
-                    <div className="flex items-center gap-1 mt-0.5">
-                      <div className="h-1.5 w-12 bg-slate-800 rounded-full overflow-hidden">
-                        <div
-                          className="h-full rounded-full"
-                          style={{
-                            width: `${data.activity_score * 10}%`,
-                            backgroundColor: theme.color_hex,
-                          }}
-                        ></div>
-                      </div>
-                      <span
-                        className="text-xs font-mono font-bold ml-1"
-                        style={{ color: theme.color_hex }}
-                      >
-                        {data.activity_score}
-                      </span>
+                <div className="theme-card__meta">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="theme-card__name">{theme.display_name}</p>
+                    <div
+                      className="theme-card__score"
+                      style={{ color: score.color }}
+                    >
+                      {score.arrow}{" "}
+                      {data.thesis_score > 0 ? `+${data.thesis_score}` : data.thesis_score}
                     </div>
                   </div>
-
-                  <div
-                    className={`px-2 py-1 rounded border flex items-center gap-1 ${sentimentBgClass}`}
-                  >
-                    <SentimentIcon
-                      size={12}
-                      className={sentimentColorClass}
-                    />
-                    <span
-                      className={`text-xs font-mono font-bold ${sentimentColorClass}`}
-                    >
-                      {data.thesis_score > 0
-                        ? `+${data.thesis_score}`
-                        : data.thesis_score}
-                    </span>
+                  <div className="flex items-center gap-2 mt-1.5">
+                    <span className="theme-card__bar-label">ACTIVITY</span>
+                    <div className="theme-card__bar">
+                      <div
+                        className="theme-card__bar-fill"
+                        style={{ width: `${activityPct}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -168,19 +82,14 @@ const ThemePulse = ({ themeData }) => {
               <div
                 className={`overflow-hidden transition-all duration-300 ${
                   isExpanded
-                    ? "max-h-40 mt-3 pt-3 border-t border-slate-900"
+                    ? "max-h-40 pt-2 border-t border-slate-900/60"
                     : "max-h-0"
                 }`}
               >
-                <div className="text-xs space-y-2">
-                  <p className="text-slate-400 font-mono text-[11px] leading-relaxed">
-                    <span className="text-sigil-gold font-bold">ANALYSIS: </span>
-                    {data.reason}
-                  </p>
-                  <p className="text-[10px] text-slate-500 font-sans italic">
-                    {theme.short_description}
-                  </p>
-                </div>
+                <p className="text-slate-400 font-mono text-[11px] leading-relaxed">
+                  <span className="text-sigil-gold font-bold">ANALYSIS: </span>
+                  {data.reason}
+                </p>
               </div>
             </div>
           );
