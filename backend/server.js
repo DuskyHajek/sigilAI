@@ -76,7 +76,11 @@ const getDashboardFromCache = () => {
   return mockData;
 };
 
-app.get("/api/health", (req, res) => {
+// Vercel Services may strip routePrefix before forwarding.
+// We register routes on a router and mount it at both "/" and "/api".
+const api = express.Router();
+
+api.get("/health", (req, res) => {
   const cache = readCache();
   const live = isLiveConfigured();
 
@@ -85,11 +89,13 @@ app.get("/api/health", (req, res) => {
     mode: live ? "LIVE" : "MOCK",
     lastSync: cache?.lastUpdated || null,
     cacheAge: getCacheAgeHours(cache),
-    cacheStale: cache ? getCacheAgeHours(cache) >= SETTINGS.cache_ttl_hours : true,
+    cacheStale: cache
+      ? getCacheAgeHours(cache) >= SETTINGS.cache_ttl_hours
+      : true,
   });
 });
 
-app.get("/api/dashboard", (req, res) => {
+api.get("/dashboard", (req, res) => {
   try {
     res.json(getDashboardFromCache());
   } catch (error) {
@@ -97,7 +103,7 @@ app.get("/api/dashboard", (req, res) => {
   }
 });
 
-app.post("/api/sync", async (req, res) => {
+api.post("/sync", async (req, res) => {
   try {
     const data = await runFullSync();
     res.json(data);
@@ -111,7 +117,8 @@ app.post("/api/sync", async (req, res) => {
   }
 });
 
-app.post("/api/refresh", async (req, res) => {
+// Back-compat alias (older frontend)
+api.post("/refresh", async (req, res) => {
   try {
     const data = await runFullSync();
     res.json({ success: true, data });
@@ -119,6 +126,9 @@ app.post("/api/refresh", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+app.use("/api", api);
+app.use("/", api);
 
 const distPath = path.join(__dirname, "../frontend/dist");
 if (fs.existsSync(distPath)) {
