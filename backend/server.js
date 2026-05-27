@@ -15,7 +15,7 @@ import {
   readCache,
   writeCache,
   getCacheAgeHours,
-  isCacheValid,
+  getCacheBackend,
 } from "./services/cache.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -48,7 +48,7 @@ const runFullSync = async () => {
       "Running in MOCK MODE (No API keys provided). Loading simulated Supernova data..."
     );
     const mockData = buildMockDashboard();
-    writeCache(mockData);
+    await writeCache(mockData);
     return mockData;
   }
 
@@ -56,7 +56,7 @@ const runFullSync = async () => {
     `Running in LIVE MODE. Querying external APIs...${IS_VERCEL ? " (Vercel lite sync)" : ""}`
   );
 
-  const previousCache = readCache();
+  const previousCache = await readCache();
 
   const [{ themePulse, classifiedArticles, rawArticlesByTheme }, priceResult] =
     await Promise.all([
@@ -90,7 +90,7 @@ const runFullSync = async () => {
     researchQueue,
   };
 
-  writeCache(liveData);
+  await writeCache(liveData);
   return liveData;
 };
 
@@ -98,11 +98,11 @@ const isCacheShapeValid = (cache) =>
   cache?.watchlist?.length === WATCHLIST.length &&
   Object.keys(cache?.themePulse || {}).length === 7;
 
-const getDashboardFromCache = () => {
-  const cache = readCache();
+const getDashboardFromCache = async () => {
+  const cache = await readCache();
   if (cache && isCacheShapeValid(cache)) return cache;
   const mockData = buildMockDashboard();
-  writeCache(mockData);
+  await writeCache(mockData);
   return mockData;
 };
 
@@ -110,8 +110,8 @@ const getDashboardFromCache = () => {
 // We register routes on a router and mount it at both "/" and "/api".
 const api = express.Router();
 
-api.get("/health", (req, res) => {
-  const cache = readCache();
+api.get("/health", async (req, res) => {
+  const cache = await readCache();
   const live = isLiveConfigured();
   const keys = getApiKeys();
 
@@ -123,6 +123,7 @@ api.get("/health", (req, res) => {
       news: !!keys.news,
     },
     vercel: IS_VERCEL,
+    cacheBackend: getCacheBackend(),
     lastSync: cache?.lastUpdated || null,
     cacheAge: getCacheAgeHours(cache),
     cacheStale: cache
@@ -133,9 +134,9 @@ api.get("/health", (req, res) => {
   });
 });
 
-api.get("/dashboard", (req, res) => {
+api.get("/dashboard", async (req, res) => {
   try {
-    res.json(getDashboardFromCache());
+    res.json(await getDashboardFromCache());
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -179,10 +180,10 @@ if (fs.existsSync(distPath)) {
   });
 }
 
-app.listen(PORT, () => {
-  const cache = readCache();
+app.listen(PORT, async () => {
+  const cache = await readCache();
   if (!isLiveConfigured() && (!cache || !isCacheShapeValid(cache))) {
-    writeCache(buildMockDashboard());
+    await writeCache(buildMockDashboard());
   }
 
   console.log(`==================================================`);
