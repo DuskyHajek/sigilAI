@@ -3,9 +3,9 @@ import { THEMES, THEME_COLORS, THEME_ICONS } from "@config/thesis.js";
 import "../styles/theme-cards.css";
 
 const getScoreDisplay = (score) => {
-  if (score >= 2) return { arrow: "↑", color: "#2ec98a" }; // bullish
-  if (score <= -2) return { arrow: "↓", color: "#f06060" }; // bearish
-  return { arrow: "→", color: "#f5b84a" }; // neutral
+  if (score >= 2) return { arrow: "↑", color: "#2ec98a", label: "bullish" };
+  if (score <= -2) return { arrow: "↓", color: "#f06060", label: "bearish" };
+  return { arrow: "→", color: "#f5b84a", label: "neutral" };
 };
 
 const ThemePulse = ({ themeData }) => {
@@ -14,20 +14,30 @@ const ThemePulse = ({ themeData }) => {
   if (!themeData) return null;
 
   return (
-    <div className="glass-panel border-gold-glow p-6 rounded-2xl">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-xl font-semibold text-slate-100 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-sigil-gold inline-block animate-pulse"></span>
-            Theme Pulse Heatmap
-          </h2>
-          <p className="text-xs text-slate-400 mt-1">
-            Live thesis evaluation of news signals across the 7 Sigil sectors
-          </p>
+    <div className="glass-panel border-gold-glow p-6 rounded-2xl h-full flex flex-col">
+      <div className="mb-4">
+        <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-sigil-gold/80 mb-1">
+          Panel 02
+        </p>
+        <h2 className="text-xl font-semibold text-slate-100 flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-sigil-gold inline-block animate-pulse" />
+          Theme Pulse
+        </h2>
+        <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+          Live read on all 7 Supernova themes. Click a card for the analyst note.
+        </p>
+
+        <div className="mt-3 flex flex-wrap gap-2 text-[10px] font-mono">
+          <span className="px-2 py-1 rounded-md bg-slate-900/80 border border-slate-800 text-slate-400">
+            <span className="text-slate-300">ACTIVITY</span> bar · news volume (1–10)
+          </span>
+          <span className="px-2 py-1 rounded-md bg-slate-900/80 border border-slate-800 text-slate-400">
+            <span className="text-emerald-400">± THESIS</span> · good or bad for the thesis (−5 to +5)
+          </span>
         </div>
       </div>
 
-      <div className="theme-pulse-grid">
+      <div className="theme-pulse-grid flex-1">
         {THEMES.map((theme) => {
           const data = themeData[theme.id] || {
             activity_score: 1,
@@ -60,11 +70,19 @@ const ThemePulse = ({ themeData }) => {
                   <div className="flex items-center justify-between gap-2">
                     <p className="theme-card__name">{theme.display_name}</p>
                     <div
-                      className="theme-card__score"
+                      className="theme-card__score flex flex-col items-end"
                       style={{ color: score.color }}
+                      title={`Thesis signal: ${score.label}`}
                     >
-                      {score.arrow}{" "}
-                      {data.thesis_score > 0 ? `+${data.thesis_score}` : data.thesis_score}
+                      <span className="text-[9px] font-mono opacity-70 uppercase tracking-wide">
+                        Thesis
+                      </span>
+                      <span>
+                        {score.arrow}{" "}
+                        {data.thesis_score > 0
+                          ? `+${data.thesis_score}`
+                          : data.thesis_score}
+                      </span>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 mt-1.5">
@@ -87,7 +105,7 @@ const ThemePulse = ({ themeData }) => {
                 }`}
               >
                 <p className="text-slate-400 font-mono text-[11px] leading-relaxed">
-                  <span className="text-sigil-gold font-bold">ANALYSIS: </span>
+                  <span className="text-sigil-gold font-bold">SIGNAL · </span>
                   {data.reason}
                 </p>
               </div>

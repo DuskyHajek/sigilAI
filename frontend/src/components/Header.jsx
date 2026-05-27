@@ -45,7 +45,7 @@ const Header = ({ onSync, syncState, lastUpdated }) => {
       case "error":
         return "Sync failed";
       default:
-        return "[↻ Sync]";
+        return "Sync live data";
     }
   };
 
@@ -89,7 +89,7 @@ const Header = ({ onSync, syncState, lastUpdated }) => {
             </div>
 
             <p className="text-sm text-slate-400 font-sans mt-1">
-              Investment intelligence for the Supernova thesis
+              Thesis-aware intelligence · 7 themes · 20 tickers
             </p>
           </div>
         </div>

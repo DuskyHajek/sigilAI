@@ -115,3 +115,27 @@ body {
     background-position: -200% 0;
   }
 }
+
+.hero-guide {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(13, 17, 28, 0.95) 0%,
+    rgba(7, 10, 19, 0.98) 100%
+  );
+  box-shadow: 0 0 40px rgba(229, 193, 88, 0.04);
+}
+
+.hero-guide__accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(229, 193, 88, 0.5),
+    transparent
+  );
+}

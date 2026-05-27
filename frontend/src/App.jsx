@@ -101,6 +101,14 @@ function App() {
                 <Watchlist watchlistData={data?.watchlist} />
               </div>
             </div>
+
+            <footer className="text-center pb-4 pt-2">
+              <p className="text-[11px] font-mono text-slate-600">
+                Application demo · Supernova thesis encoded in{" "}
+                <span className="text-slate-500">config/thesis.js</span> · AI
+                prompts in <span className="text-slate-500">services/prompts.js</span>
+              </p>
+            </footer>
           </>
         )}
       </main>

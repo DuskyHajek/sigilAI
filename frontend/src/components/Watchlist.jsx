@@ -20,7 +20,7 @@ const FILTER_SHORT_NAMES = {
   warfare: "Warfare",
   space: "Space",
   biotech: "Biotech",
-  adversarial_ai: "Adv. AI",
+  adversarial: "Adv. AI",
 };
 
 const themeBadgeStyle = (themeId) => {
@@ -77,14 +77,19 @@ const Watchlist = ({ watchlistData }) => {
   return (
     <div className="glass-panel border-gold-glow p-6 rounded-2xl flex flex-col h-full">
       <div className="mb-5">
+        <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-sigil-gold/80 mb-1">
+          Panel 03
+        </p>
         <div className="flex items-center gap-2 mb-1">
           <Sparkles size={18} className="text-sigil-gold shrink-0" />
           <h2 className="text-xl font-semibold text-slate-100">
-            Watchlist Intelligence
+            Watchlist
           </h2>
         </div>
-        <p className="text-xs text-slate-400 mb-4">
-          {watchlistData.length} Supernova tickers with prices & thesis-specific insight overlays
+        <p className="text-xs text-slate-400 mb-4 leading-relaxed">
+          {watchlistData.length} thesis-curated names · live price ·{" "}
+          <span className="text-sigil-gold/90">SIGIL AI</span> = one line on why
+          this week matters for that stock&apos;s angle
         </p>
 
         <div className="flex items-center gap-1.5 flex-wrap">
