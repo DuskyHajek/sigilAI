@@ -75,10 +75,40 @@ const dedupeArticles = (articles) => {
 };
 
 const fallbackQueriesByTheme = {
+  datacenters: [
+    '"AI datacenter" OR "hyperscaler capex" OR "Nvidia Blackwell"',
+    '"HBM" OR "high bandwidth memory" OR "advanced packaging"',
+    '"AI power" OR "data center power" OR "copper" OR "grid capacity"',
+  ],
   application: [
     '"AI agents" OR "AI agent" OR "agentic AI"',
     '"AI coding" OR "GitHub Copilot" OR "Cursor AI" OR "Claude Code" OR "OpenAI Codex"',
     '"enterprise AI" OR "AI automation" OR "vertical SaaS" OR "SaaS AI"',
+  ],
+  robotics: [
+    '"industrial automation" OR "warehouse robotics" OR "factory automation"',
+    '"agricultural robot" OR "mining automation" OR "autonomous mobile robot"',
+    '"robotics" OR "machine vision" OR "humanoid robot"',
+  ],
+  warfare: [
+    '"Ukraine drone" OR "drone warfare" OR "loitering munition"',
+    '"NATO defense spending" OR "European defense" OR "defense procurement"',
+    '"counter-drone" OR "electronic warfare" OR "autonomous drone"',
+  ],
+  space: [
+    '"SpaceX launch" OR "Rocket Lab" OR "reusable rocket"',
+    '"satellite constellation" OR "Starlink" OR "LEO satellite"',
+    '"space defense" OR "orbital infrastructure" OR "launch contract"',
+  ],
+  biotech: [
+    '"AI drug discovery" OR "AI diagnostics" OR "precision medicine"',
+    '"clinical trial AI" OR "protein folding" OR "AI genomics"',
+    '"longevity research" OR "GLP-1" OR "biotech FDA"',
+  ],
+  adversarial: [
+    '"AI cybersecurity" OR "AI phishing" OR "LLM security"',
+    '"deepfake fraud" OR "synthetic identity" OR "AI fraud"',
+    '"autonomous hacking" OR "zero day AI" OR "agent security"',
   ],
 };
 
@@ -93,24 +123,52 @@ export const fetchThemeNews = async (themeId) => {
   }
 
   const primaryQuery = theme.news_keywords.map(quoteKeyword).join(" OR ");
-  const articles = await fetchNewsQuery(
-    primaryQuery,
-    SETTINGS.max_articles_per_theme
-  );
+  let articles = [];
+  let primaryError = null;
+
+  try {
+    articles = await fetchNewsQuery(
+      primaryQuery,
+      SETTINGS.max_articles_per_theme
+    );
+  } catch (error) {
+    primaryError = error;
+    console.warn(
+      `Primary NewsAPI query failed for ${themeId}; trying fallback queries:`,
+      error.message
+    );
+  }
 
   if (articles.length >= MAX_PER_THEME || !fallbackQueriesByTheme[themeId]) {
+    if (primaryError && articles.length === 0) throw primaryError;
     return articles;
   }
 
   const fallbackResults = await mapWithConcurrency(
     fallbackQueriesByTheme[themeId],
     2,
-    (query) => fetchNewsQuery(query, 5)
+    async (query) => {
+      try {
+        return await fetchNewsQuery(query, 5);
+      } catch (error) {
+        console.warn(
+          `Fallback NewsAPI query failed for ${themeId}:`,
+          error.message
+        );
+        return [];
+      }
+    }
   );
 
-  return dedupeArticles([...articles, ...fallbackResults.flat()]).sort(
+  const combined = dedupeArticles([...articles, ...fallbackResults.flat()]).sort(
     (a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)
   );
+
+  if (combined.length === 0 && primaryError) {
+    throw primaryError;
+  }
+
+  return combined;
 };
 
 const classifyArticle = async (article) => {
@@ -215,6 +273,7 @@ const rawPulseFromHeadlines = (articles) => {
 export const fetchNewsAndProcess = async () => {
   console.log("Starting NewsAPI fetching for all 7 themes...");
   const allArticlesMap = {};
+  const themeFetchErrors = [];
   const rawArticlesByTheme = Object.fromEntries(
     THEMES.map((theme) => [theme.id, []])
   );
@@ -241,6 +300,7 @@ export const fetchNewsAndProcess = async () => {
       });
     } catch (err) {
       console.error(`Error fetching news for theme ${theme.id}:`, err.message);
+      themeFetchErrors.push(`${theme.id}: ${err.message}`);
     }
   }
 
@@ -250,7 +310,11 @@ export const fetchNewsAndProcess = async () => {
   );
 
   if (deDuplicatedArticles.length === 0) {
-    throw new Error("No articles retrieved from NewsAPI.");
+    const detail =
+      themeFetchErrors.length > 0
+        ? ` Theme fetch errors: ${themeFetchErrors.slice(0, 3).join(" | ")}`
+        : "";
+    throw new Error(`No articles retrieved from NewsAPI.${detail}`);
   }
 
   deDuplicatedArticles.sort(
