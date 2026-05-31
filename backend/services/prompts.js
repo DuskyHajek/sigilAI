@@ -198,13 +198,14 @@ Return ONLY valid JSON:
 }
 
 Rules:
-- Produce 3 to 7 items only
+- Produce 3 to 7 items total — fewer is better if there is nothing essential
+- MAXIMUM 2 items from any single theme — force spread across different themes
+- NO duplicate or near-duplicate actions — if two signals point to the same research question, pick the stronger one and drop the other
 - Each "action" is one short imperative sentence: what to read, verify, compare, or google next
 - "keywords" = 2-5 concrete search terms (companies, products, policy terms, metrics)
 - "theme" = one theme id when relevant, else null. Valid ids: datacenters, application, robotics, warfare, space, biotech, adversarial
 - "tickers" = relevant watchlist tickers when applicable, else []
-- Prioritize themes with higher activity or clearer news signals
+- Prioritize the highest-signal items across the widest theme spread — do not add a second item from any theme until all clearly active themes have at least one
 - Include at least one item that challenges or tests the thesis, not only bullish follow-ups
 - Be specific. Bad: "Monitor AI trends". Good: "Compare AI agent enterprise adoption headlines with PATH and CSU.TO workflow moats"
-- Do not repeat the same action twice
 `;

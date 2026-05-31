@@ -302,8 +302,8 @@ export default function MasteryGuide() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <p className="text-[10px] font-mono text-sigil-gold uppercase tracking-widest mb-1">Sigil Supernova</p>
-            <h2 className="text-2xl font-bold text-white mb-1">Research Mastery Guide</h2>
-            <p className="text-sm text-slate-400">Complete study curriculum for the 7 investment themes</p>
+            <h2 className="text-2xl font-bold text-white mb-1">Learning Hub</h2>
+            <p className="text-sm text-slate-400">Books, concepts, glossary & mental models for all 7 themes</p>
           </div>
           <div className="flex gap-6 shrink-0">
             {[

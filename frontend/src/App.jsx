@@ -7,6 +7,7 @@ import WeeklyBrief from "./components/WeeklyBrief";
 import Header from "./components/Header";
 import WhatIsThis from "./components/WhatIsThis";
 import ResearchQueue from "./components/ResearchQueue";
+import SyncProgress from "./components/SyncProgress";
 import MasteryGuide from "./pages/MasteryGuide";
 import { fetchDashboard, fetchHealth, triggerSync } from "./api";
 
@@ -112,6 +113,8 @@ function App() {
                   <span>{syncNotice}</span>
                 </div>
               )}
+
+              {syncState === "syncing" && <SyncProgress />}
 
               {loading ? (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">

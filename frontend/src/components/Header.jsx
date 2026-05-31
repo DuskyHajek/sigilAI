@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { RefreshCw, Cpu, Check, X } from "lucide-react";
+import { RefreshCw, Cpu, Check, X, BookOpen } from "lucide-react";
 import { fetchHealth } from "../api";
 
 const Header = ({ onSync, syncState, lastUpdated }) => {
@@ -132,15 +132,17 @@ const Header = ({ onSync, syncState, lastUpdated }) => {
           </NavLink>
           <NavLink
             to="/mastery-guide"
+            title="Books, key concepts, glossary & mental models for all 7 investment themes"
             className={({ isActive }) =>
-              `px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+              `flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
                 isActive
                   ? "bg-sigil-gold/15 text-sigil-gold border border-sigil-gold/30"
                   : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/60"
               }`
             }
           >
-            RESEARCH GUIDE
+            <BookOpen size={12} />
+            LEARNING HUB
           </NavLink>
         </nav>
       </div>

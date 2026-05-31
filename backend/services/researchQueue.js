@@ -84,16 +84,21 @@ export const buildResearchSignals = (
 export const buildResearchQueueProgrammatic = (signals) => {
   const items = [];
   const seen = new Set();
+  const themeCounts = {};
 
   const add = (item) => {
     const normalized = normalizeItem(item);
     if (!normalized.action) return;
-    const key = normalized.action.toLowerCase();
+    const key = normalized.action.toLowerCase().slice(0, 60);
     if (seen.has(key) || items.length >= 7) return;
+    const themeKey = normalized.theme || "__none__";
+    if (themeKey !== "__none__" && (themeCounts[themeKey] || 0) >= 2) return;
     seen.add(key);
+    themeCounts[themeKey] = (themeCounts[themeKey] || 0) + 1;
     items.push(normalized);
   };
 
+  // One pass per theme (sorted by signal strength) so we get breadth first
   const themeSignals = signals
     .filter((signal) => signal.type === "theme")
     .sort(
@@ -102,7 +107,7 @@ export const buildResearchQueueProgrammatic = (signals) => {
         Math.abs(b.thesis) - Math.abs(a.thesis)
     );
 
-  for (const signal of themeSignals.slice(0, 4)) {
+  for (const signal of themeSignals) {
     const tickerHint = signal.tickers?.length
       ? ` Watchlist: ${signal.tickers.join(", ")}.`
       : "";
@@ -119,7 +124,7 @@ export const buildResearchQueueProgrammatic = (signals) => {
 
   for (const signal of signals
     .filter((item) => item.type === "article")
-    .slice(0, 3)) {
+    .slice(0, 5)) {
     add({
       action: `Read and verify: ${signal.one_line || signal.title}`,
       keywords: [
@@ -133,7 +138,7 @@ export const buildResearchQueueProgrammatic = (signals) => {
 
   for (const signal of signals
     .filter((item) => item.type === "watchlist")
-    .slice(0, 4)) {
+    .slice(0, 6)) {
     add({
       action: `Check ${signal.ticker} — ${signal.angle}`,
       keywords: [signal.ticker, signal.theme],
@@ -188,9 +193,22 @@ export const generateResearchQueue = async (
     );
 
     if (Array.isArray(result.items) && result.items.length >= 3) {
-      return {
-        items: result.items.slice(0, 7).map(normalizeItem).filter((i) => i.action),
-      };
+      const deduped = [];
+      const themeCounts = {};
+      const seen = new Set();
+      for (const raw of result.items) {
+        const item = normalizeItem(raw);
+        if (!item.action) continue;
+        const key = item.action.toLowerCase().slice(0, 60);
+        if (seen.has(key)) continue;
+        const themeKey = item.theme || "__none__";
+        if (themeKey !== "__none__" && (themeCounts[themeKey] || 0) >= 2) continue;
+        seen.add(key);
+        themeCounts[themeKey] = (themeCounts[themeKey] || 0) + 1;
+        deduped.push(item);
+        if (deduped.length >= 7) break;
+      }
+      if (deduped.length >= 3) return { items: deduped };
     }
   } catch (err) {
     console.error("Research queue generation failed:", err.message);
