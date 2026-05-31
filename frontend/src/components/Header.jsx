@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { RefreshCw, Cpu, Check, X, BookOpen } from "lucide-react";
 import { fetchHealth } from "../api";
+import SyncProgress from "./SyncProgress";
 
 const Header = ({ onSync, syncState, lastUpdated }) => {
   const [health, setHealth] = useState(null);
@@ -114,6 +115,8 @@ const Header = ({ onSync, syncState, lastUpdated }) => {
             <span>{syncLabel()}</span>
           </button>
         </div>
+
+        {syncState === "syncing" && <SyncProgress />}
 
         {/* Bottom row: nav links */}
         <nav className="flex items-center gap-1 border-t border-slate-800/50 pt-2">
