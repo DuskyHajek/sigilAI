@@ -450,15 +450,7 @@ export default function MasteryGuide() {
       {/* Content panel */}
       <div className="glass-panel rounded-2xl p-6">
         {mode === "practice" && practiceTab === "quiz" && (
-          <>
-            <SectionHeader
-              eyebrow="Knowledge Check"
-              title={`Quiz — ${QUIZ_QUESTIONS.length} Questions`}
-              description="Multiple-choice questions across all 7 themes. Instant feedback after each answer."
-              icon={HelpCircle}
-            />
-            <QuizSection onReviewFlashcards={goToFlashcards} />
-          </>
+          <QuizSection onReviewFlashcards={goToFlashcards} />
         )}
 
         {mode === "practice" && practiceTab === "flashcards" && (

@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Clock, Layers, Target, Zap } from "lucide-react";
+import { Clock, HelpCircle, Layers, Target, Zap } from "lucide-react";
 import {
   QUIZ_QUESTIONS,
   QUIZ_THEME_FILTERS,
   shuffle,
 } from "../../data/academyData";
 import ThemeBadge from "./ThemeBadge";
-import { TipBox } from "./LearningUI";
+import { SectionHeader, TipBox } from "./LearningUI";
 import { actionBtn, filterBtn } from "./learningStyles";
 
 const QUIZ_MODES = [
@@ -26,8 +26,38 @@ const QUIZ_MODES = [
   },
 ];
 
+function quizHeader({ phase, quizMode, themeLabel, questionCount, index, score }) {
+  if (phase === "setup") {
+    return {
+      title: "Quiz",
+      description:
+        "Choose quick (10 questions), full (30), or drill one theme. Instant feedback after each answer.",
+    };
+  }
+  if (phase === "results") {
+    return {
+      title: "Quiz complete",
+      description: `You answered ${score} of ${questionCount} correctly. Review misses below or pick another mode.`,
+    };
+  }
+  const modeTitle =
+    quizMode === "quick"
+      ? "Quick quiz · 10 questions"
+      : quizMode === "full"
+        ? "Full quiz · 30 questions"
+        : themeLabel
+          ? `${themeLabel} · ${questionCount} questions`
+          : `${questionCount}-question quiz`;
+  return {
+    title: modeTitle,
+    description: `Question ${index + 1} of ${questionCount}. Choose an answer to see the explanation.`,
+  };
+}
+
 export default function QuizSection({ onReviewFlashcards }) {
   const [phase, setPhase] = useState("setup");
+  const [quizMode, setQuizMode] = useState(null);
+  const [themeLabel, setThemeLabel] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -43,6 +73,12 @@ export default function QuizSection({ onReviewFlashcards }) {
     pool = shuffle(pool);
     const count =
       mode === "quick" ? 10 : mode === "theme" ? Math.min(pool.length, 8) : 30;
+    setQuizMode(mode);
+    setThemeLabel(
+      mode === "theme"
+        ? QUIZ_THEME_FILTERS.find((t) => t.slug === theme)?.label ?? theme
+        : null
+    );
     setQuestions(pool.slice(0, count));
     setIndex(0);
     setScore(0);
@@ -74,12 +110,33 @@ export default function QuizSection({ onReviewFlashcards }) {
 
   const reset = () => {
     setPhase("setup");
+    setQuizMode(null);
+    setThemeLabel(null);
     setQuestions([]);
   };
+
+  const header = quizHeader({
+    phase,
+    quizMode,
+    themeLabel,
+    questionCount: questions.length,
+    index,
+    score,
+  });
+
+  const quizHeaderBlock = (
+    <SectionHeader
+      eyebrow="Knowledge Check"
+      title={header.title}
+      description={header.description}
+      icon={HelpCircle}
+    />
+  );
 
   if (phase === "setup") {
     return (
       <div>
+        {quizHeaderBlock}
         <TipBox icon={Target}>
           Choose a mode below. Each answer shows an explanation immediately — use wrong
           answers as a map to topics worth revisiting in Reference or Flashcards.
@@ -142,6 +199,7 @@ export default function QuizSection({ onReviewFlashcards }) {
 
     return (
       <div>
+        {quizHeaderBlock}
         <div className="glass-panel rounded-xl p-8 text-center mb-5 border border-slate-800/60">
           <p className={`text-5xl font-bold mb-1 ${ringColor}`}>{pct}%</p>
           <p className="text-lg font-semibold text-white mb-1">
@@ -186,6 +244,7 @@ export default function QuizSection({ onReviewFlashcards }) {
 
   return (
     <div>
+      {quizHeaderBlock}
       <div className="flex justify-between items-center mb-3">
         <span className="text-xs font-mono text-slate-500 flex items-center gap-1.5">
           <Clock size={12} />
