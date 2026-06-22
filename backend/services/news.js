@@ -17,7 +17,8 @@ dotenv.config({ path: path.join(__dirname, "../../.env") });
 const NEWS_API_KEY = process.env.NEWS_API_KEY?.trim();
 const IS_VERCEL = !!process.env.VERCEL;
 const MAX_PER_THEME = IS_VERCEL ? 3 : SETTINGS.max_articles_per_theme;
-const MAX_TO_CLASSIFY = IS_VERCEL ? 21 : 40;
+const MAX_TO_CLASSIFY = IS_VERCEL ? 14 : 40;
+const THEME_FETCH_CONCURRENCY = IS_VERCEL ? 3 : 5;
 const MIN_PER_THEME = 1;
 const CLASSIFY_CONCURRENCY = IS_VERCEL ? 4 : 5;
 const LOOKBACK_DAYS = 7;
@@ -284,30 +285,39 @@ export const fetchNewsAndProcess = async () => {
     THEMES.map((theme) => [theme.id, []])
   );
 
-  for (const theme of THEMES) {
-    try {
-      console.log(`Fetching news for theme: ${theme.id}`);
-      const articles = await fetchThemeNews(theme.id);
-      rawArticlesByTheme[theme.id] = articles.slice(0, MAX_PER_THEME);
-
-      articles.forEach((article) => {
-        if (!allArticlesMap[article.url]) {
-          allArticlesMap[article.url] = {
-            title: article.title,
-            description: article.description || "",
-            url: article.url,
-            publishedAt: article.publishedAt,
-            source: article.source,
-            searchedThemes: [theme.id],
-          };
-        } else {
-          allArticlesMap[article.url].searchedThemes.push(theme.id);
-        }
-      });
-    } catch (err) {
-      console.error(`Error fetching news for theme ${theme.id}:`, err.message);
-      themeFetchErrors.push(`${theme.id}: ${err.message}`);
+  const themeResults = await mapWithConcurrency(
+    THEMES,
+    THEME_FETCH_CONCURRENCY,
+    async (theme) => {
+      try {
+        console.log(`Fetching news for theme: ${theme.id}`);
+        const articles = await fetchThemeNews(theme.id);
+        return { themeId: theme.id, articles, error: null };
+      } catch (err) {
+        console.error(`Error fetching news for theme ${theme.id}:`, err.message);
+        return { themeId: theme.id, articles: [], error: err.message };
+      }
     }
+  );
+
+  for (const { themeId, articles, error } of themeResults) {
+    if (error) themeFetchErrors.push(`${themeId}: ${error}`);
+    rawArticlesByTheme[themeId] = articles.slice(0, MAX_PER_THEME);
+
+    articles.forEach((article) => {
+      if (!allArticlesMap[article.url]) {
+        allArticlesMap[article.url] = {
+          title: article.title,
+          description: article.description || "",
+          url: article.url,
+          publishedAt: article.publishedAt,
+          source: article.source,
+          searchedThemes: [themeId],
+        };
+      } else {
+        allArticlesMap[article.url].searchedThemes.push(themeId);
+      }
+    });
   }
 
   const deDuplicatedArticles = Object.values(allArticlesMap);

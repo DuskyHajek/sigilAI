@@ -3,6 +3,8 @@ import { THEMES } from "../../config/thesis.js";
 import { buildResearchQueuePrompt } from "./prompts.js";
 import { callClaudeJSON } from "./llm.js";
 
+const IS_VERCEL = !!process.env.VERCEL;
+
 const EMPTY_CONTEXT = "No thesis-relevant developments in the last 7 days.";
 
 const normalizeItem = (item) => ({
@@ -183,6 +185,10 @@ export const generateResearchQueue = async (
         },
       ],
     };
+  }
+
+  if (IS_VERCEL) {
+    return fallback;
   }
 
   try {

@@ -16,7 +16,7 @@ export const fetchDashboard = async () => {
 
 export const triggerSync = async () => {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 55000);
+  const timeout = setTimeout(() => controller.abort(), 58000);
 
   try {
     const response = await fetch("/api/sync", {
@@ -34,7 +34,7 @@ export const triggerSync = async () => {
   } catch (err) {
     if (err.name === "AbortError") {
       throw new Error(
-        "Sync timed out after 55s. On Vercel, retry once or run sync locally.",
+        "Sync timed out after 58s. Vercel functions cap at 60s — the pipeline may still be too heavy. Retry once, or run sync locally with the same API keys.",
         { cause: err }
       );
     }

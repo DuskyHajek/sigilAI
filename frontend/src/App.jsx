@@ -50,9 +50,12 @@ function App() {
       setData(dashboardData);
 
       if (dashboardData.cacheOnly && dashboardData.syncOk === false) {
+        const detail = dashboardData.syncError
+          ? ` (${dashboardData.syncError})`
+          : "";
         setSyncNotice(
-          dashboardData.hint ||
-            "Live sync is temporarily unavailable, likely because the NewsAPI daily limit has been reached. Showing the latest cached dashboard data."
+          (dashboardData.hint ||
+            "Live sync failed. Showing the latest cached dashboard data.") + detail
         );
         setSyncState("error");
         setTimeout(() => setSyncState("idle"), 3000);
@@ -70,7 +73,10 @@ function App() {
       setTimeout(() => setSyncState("idle"), 2000);
     } catch (err) {
       console.error("Error syncing data:", err);
-      setError("Signal synchronization failed. Please retry.");
+      setError(
+        err.message ||
+          "Signal synchronization failed. Please retry."
+      );
       setSyncState("error");
       setTimeout(() => setSyncState("idle"), 3000);
     }

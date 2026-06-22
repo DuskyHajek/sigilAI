@@ -66,13 +66,19 @@ const runFullSync = async () => {
     ]);
   const { watchlist: watchlistWithPrices, livePriceCount, total } = priceResult;
 
+  const weeklyBriefPromise = generateWeeklyBrief(
+    classifiedArticles,
+    themePulse
+  );
+
   await enrichWatchlistWithContext(watchlistWithPrices, classifiedArticles, {
-    maxStocks: IS_VERCEL ? 20 : undefined,
-    aiConcurrency: IS_VERCEL ? 4 : 5,
+    maxStocks: IS_VERCEL ? 10 : undefined,
+    aiConcurrency: 5,
     rawArticlesByTheme,
   });
+
   const [weeklyBrief, researchQueue] = await Promise.all([
-    generateWeeklyBrief(classifiedArticles, themePulse),
+    weeklyBriefPromise,
     generateResearchQueue(
       classifiedArticles,
       themePulse,
@@ -173,8 +179,9 @@ api.post("/sync", async (req, res) => {
         syncOk: false,
         cacheOnly: true,
         syncError: error.message,
-        hint:
-          "Live sync failed, so the latest cached live dashboard data is being shown. This often happens when NewsAPI daily quota is exhausted.",
+        hint: IS_VERCEL
+          ? "Live sync failed on Vercel (often a 60s function timeout). Showing cached data — retry once, or run sync locally and redeploy."
+          : "Live sync failed, so the latest cached live dashboard data is being shown. Check server logs for syncError details.",
       });
     }
 
