@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { FlipHorizontal2, Shuffle } from "lucide-react";
 import { GLOSSARY } from "../../data/masteryGuideData";
 import {
   GLOSSARY_THEME_TO_SLUG,
@@ -6,12 +7,8 @@ import {
   THEME_LABELS,
   shuffle,
 } from "../../data/academyData";
-const filterBtn = (active) =>
-  `text-xs font-mono font-bold px-3 py-1 rounded-lg transition-all ${
-    active
-      ? "bg-sigil-gold/15 text-sigil-gold border border-sigil-gold/30"
-      : "text-slate-500 hover:text-slate-300 bg-slate-800/40 border border-slate-700/40"
-  }`;
+import { TipBox } from "./LearningUI";
+import { actionBtn, filterBtn } from "./learningStyles";
 
 const ALL_FLASHCARDS = GLOSSARY.map(({ term, definition, theme }) => ({
   term,
@@ -61,9 +58,11 @@ export default function FlashcardSection() {
 
   return (
     <div>
-      <p className="text-sm text-slate-400 mb-4">
-        Click the card to flip and reveal the definition.
-      </p>
+      <TipBox icon={FlipHorizontal2}>
+        Tap the card to flip. Try to recall the definition before revealing it — then use
+        Prev/Next to move through the deck or filter by theme to focus your review.
+      </TipBox>
+
       <div className="flex flex-wrap gap-2 mb-5">
         <button type="button" onClick={() => setTheme("all")} className={filterBtn(themeFilter === "all")}>
           All
@@ -80,56 +79,52 @@ export default function FlashcardSection() {
         ))}
       </div>
 
-      <div className="flashcard-perspective mb-4">
+      <div className="flashcard-perspective mb-2">
         <button
           type="button"
-          className={`flashcard-inner w-full h-52 ${flipped ? "flipped" : ""}`}
+          className={`flashcard-inner w-full h-56 ${flipped ? "flipped" : ""}`}
           onClick={() => setFlipped((f) => !f)}
           aria-label={flipped ? "Hide definition" : "Reveal definition"}
         >
-          <div className="flashcard-face flashcard-front glass-panel rounded-xl flex flex-col items-center justify-center p-6 text-center">
-            <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-3">
+          <div className="flashcard-face flashcard-front glass-panel rounded-xl flex flex-col items-center justify-center p-6 text-center border border-sigil-gold/10">
+            <p className="text-[10px] font-mono text-sigil-gold/80 uppercase tracking-widest mb-3">
               {THEME_LABELS[card.theme]}
             </p>
-            <p className="text-xl font-bold text-white">{card.term}</p>
-            <p className="text-xs text-slate-500 mt-4">Click to reveal definition</p>
+            <p className="text-xl font-bold text-white max-w-md">{card.term}</p>
+            <p className="text-xs text-slate-500 mt-5 flex items-center gap-1.5">
+              <FlipHorizontal2 size={12} />
+              Tap to reveal
+            </p>
           </div>
-          <div className="flashcard-face flashcard-back glass-panel rounded-xl flex flex-col items-center justify-center p-6 text-center">
-            <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-3">
+          <div className="flashcard-face flashcard-back glass-panel rounded-xl flex flex-col items-center justify-center p-6 text-center border border-emerald-500/15">
+            <p className="text-[10px] font-mono text-emerald-400/80 uppercase tracking-widest mb-3">
               Definition
             </p>
-            <p className="text-sm text-slate-300 leading-relaxed">{card.def}</p>
+            <p className="text-sm text-slate-300 leading-relaxed max-w-lg overflow-y-auto max-h-40">
+              {card.def}
+            </p>
           </div>
         </button>
       </div>
 
-      <div className="flex items-center justify-center gap-4 mb-4">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="text-xs font-mono font-bold px-4 py-2 rounded-lg text-slate-400 bg-slate-800/40 border border-slate-700/40 hover:text-slate-200"
-        >
+      <p className="text-center text-[10px] font-mono text-slate-600 mb-4">
+        Card {index + 1} of {filteredDeck.length}
+      </p>
+
+      <div className="flex items-center justify-center gap-3 mb-4">
+        <button type="button" onClick={() => navigate(-1)} className={actionBtn.secondary}>
           ← Prev
         </button>
-        <span className="text-xs font-mono text-slate-500">
-          {index + 1} / {filteredDeck.length}
-        </span>
-        <button
-          type="button"
-          onClick={() => navigate(1)}
-          className="text-xs font-mono font-bold px-4 py-2 rounded-lg text-slate-400 bg-slate-800/40 border border-slate-700/40 hover:text-slate-200"
-        >
-          Next →
-        </button>
-      </div>
-
-      <div className="flex justify-center">
         <button
           type="button"
           onClick={shuffleDeck}
-          className="text-xs font-mono font-bold px-4 py-2 rounded-lg text-slate-400 bg-slate-800/40 border border-slate-700/40 hover:text-slate-200"
+          className={`${actionBtn.secondary} flex items-center gap-1.5`}
         >
-          Shuffle deck
+          <Shuffle size={12} />
+          Shuffle
+        </button>
+        <button type="button" onClick={() => navigate(1)} className={actionBtn.secondary}>
+          Next →
         </button>
       </div>
     </div>

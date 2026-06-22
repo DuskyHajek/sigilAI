@@ -1,15 +1,28 @@
 import { useState, useMemo } from "react";
-import { BookOpen, ChevronDown, ChevronRight, Search } from "lucide-react";
+import {
+  BookOpen,
+  Brain,
+  ChevronDown,
+  ChevronRight,
+  ClipboardList,
+  GraduationCap,
+  HelpCircle,
+  Layers,
+  Library,
+  Search,
+  Sparkles,
+} from "lucide-react";
 import { THEMES, NAV_TABS, READING_LIST, GLOSSARY } from "../data/masteryGuideData";
 import { QUIZ_QUESTIONS, SCENARIOS } from "../data/academyData";
 import QuizSection from "../components/learning/QuizSection";
 import FlashcardSection from "../components/learning/FlashcardSection";
 import ScenarioSection from "../components/learning/ScenarioSection";
+import { ModeCard, SectionHeader, TipBox } from "../components/learning/LearningUI";
 
 const PRACTICE_TABS = [
-  { id: "quiz", label: "Quiz" },
-  { id: "flashcards", label: "Flashcards" },
-  { id: "scenarios", label: "Scenarios" },
+  { id: "quiz", label: "Quiz", icon: HelpCircle },
+  { id: "flashcards", label: "Flashcards", icon: Layers },
+  { id: "scenarios", label: "Scenarios", icon: Sparkles },
 ];
 
 const tabBtn = (active) =>
@@ -36,7 +49,7 @@ function LevelBadge({ level }) {
 
 // ─── Collapsible sub-section ─────────────────────────────────────────────────
 
-function SubSection({ title, count, children, defaultOpen = false }) {
+function SubSection({ title, count, hint, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="border-t border-slate-800/60">
@@ -44,15 +57,22 @@ function SubSection({ title, count, children, defaultOpen = false }) {
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between py-3 text-left group"
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           {open
-            ? <ChevronDown size={14} className="text-sigil-gold" />
-            : <ChevronRight size={14} className="text-slate-500 group-hover:text-slate-300" />
+            ? <ChevronDown size={14} className="text-sigil-gold shrink-0" />
+            : <ChevronRight size={14} className="text-slate-500 group-hover:text-slate-300 shrink-0" />
           }
-          <span className={`text-xs font-mono font-bold uppercase tracking-widest ${open ? "text-sigil-gold" : "text-slate-400 group-hover:text-slate-200"}`}>
-            {title}
-          </span>
-          <span className="text-[10px] font-mono text-slate-600">{count}</span>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <span className={`text-xs font-mono font-bold uppercase tracking-widest ${open ? "text-sigil-gold" : "text-slate-400 group-hover:text-slate-200"}`}>
+                {title}
+              </span>
+              <span className="text-[10px] font-mono text-slate-600">{count}</span>
+            </div>
+            {hint && !open && (
+              <p className="text-[10px] text-slate-600 mt-0.5 truncate">{hint}</p>
+            )}
+          </div>
         </div>
       </button>
       {open && <div className="pb-4">{children}</div>}
@@ -66,7 +86,7 @@ function ThemeSection({ data }) {
   return (
     <div className="space-y-0">
       {/* Concepts */}
-      <SubSection title="Key Concepts" count={data.concepts.length} defaultOpen>
+      <SubSection title="Key Concepts" count={data.concepts.length} hint="Core vocabulary for this theme" defaultOpen>
         <div className="space-y-2">
           {data.concepts.map((c, i) => (
             <div key={i} className="glass-panel rounded-xl p-4">
@@ -78,7 +98,7 @@ function ThemeSection({ data }) {
       </SubSection>
 
       {/* Books */}
-      <SubSection title="Essential Books" count={data.books.length}>
+      <SubSection title="Essential Books" count={data.books.length} hint="Curated reading with level badges">
         <div className="space-y-3">
           {data.books.map((b, i) => (
             <div key={i} className="flex gap-3 glass-panel rounded-xl p-4">
@@ -97,7 +117,7 @@ function ThemeSection({ data }) {
       </SubSection>
 
       {/* Courses */}
-      <SubSection title="Courses & Resources" count={data.courses.length}>
+      <SubSection title="Courses & Resources" count={data.courses.length} hint="Free and paid learning paths">
         <div className="space-y-3">
           {data.courses.map((c, i) => (
             <div key={i} className="glass-panel rounded-xl p-4">
@@ -112,7 +132,7 @@ function ThemeSection({ data }) {
       </SubSection>
 
       {/* Voices */}
-      <SubSection title="Voices to Follow" count={data.voices.length}>
+      <SubSection title="Voices to Follow" count={data.voices.length} hint="Newsletters, podcasts & analysts">
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
@@ -136,7 +156,7 @@ function ThemeSection({ data }) {
       </SubSection>
 
       {/* Mental Models */}
-      <SubSection title="Mental Models" count={data.mentalModels.length}>
+      <SubSection title="Mental Models" count={data.mentalModels.length} hint="Frameworks Sigil applies when investing">
         <div className="space-y-3">
           {data.mentalModels.map((m, i) => (
             <div key={i} className="border-l-2 border-sigil-gold/40 pl-4 py-1">
@@ -167,6 +187,11 @@ function ReadingListSection() {
 
   return (
     <div className="space-y-6">
+      <TipBox icon={BookOpen}>
+        Filter by reading level or theme. Work through all &ldquo;Start Here&rdquo; books across themes
+        before moving to Intermediate — the list is ordered by priority, not alphabetically.
+      </TipBox>
+
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-3">
         {[
@@ -258,6 +283,11 @@ function GlossarySection() {
 
   return (
     <div className="space-y-5">
+      <TipBox icon={Search}>
+        Search while reading research or evaluating pitches. These same terms appear as flashcards
+        in Practice mode — use both together to build retention.
+      </TipBox>
+
       {/* Search */}
       <div className="relative">
         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -340,7 +370,7 @@ export default function MasteryGuide() {
   return (
     <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
       {/* Hero */}
-      <div className="hero-guide rounded-2xl p-6 mb-6 relative overflow-hidden">
+      <div className="hero-guide rounded-2xl p-6 mb-6 relative overflow-hidden border border-sigil-gold/10">
         <div className="hero-guide__accent" />
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -351,10 +381,17 @@ export default function MasteryGuide() {
                 ? "Books, concepts, glossary & mental models for all 7 themes"
                 : "Quizzes, flashcards & scenario drills to test your mastery"}
             </p>
+            <p className="text-[11px] font-mono text-slate-600 mt-2 flex items-center gap-1.5">
+              <GraduationCap size={12} className="text-sigil-gold/60" />
+              Reference to learn · Practice to retain
+            </p>
           </div>
-          <div className="flex gap-6 shrink-0">
+          <div className="flex gap-3 shrink-0">
             {heroStats.map(s => (
-              <div key={s.label} className="text-center">
+              <div
+                key={s.label}
+                className="text-center px-4 py-2 rounded-xl bg-slate-900/50 border border-slate-800/60 min-w-[72px]"
+              >
                 <p className="text-xl font-bold text-sigil-gold">{s.value}</p>
                 <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">{s.label}</p>
               </div>
@@ -364,20 +401,21 @@ export default function MasteryGuide() {
       </div>
 
       {/* Mode toggle */}
-      <div className="flex gap-1.5 mb-4">
-        {[
-          { id: "reference", label: "Reference" },
-          { id: "practice", label: "Practice" },
-        ].map(m => (
-          <button
-            key={m.id}
-            type="button"
-            onClick={() => switchMode(m.id)}
-            className={tabBtn(mode === m.id)}
-          >
-            {m.label}
-          </button>
-        ))}
+      <div className="flex flex-col sm:flex-row gap-2 mb-5">
+        <ModeCard
+          active={mode === "reference"}
+          icon={Library}
+          label="Reference"
+          description="Read curriculum — concepts, books, glossary & mental models"
+          onClick={() => switchMode("reference")}
+        />
+        <ModeCard
+          active={mode === "practice"}
+          icon={Brain}
+          label="Practice"
+          description="Active study — quiz yourself, flip flashcards, walk through scenarios"
+          onClick={() => switchMode("practice")}
+        />
       </div>
 
       {/* Tab navigation */}
@@ -393,82 +431,96 @@ export default function MasteryGuide() {
                 {tab.label}
               </button>
             ))
-          : PRACTICE_TABS.map(tab => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setPracticeTab(tab.id)}
-                className={tabBtn(practiceTab === tab.id)}
-              >
-                {tab.label}
-              </button>
-            ))}
+          : PRACTICE_TABS.map(tab => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setPracticeTab(tab.id)}
+                  className={`${tabBtn(practiceTab === tab.id)} flex items-center gap-1.5`}
+                >
+                  <Icon size={12} />
+                  {tab.label}
+                </button>
+              );
+            })}
       </div>
 
       {/* Content panel */}
       <div className="glass-panel rounded-2xl p-6">
         {mode === "practice" && practiceTab === "quiz" && (
           <>
-            <div className="mb-6">
-              <p className="text-[10px] font-mono text-sigil-gold uppercase tracking-widest mb-1">Knowledge Check</p>
-              <h3 className="text-lg font-bold text-white mb-1">Quiz — {QUIZ_QUESTIONS.length} Questions</h3>
-              <p className="text-sm text-slate-400">Test your mastery across all 7 themes with instant feedback.</p>
-            </div>
+            <SectionHeader
+              eyebrow="Knowledge Check"
+              title={`Quiz — ${QUIZ_QUESTIONS.length} Questions`}
+              description="Multiple-choice questions across all 7 themes. Instant feedback after each answer."
+              icon={HelpCircle}
+            />
             <QuizSection onReviewFlashcards={goToFlashcards} />
           </>
         )}
 
         {mode === "practice" && practiceTab === "flashcards" && (
           <>
-            <div className="mb-6">
-              <p className="text-[10px] font-mono text-sigil-gold uppercase tracking-widest mb-1">Spaced Review</p>
-              <h3 className="text-lg font-bold text-white mb-1">Flashcards — {GLOSSARY.length} Terms</h3>
-              <p className="text-sm text-slate-400">Flip through key terms from the glossary, filtered by theme.</p>
-            </div>
+            <SectionHeader
+              eyebrow="Spaced Review"
+              title={`Flashcards — ${GLOSSARY.length} Terms`}
+              description="Same glossary terms, flipped into active recall. Filter by theme to focus your session."
+              icon={Layers}
+            />
             <FlashcardSection />
           </>
         )}
 
         {mode === "practice" && practiceTab === "scenarios" && (
           <>
-            <div className="mb-6">
-              <p className="text-[10px] font-mono text-sigil-gold uppercase tracking-widest mb-1">Applied Thinking</p>
-              <h3 className="text-lg font-bold text-white mb-1">Scenario Practice — {SCENARIOS.length} Cases</h3>
-              <p className="text-sm text-slate-400">Apply the frameworks to real investment decisions. Think before revealing analysis.</p>
-            </div>
+            <SectionHeader
+              eyebrow="Applied Thinking"
+              title={`Scenario Practice — ${SCENARIOS.length} Cases`}
+              description="Realistic investment situations. Form your view first, then compare with the framework analysis."
+              icon={Sparkles}
+            />
             <ScenarioSection />
           </>
         )}
 
         {mode === "reference" && activeTheme && (
           <>
-            <div className="mb-6">
-              <p className="text-[10px] font-mono text-sigil-gold uppercase tracking-widest mb-1">{activeTheme.label}</p>
-              <h3 className="text-lg font-bold text-white mb-1">{activeTheme.tagline}</h3>
-              <p className="text-sm text-slate-400 leading-relaxed">{activeTheme.description}</p>
-            </div>
+            <SectionHeader
+              eyebrow={activeTheme.label}
+              title={activeTheme.tagline}
+              description={activeTheme.description}
+              icon={BookOpen}
+            />
+            <TipBox icon={ClipboardList}>
+              Expand each section below — concepts first, then books, courses, voices, and mental
+              models. Collapsed hints show what each block contains.
+            </TipBox>
             <ThemeSection data={activeTheme} />
           </>
         )}
 
         {mode === "reference" && activeTab === "reading" && (
           <>
-            <div className="mb-6">
-              <p className="text-[10px] font-mono text-sigil-gold uppercase tracking-widest mb-1">Master Reading List</p>
-              <h3 className="text-lg font-bold text-white mb-1">Complete Curriculum — {READING_LIST.length} Books</h3>
-              <p className="text-sm text-slate-400">Ordered by priority. Start with all "Start Here" books across all themes before moving to Intermediate.</p>
-            </div>
+            <SectionHeader
+              eyebrow="Master Reading List"
+              title={`Complete Curriculum — ${READING_LIST.length} Books`}
+              description='Ordered by priority. Start with all "Start Here" books across themes before Intermediate.'
+              icon={BookOpen}
+            />
             <ReadingListSection />
           </>
         )}
 
         {mode === "reference" && activeTab === "glossary" && (
           <>
-            <div className="mb-6">
-              <p className="text-[10px] font-mono text-sigil-gold uppercase tracking-widest mb-1">Reference Dictionary</p>
-              <h3 className="text-lg font-bold text-white mb-1">Glossary — {GLOSSARY.length} Terms</h3>
-              <p className="text-sm text-slate-400">All key terms across the 7 themes, alphabetical. Your quick-reference when reading research or evaluating pitches.</p>
-            </div>
+            <SectionHeader
+              eyebrow="Reference Dictionary"
+              title={`Glossary — ${GLOSSARY.length} Terms`}
+              description="Alphabetical quick-reference for all key terms. Pair with Flashcards in Practice to test recall."
+              icon={Search}
+            />
             <GlossarySection />
           </>
         )}
