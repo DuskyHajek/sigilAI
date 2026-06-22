@@ -1,10 +1,5 @@
 {
   "version": 2,
-  "functions": {
-    "backend/server.js": {
-      "maxDuration": 60
-    }
-  },
   "builds": [
     {
       "src": "backend/server.js",
