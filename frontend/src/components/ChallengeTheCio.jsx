@@ -4,8 +4,10 @@ import { THEMES } from "@config/thesis.js";
 const getTheme = (themeId) => THEMES.find((theme) => theme.id === themeId);
 
 const SOURCE_LABELS = {
-  claude: "Claude · adversarial prompt",
-  headlines: "Built from today's headlines",
+  claude: "Claude · adversarial pass",
+  "claude-haiku": "Claude Haiku · fast adversarial pass",
+  headlines: "High-sig bearish headlines only",
+  none: "No counter-signals today",
   unavailable: "Unavailable this sync",
 };
 
@@ -14,11 +16,15 @@ const ChallengeTheCio = ({ adversarialAssessment, isMock }) => {
   const blindspotAlert = adversarialAssessment?.blindspotAlert ?? "";
   const source = adversarialAssessment?.source;
   const hasRisks = risks.length > 0;
-  const isUnavailable = source === "unavailable" || (!hasRisks && blindspotAlert === "Analysis temporarily unavailable.");
+  const isCleanEmpty = source === "none";
+  const isUnavailable =
+    source === "unavailable" ||
+    (!hasRisks && blindspotAlert === "Analysis temporarily unavailable.");
 
   const sourceLabel = isMock
     ? "Demo adversarial pass"
-    : SOURCE_LABELS[source] || (hasRisks ? "Claude · adversarial prompt" : "Built from today's headlines");
+    : SOURCE_LABELS[source] ||
+      (hasRisks ? "Claude · adversarial pass" : "No counter-signals today");
 
   return (
     <div className="glass-panel p-6 rounded-2xl border border-rose-500/15 h-full flex flex-col">
@@ -37,7 +43,9 @@ const ChallengeTheCio = ({ adversarialAssessment, isMock }) => {
             className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded border ${
               isMock
                 ? "text-amber-400/90 border-amber-500/20 bg-amber-500/5"
-                : "text-rose-400/90 border-rose-500/20 bg-rose-500/5"
+                : isCleanEmpty
+                  ? "text-slate-400 border-slate-700/50 bg-slate-900/40"
+                  : "text-rose-400/90 border-rose-500/20 bg-rose-500/5"
             }`}
           >
             {sourceLabel}
@@ -47,22 +55,24 @@ const ChallengeTheCio = ({ adversarialAssessment, isMock }) => {
         <p className="mt-1 text-xs text-slate-500 leading-relaxed">
           Deliberately searches for blind spots, bear cases, and &ldquo;what if we
           are wrong?&rdquo; scenarios — separate from the brief&apos;s single
-          counter-signal line.
+          counter-signal line. Silence beats noise: no card is shown when
+          today&apos;s feed has no material counter-signal.
         </p>
 
         {!hasRisks ? (
-          <div className="mt-4 rounded-xl border border-slate-800 bg-slate-950/40 p-4 space-y-2">
+          <div
+            className={`mt-4 rounded-xl border p-4 ${
+              isCleanEmpty
+                ? "border-slate-800 bg-slate-950/30"
+                : "border-slate-800 bg-slate-950/40"
+            }`}
+          >
             <p className="text-sm text-slate-400 leading-relaxed">
               {isUnavailable
-                ? "Adversarial analysis could not run this sync — usually a timeout or empty headline pull. Retry Sync once; cached data may be from before this feature shipped."
+                ? "Adversarial analysis could not run this sync — usually a timeout or API error. Retry Sync once."
                 : blindspotAlert ||
-                  "No asymmetric risks surfaced this sync. That can mean a thin news day — check Theme Pulse for raw headlines."}
+                  "No meaningful counter-signals detected in today's headline sample."}
             </p>
-            {!isUnavailable && blindspotAlert && (
-              <p className="text-[11px] font-mono text-slate-500 leading-relaxed">
-                {blindspotAlert}
-              </p>
-            )}
           </div>
         ) : (
           <ol className="mt-4 space-y-3">
@@ -130,8 +140,8 @@ const ChallengeTheCio = ({ adversarialAssessment, isMock }) => {
 
         {source === "headlines" && hasRisks && (
           <p className="mt-3 text-[10px] font-mono text-slate-600 leading-relaxed">
-            Claude adversarial pass did not complete — risks above were inferred
-            from headline sentiment and theme bear signals.
+            Claude did not complete — showing only high-significance bearish
+            headlines (significance ≥ 3), deduplicated to one risk per story.
           </p>
         )}
       </div>

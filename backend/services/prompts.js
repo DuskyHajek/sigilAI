@@ -240,6 +240,9 @@ CRITICAL INSTRUCTIONS:
 1. Identify 2 to 3 "Adversarial Clusters" where today's data points to macro drift, structural headwinds, or overvaluation in our themes.
 2. Formulate explicit "What If We Are Wrong?" scenarios based on today's specific events.
 3. Adopt a sharp, sophisticated, intellectually aggressive financial tone. Speak directly to a brilliant, busy CIO. Do not include conversational fluff.
+4. targetTheme MUST be a theme id: datacenters, application, robotics, warfare, space, biotech, or adversarial.
+5. headlineRisk MUST be a sharp, synthesized counter-thesis line (e.g. "Agent routing tools normalize cross-border model access — domestic workflow moats may be overstated"). NEVER paste the raw headline title or one_line verbatim.
+6. If the feed has no material bear cases, return asymmetricRisks: [] and explain why in blindspotAlert. Do not invent generic risks.
 
 Return your response strictly as a valid JSON object matching this TypeScript interface:
 interface AdversarialBrief {

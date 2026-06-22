@@ -12,6 +12,8 @@ const apiKey = process.env.ANTHROPIC_API_KEY;
 const client = apiKey ? new Anthropic({ apiKey }) : null;
 const CLAUDE_MODEL =
   process.env.CLAUDE_MODEL || "claude-sonnet-4-6";
+export const CLAUDE_HAIKU_MODEL =
+  process.env.CLAUDE_HAIKU_MODEL || "claude-haiku-4-5";
 
 export const isClaudeConfigured = () => !!client;
 
@@ -21,22 +23,22 @@ export const parseJSONResponse = (text) => {
   return JSON.parse(cleanText);
 };
 
-export const callClaude = async (userPrompt, maxTokens) => {
+export const callClaude = async (userPrompt, maxTokens, options = {}) => {
   if (!client) {
     throw new Error("Claude API client is not initialized.");
   }
 
   const response = await client.messages.create({
-    model: CLAUDE_MODEL,
+    model: options.model || CLAUDE_MODEL,
     max_tokens: maxTokens,
-    system: SYSTEM_PROMPT,
+    system: options.system || SYSTEM_PROMPT,
     messages: [{ role: "user", content: userPrompt }],
   });
 
   return response.content[0].text.trim();
 };
 
-export const callClaudeJSON = async (userPrompt, maxTokens) => {
-  const text = await callClaude(userPrompt, maxTokens);
+export const callClaudeJSON = async (userPrompt, maxTokens, options = {}) => {
+  const text = await callClaude(userPrompt, maxTokens, options);
   return parseJSONResponse(text);
 };
