@@ -183,13 +183,32 @@ const classifyArticle = async (article) => {
   return callClaudeJSON(prompt, SETTINGS.classification_max_tokens);
 };
 
+const buildEvidence = (articles, limit = 3) =>
+  [...articles]
+    .sort((a, b) => (b.significance || 0) - (a.significance || 0))
+    .slice(0, limit)
+    .map(({ title, sentiment, significance, one_line }) => ({
+      title,
+      sentiment: sentiment || "neutral",
+      significance: significance || 2,
+      one_line: one_line || null,
+    }));
+
+const attachPulseEvidence = (pulse, articles, source) => ({
+  ...pulse,
+  headline_count: articles.length,
+  evidence: buildEvidence(articles),
+  source,
+});
+
 const getThemePulseScore = async (theme, articles) => {
   const prompt = buildThemePulsePrompt(
     theme.display_name,
     theme.long_description,
     articles
   );
-  return callClaudeJSON(prompt, SETTINGS.theme_pulse_max_tokens);
+  const pulse = await callClaudeJSON(prompt, SETTINGS.theme_pulse_max_tokens);
+  return attachPulseEvidence(pulse, articles, "claude");
 };
 
 const programmaticPulseFallback = (articles, reasonPrefix = "Calculated from") => {
@@ -208,16 +227,20 @@ const programmaticPulseFallback = (articles, reasonPrefix = "Calculated from") =
   const averageSentiment = count > 0 ? sentimentSum / count : 0;
   const thesis_score = Math.min(5, Math.max(-5, Math.round(averageSentiment)));
 
-  return {
-    activity_score,
-    thesis_score,
-    reason:
-      count > 0
-        ? topArticle?.one_line ||
-          topArticle?.title ||
-          `${reasonPrefix} ${count} news item${count === 1 ? "" : "s"}.`
-        : "No significant news updates monitored today.",
-  };
+  return attachPulseEvidence(
+    {
+      activity_score,
+      thesis_score,
+      reason:
+        count > 0
+          ? topArticle?.one_line ||
+            topArticle?.title ||
+            `${reasonPrefix} ${count} news item${count === 1 ? "" : "s"}.`
+          : "No significant news updates monitored today.",
+    },
+    articles,
+    "estimated"
+  );
 };
 
 const selectArticlesForClassification = (articles, maxTotal) => {
@@ -265,17 +288,23 @@ const selectArticlesForClassification = (articles, maxTotal) => {
   return selected;
 };
 
-const rawPulseFromHeadlines = (articles) => {
-  const count = articles.length;
-  const topArticle = articles[0];
-  return {
-    activity_score: Math.min(10, Math.max(2, count * 2)),
-    thesis_score: 0,
-    reason:
-      topArticle?.title ||
-      `${count} headline${count === 1 ? "" : "s"} tracked this week`,
-  };
-};
+const rawPulseFromHeadlines = (articles) =>
+  attachPulseEvidence(
+    {
+      activity_score: Math.min(10, Math.max(2, articles.length * 2)),
+      thesis_score: 0,
+      reason:
+        articles[0]?.title ||
+        `${articles.length} headline${articles.length === 1 ? "" : "s"} tracked this week`,
+    },
+    articles.map((article) => ({
+      title: article.title,
+      sentiment: "neutral",
+      significance: 2,
+      one_line: article.description || article.title,
+    })),
+    "raw"
+  );
 
 export const fetchNewsAndProcess = async () => {
   console.log("Starting NewsAPI fetching for all 7 themes...");
@@ -408,11 +437,15 @@ export const fetchNewsAndProcess = async () => {
         rawArticlesByTheme[theme.id]
       );
     } else {
-      themePulse[theme.id] = {
-        activity_score: 1,
-        thesis_score: 0,
-        reason: "No significant news updates monitored today.",
-      };
+      themePulse[theme.id] = attachPulseEvidence(
+        {
+          activity_score: 1,
+          thesis_score: 0,
+          reason: "No significant news updates monitored today.",
+        },
+        [],
+        "none"
+      );
     }
   }
 

@@ -144,6 +144,7 @@ function App() {
                       <ThemePulse
                         themeData={data?.themePulse}
                         thesisDriftReport={data?.thesisDriftReport}
+                        isMock={data?.isMock}
                       />
                     </div>
                     <div className="lg:col-span-2 h-full">

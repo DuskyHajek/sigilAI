@@ -14,7 +14,7 @@ const PANELS = [
   {
     icon: Activity,
     label: "02 · Theme Pulse",
-    text: "Compares each sector thesis with recent headlines, plus daily drift status and signal clusters.",
+    text: "Headline count and plain read per theme — click for evidence. Signal clusters surface cross-company patterns first.",
   },
   {
     icon: Sparkles,

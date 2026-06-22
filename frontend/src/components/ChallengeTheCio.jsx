@@ -3,10 +3,22 @@ import { THEMES } from "@config/thesis.js";
 
 const getTheme = (themeId) => THEMES.find((theme) => theme.id === themeId);
 
+const SOURCE_LABELS = {
+  claude: "Claude · adversarial prompt",
+  headlines: "Built from today's headlines",
+  unavailable: "Unavailable this sync",
+};
+
 const ChallengeTheCio = ({ adversarialAssessment, isMock }) => {
   const risks = adversarialAssessment?.asymmetricRisks ?? [];
   const blindspotAlert = adversarialAssessment?.blindspotAlert ?? "";
+  const source = adversarialAssessment?.source;
   const hasRisks = risks.length > 0;
+  const isUnavailable = source === "unavailable" || (!hasRisks && blindspotAlert === "Analysis temporarily unavailable.");
+
+  const sourceLabel = isMock
+    ? "Demo adversarial pass"
+    : SOURCE_LABELS[source] || (hasRisks ? "Claude · adversarial prompt" : "Built from today's headlines");
 
   return (
     <div className="glass-panel p-6 rounded-2xl border border-rose-500/15 h-full flex flex-col">
@@ -28,7 +40,7 @@ const ChallengeTheCio = ({ adversarialAssessment, isMock }) => {
                 : "text-rose-400/90 border-rose-500/20 bg-rose-500/5"
             }`}
           >
-            {isMock ? "Demo adversarial pass" : "Claude · adversarial prompt"}
+            {sourceLabel}
           </span>
         </div>
 
@@ -39,11 +51,18 @@ const ChallengeTheCio = ({ adversarialAssessment, isMock }) => {
         </p>
 
         {!hasRisks ? (
-          <div className="mt-4 rounded-xl border border-slate-800 bg-slate-950/40 p-4">
+          <div className="mt-4 rounded-xl border border-slate-800 bg-slate-950/40 p-4 space-y-2">
             <p className="text-sm text-slate-400 leading-relaxed">
-              {blindspotAlert ||
-                "No adversarial risks surfaced this sync. Run Sync to regenerate, or check back after more bearish headlines land."}
+              {isUnavailable
+                ? "Adversarial analysis could not run this sync — usually a timeout or empty headline pull. Retry Sync once; cached data may be from before this feature shipped."
+                : blindspotAlert ||
+                  "No asymmetric risks surfaced this sync. That can mean a thin news day — check Theme Pulse for raw headlines."}
             </p>
+            {!isUnavailable && blindspotAlert && (
+              <p className="text-[11px] font-mono text-slate-500 leading-relaxed">
+                {blindspotAlert}
+              </p>
+            )}
           </div>
         ) : (
           <ol className="mt-4 space-y-3">
@@ -107,6 +126,13 @@ const ChallengeTheCio = ({ adversarialAssessment, isMock }) => {
               {blindspotAlert}
             </p>
           </div>
+        )}
+
+        {source === "headlines" && hasRisks && (
+          <p className="mt-3 text-[10px] font-mono text-slate-600 leading-relaxed">
+            Claude adversarial pass did not complete — risks above were inferred
+            from headline sentiment and theme bear signals.
+          </p>
         )}
       </div>
     </div>

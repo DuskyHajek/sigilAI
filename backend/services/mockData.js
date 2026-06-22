@@ -5,36 +5,112 @@ export const getMockThemePulse = () => ({
     activity_score: 9,
     thesis_score: 4,
     reason: "Blackwell ramp validates physical bottleneck thesis",
+    headline_count: 4,
+    source: "estimated",
+    evidence: [
+      {
+        title: "Nvidia Blackwell shipments on track for H2 ramp",
+        sentiment: "bullish",
+        significance: 5,
+        one_line: "Blackwell timeline validation reinforces GPU supply bottleneck thesis",
+      },
+      {
+        title: "SK Hynix HBM3e allocation remains tight for hyperscalers",
+        sentiment: "bullish",
+        significance: 4,
+        one_line: "Memory exclusivity widens second-order datacenter bottlenecks",
+      },
+    ],
   },
   application: {
     activity_score: 6,
     thesis_score: -1,
     reason: "Thin-wrapper SaaS churn rising",
+    headline_count: 3,
+    source: "estimated",
+    evidence: [
+      {
+        title: "Enterprise teams pilot AI agents to replace workflow SaaS",
+        sentiment: "bearish",
+        significance: 4,
+        one_line: "Agentic replacement risk for thin-wrapper SaaS moats",
+      },
+    ],
   },
   robotics: {
     activity_score: 5,
     thesis_score: 2,
     reason: "Industrial cobot adoption accelerating",
+    headline_count: 2,
+    source: "estimated",
+    evidence: [
+      {
+        title: "Warehouse automation orders rise across Europe",
+        sentiment: "bullish",
+        significance: 3,
+        one_line: "Industrial automation demand supports component-layer thesis",
+      },
+    ],
   },
   warfare: {
     activity_score: 8,
     thesis_score: 5,
     reason: "Attritable drone contracts expanding",
+    headline_count: 3,
+    source: "estimated",
+    evidence: [
+      {
+        title: "Kratos wins Air Force attritable drone contract",
+        sentiment: "bullish",
+        significance: 4,
+        one_line: "Attrition economics gaining defense procurement traction",
+      },
+    ],
   },
   space: {
     activity_score: 7,
     thesis_score: 3,
     reason: "Launch cadence and constellation buildout",
+    headline_count: 2,
+    source: "estimated",
+    evidence: [
+      {
+        title: "Rocket Lab Neutron hot-fire test succeeds",
+        sentiment: "bullish",
+        significance: 3,
+        one_line: "Alternative launch capacity progressing on schedule",
+      },
+    ],
   },
   biotech: {
     activity_score: 5,
     thesis_score: 2,
     reason: "AI diagnostics pipeline momentum",
+    headline_count: 2,
+    source: "estimated",
+    evidence: [
+      {
+        title: "AI-assisted pathology adoption accelerates in US screening",
+        sentiment: "bullish",
+        significance: 3,
+        one_line: "Diagnostics path clearer than crowded AI drug discovery",
+      },
+    ],
   },
   adversarial: {
     activity_score: 8,
     thesis_score: 4,
     reason: "Deepfake fraud driving security budgets",
+    headline_count: 3,
+    source: "estimated",
+    evidence: [
+      {
+        title: "Deepfake fraud wave pushes banks toward zero-trust AI controls",
+        sentiment: "bullish",
+        significance: 4,
+        one_line: "AI-native threats expanding security budgets",
+      },
+    ],
   },
 });
 
@@ -171,6 +247,7 @@ export const getMockAdversarialAssessment = () => ({
   ],
   blindspotAlert:
     "Three themes still score bullish on activity while thesis fit is mixed or negative — the portfolio may be overweight physical bottlenecks while underpricing software disruption velocity.",
+  source: "claude",
 });
 
 const MOCK_DRIFT_STATUS = {
