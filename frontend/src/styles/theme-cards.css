@@ -70,6 +70,32 @@
   font-family: "IBM Plex Mono", monospace;
 }
 
+.theme-card--expanded {
+  overflow: visible;
+}
+
+.theme-card__expand {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(229, 193, 88, 0.35) transparent;
+}
+
+.theme-card__expand::-webkit-scrollbar {
+  width: 6px;
+}
+
+.theme-card__expand::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.theme-card__expand::-webkit-scrollbar-thumb {
+  background: rgba(229, 193, 88, 0.3);
+  border-radius: 3px;
+}
+
+.theme-card__expand::-webkit-scrollbar-thumb:hover {
+  background: rgba(229, 193, 88, 0.5);
+}
+
 .theme-card__header {
   display: flex;
   align-items: flex-start;

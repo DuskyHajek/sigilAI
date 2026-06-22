@@ -139,7 +139,9 @@ const ThemePulse = ({ themeData, thesisDriftReport, isMock }) => {
             <div
               key={theme.id}
               onClick={() => setExpandedTheme(isExpanded ? null : theme.id)}
-              className={`theme-card theme-card--${color} cursor-pointer`}
+              className={`theme-card theme-card--${color} cursor-pointer${
+                isExpanded ? " theme-card--expanded" : ""
+              }`}
             >
               <div className="theme-card__header">
                 <div className="theme-card__icon">
@@ -177,13 +179,14 @@ const ThemePulse = ({ themeData, thesisDriftReport, isMock }) => {
               </div>
 
               <div
-                className={`overflow-hidden transition-all duration-300 ${
+                className={`theme-card__expand transition-all duration-300 ${
                   isExpanded
-                    ? "max-h-96 pt-2 border-t border-slate-900/60"
-                    : "max-h-0"
+                    ? "theme-card__expand--open max-h-72 overflow-y-auto overscroll-contain pt-2 mt-2 border-t border-slate-900/60"
+                    : "max-h-0 overflow-hidden"
                 }`}
+                onClick={(e) => e.stopPropagation()}
               >
-                <div className="space-y-2">
+                <div className="space-y-2 pr-1">
                   <p className="text-slate-500 font-mono text-[10px] leading-relaxed">
                     <span className="text-sigil-gold font-bold">THESIS · </span>
                     {theme.short_description}
@@ -193,6 +196,12 @@ const ThemePulse = ({ themeData, thesisDriftReport, isMock }) => {
                     <div className="space-y-2">
                       <p className="text-[10px] font-mono uppercase tracking-wide text-sigil-gold/80">
                         Evidence · top headlines
+                        {headlineCount > evidence.length && (
+                          <span className="text-slate-600 normal-case tracking-normal">
+                            {" "}
+                            (showing {evidence.length} of {headlineCount})
+                          </span>
+                        )}
                       </p>
                       {evidence.map((item, index) => (
                         <div
@@ -217,12 +226,17 @@ const ThemePulse = ({ themeData, thesisDriftReport, isMock }) => {
                             {item.title}
                           </p>
                           {item.one_line && (
-                            <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
+                            <p className="text-[10px] text-slate-500 mt-1 leading-relaxed line-clamp-3">
                               {item.one_line}
                             </p>
                           )}
                         </div>
                       ))}
+                      {evidence.length > 2 && (
+                        <p className="text-[9px] font-mono text-slate-600 text-center pt-0.5">
+                          Scroll for more ↓
+                        </p>
+                      )}
                     </div>
                   ) : (
                     <p className="text-[11px] text-slate-500 font-mono">
