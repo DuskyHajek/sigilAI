@@ -55,6 +55,8 @@ This starts:
 
 Open `http://localhost:5173`. The dashboard should load from cache or demo data. Click **Sync live data** to run the live pipeline when keys are configured.
 
+Learning Hub: `http://localhost:5173/mastery-guide` (Reference curriculum + Practice quiz/flashcards/scenarios).
+
 ## Current project structure
 
 ```text
@@ -85,6 +87,11 @@ supernova-dashboard/
 │   └── src/
 │       ├── App.jsx
 │       ├── api.js
+│       ├── data/
+│       │   ├── masteryGuideData.js
+│       │   └── academyData.js
+│       ├── pages/
+│       │   └── MasteryGuide.jsx
 │       ├── components/
 │       │   ├── Header.jsx
 │       │   ├── WhatIsThis.jsx
@@ -92,7 +99,11 @@ supernova-dashboard/
 │       │   ├── ChallengeTheCio.jsx
 │       │   ├── ThemePulse.jsx
 │       │   ├── Watchlist.jsx
-│       │   └── ResearchQueue.jsx
+│       │   ├── ResearchQueue.jsx
+│       │   └── learning/
+│       │       ├── QuizSection.jsx
+│       │       ├── FlashcardSection.jsx
+│       │       └── ScenarioSection.jsx
 │       └── styles/
 │           └── theme-cards.css
 ├── docs/

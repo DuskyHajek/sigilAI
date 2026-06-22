@@ -1,6 +1,23 @@
 import { useState, useMemo } from "react";
 import { BookOpen, ChevronDown, ChevronRight, Search } from "lucide-react";
 import { THEMES, NAV_TABS, READING_LIST, GLOSSARY } from "../data/masteryGuideData";
+import { QUIZ_QUESTIONS, SCENARIOS } from "../data/academyData";
+import QuizSection from "../components/learning/QuizSection";
+import FlashcardSection from "../components/learning/FlashcardSection";
+import ScenarioSection from "../components/learning/ScenarioSection";
+
+const PRACTICE_TABS = [
+  { id: "quiz", label: "Quiz" },
+  { id: "flashcards", label: "Flashcards" },
+  { id: "scenarios", label: "Scenarios" },
+];
+
+const tabBtn = (active) =>
+  `shrink-0 text-xs font-mono font-bold px-3 py-2 rounded-lg transition-all whitespace-nowrap ${
+    active
+      ? "bg-sigil-gold/15 text-sigil-gold border border-sigil-gold/30"
+      : "text-slate-500 hover:text-slate-200 bg-slate-800/40 border border-slate-700/30 hover:border-slate-600/40"
+  }`;
 
 // ─── Level badge ─────────────────────────────────────────────────────────────
 
@@ -291,8 +308,34 @@ function GlossarySection() {
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function MasteryGuide() {
+  const [mode, setMode] = useState("reference");
   const [activeTab, setActiveTab] = useState("overview");
-  const activeTheme = THEMES.find(t => t.id === activeTab);
+  const [practiceTab, setPracticeTab] = useState("quiz");
+  const activeTheme = mode === "reference" ? THEMES.find(t => t.id === activeTab) : null;
+
+  const switchMode = (next) => {
+    setMode(next);
+    if (next === "practice") setPracticeTab("quiz");
+    else setActiveTab("overview");
+  };
+
+  const goToFlashcards = () => {
+    setMode("practice");
+    setPracticeTab("flashcards");
+  };
+
+  const heroStats =
+    mode === "reference"
+      ? [
+          { value: "135+", label: "Concepts" },
+          { value: "34", label: "Books" },
+          { value: "55+", label: "Glossary" },
+        ]
+      : [
+          { value: String(QUIZ_QUESTIONS.length), label: "Questions" },
+          { value: String(GLOSSARY.length), label: "Flashcards" },
+          { value: String(SCENARIOS.length), label: "Scenarios" },
+        ];
 
   return (
     <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
@@ -303,14 +346,14 @@ export default function MasteryGuide() {
           <div>
             <p className="text-[10px] font-mono text-sigil-gold uppercase tracking-widest mb-1">Sigil Supernova</p>
             <h2 className="text-2xl font-bold text-white mb-1">Learning Hub</h2>
-            <p className="text-sm text-slate-400">Books, concepts, glossary & mental models for all 7 themes</p>
+            <p className="text-sm text-slate-400">
+              {mode === "reference"
+                ? "Books, concepts, glossary & mental models for all 7 themes"
+                : "Quizzes, flashcards & scenario drills to test your mastery"}
+            </p>
           </div>
           <div className="flex gap-6 shrink-0">
-            {[
-              { value: "135+", label: "Concepts" },
-              { value: "34", label: "Books" },
-              { value: "55+", label: "Glossary" },
-            ].map(s => (
+            {heroStats.map(s => (
               <div key={s.label} className="text-center">
                 <p className="text-xl font-bold text-sigil-gold">{s.value}</p>
                 <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">{s.label}</p>
@@ -320,26 +363,84 @@ export default function MasteryGuide() {
         </div>
       </div>
 
-      {/* Tab navigation */}
-      <div className="flex gap-1.5 overflow-x-auto pb-2 mb-6 scrollbar-none">
-        {NAV_TABS.map(tab => (
+      {/* Mode toggle */}
+      <div className="flex gap-1.5 mb-4">
+        {[
+          { id: "reference", label: "Reference" },
+          { id: "practice", label: "Practice" },
+        ].map(m => (
           <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`shrink-0 text-xs font-mono font-bold px-3 py-2 rounded-lg transition-all whitespace-nowrap ${
-              activeTab === tab.id
-                ? "bg-sigil-gold/15 text-sigil-gold border border-sigil-gold/30"
-                : "text-slate-500 hover:text-slate-200 bg-slate-800/40 border border-slate-700/30 hover:border-slate-600/40"
-            }`}
+            key={m.id}
+            type="button"
+            onClick={() => switchMode(m.id)}
+            className={tabBtn(mode === m.id)}
           >
-            {tab.label}
+            {m.label}
           </button>
         ))}
       </div>
 
+      {/* Tab navigation */}
+      <div className="flex gap-1.5 overflow-x-auto pb-2 mb-6 scrollbar-none">
+        {mode === "reference"
+          ? NAV_TABS.map(tab => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={tabBtn(activeTab === tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))
+          : PRACTICE_TABS.map(tab => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setPracticeTab(tab.id)}
+                className={tabBtn(practiceTab === tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
+      </div>
+
       {/* Content panel */}
       <div className="glass-panel rounded-2xl p-6">
-        {activeTheme && (
+        {mode === "practice" && practiceTab === "quiz" && (
+          <>
+            <div className="mb-6">
+              <p className="text-[10px] font-mono text-sigil-gold uppercase tracking-widest mb-1">Knowledge Check</p>
+              <h3 className="text-lg font-bold text-white mb-1">Quiz — {QUIZ_QUESTIONS.length} Questions</h3>
+              <p className="text-sm text-slate-400">Test your mastery across all 7 themes with instant feedback.</p>
+            </div>
+            <QuizSection onReviewFlashcards={goToFlashcards} />
+          </>
+        )}
+
+        {mode === "practice" && practiceTab === "flashcards" && (
+          <>
+            <div className="mb-6">
+              <p className="text-[10px] font-mono text-sigil-gold uppercase tracking-widest mb-1">Spaced Review</p>
+              <h3 className="text-lg font-bold text-white mb-1">Flashcards — {GLOSSARY.length} Terms</h3>
+              <p className="text-sm text-slate-400">Flip through key terms from the glossary, filtered by theme.</p>
+            </div>
+            <FlashcardSection />
+          </>
+        )}
+
+        {mode === "practice" && practiceTab === "scenarios" && (
+          <>
+            <div className="mb-6">
+              <p className="text-[10px] font-mono text-sigil-gold uppercase tracking-widest mb-1">Applied Thinking</p>
+              <h3 className="text-lg font-bold text-white mb-1">Scenario Practice — {SCENARIOS.length} Cases</h3>
+              <p className="text-sm text-slate-400">Apply the frameworks to real investment decisions. Think before revealing analysis.</p>
+            </div>
+            <ScenarioSection />
+          </>
+        )}
+
+        {mode === "reference" && activeTheme && (
           <>
             <div className="mb-6">
               <p className="text-[10px] font-mono text-sigil-gold uppercase tracking-widest mb-1">{activeTheme.label}</p>
@@ -350,7 +451,7 @@ export default function MasteryGuide() {
           </>
         )}
 
-        {activeTab === "reading" && (
+        {mode === "reference" && activeTab === "reading" && (
           <>
             <div className="mb-6">
               <p className="text-[10px] font-mono text-sigil-gold uppercase tracking-widest mb-1">Master Reading List</p>
@@ -361,7 +462,7 @@ export default function MasteryGuide() {
           </>
         )}
 
-        {activeTab === "glossary" && (
+        {mode === "reference" && activeTab === "glossary" && (
           <>
             <div className="mb-6">
               <p className="text-[10px] font-mono text-sigil-gold uppercase tracking-widest mb-1">Reference Dictionary</p>

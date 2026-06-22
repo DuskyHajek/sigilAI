@@ -9,18 +9,27 @@ The dashboard is a lightweight investment intelligence demo for the Sigil Supern
 
 ## Current scope
 
-One page, four user-facing sections:
+Two frontend routes:
+
+### Dashboard (`/`)
 
 1. **Analyst Brief** - a concise generated summary of the most important current signals.
 2. **Theme Pulse** - 7 theme cards with activity and thesis-fit scoring.
 3. **Watchlist** - 20 curated names with price data, 52-week change, and thesis notes.
 4. **Research Queue** - follow-up checks for an analyst after sync.
 
+### Learning Hub (`/mastery-guide`)
+
+Static curriculum and practice. No API dependency.
+
+- **Reference** — themes, books, courses, voices, mental models, reading list, glossary.
+- **Practice** — quiz (30 Q), flashcards (from glossary), scenarios (5 cases).
+
 ## Tech stack
 
 | Layer | Choice | Notes |
 |---|---|---|
-| Frontend | React + Vite | Single-page app, no router. |
+| Frontend | React + Vite + React Router | Dashboard at `/`, Learning Hub at `/mastery-guide`. |
 | Styling | Tailwind CSS v4 + local CSS | Vite plugin setup; custom dashboard styles in `src/index.css` and `src/styles/`. |
 | Backend | Node.js + Express | Small API and sync pipeline. |
 | Hosting | Vercel | Dual build: Express server + static frontend build. |
@@ -181,6 +190,9 @@ backend/services/concurrency.js
 
 frontend/src/App.jsx
 frontend/src/api.js
+frontend/src/pages/MasteryGuide.jsx
+frontend/src/data/masteryGuideData.js
+frontend/src/data/academyData.js
 frontend/src/components/Header.jsx
 frontend/src/components/WhatIsThis.jsx
 frontend/src/components/WeeklyBrief.jsx
@@ -188,6 +200,10 @@ frontend/src/components/ChallengeTheCio.jsx
 frontend/src/components/ThemePulse.jsx
 frontend/src/components/Watchlist.jsx
 frontend/src/components/ResearchQueue.jsx
+frontend/src/components/learning/QuizSection.jsx
+frontend/src/components/learning/FlashcardSection.jsx
+frontend/src/components/learning/ScenarioSection.jsx
+frontend/src/components/learning/ThemeBadge.jsx
 ```
 
 ## Demo story

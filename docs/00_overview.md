@@ -36,6 +36,29 @@ The stock price is useful context, but the note is the product. It explains why 
 
 After a sync, the backend generates 3-7 follow-up checks. These are practical analyst prompts: what to read, compare, verify, or search next. They are suggestions, not conclusions or investment advice.
 
+### 5. Learning Hub
+
+Route: `/mastery-guide`. Header nav: **LEARNING HUB**.
+
+A static study companion for the 7 Supernova themes. No backend or sync dependency.
+
+**Reference mode**
+
+- Per-theme tabs: key concepts, essential books, courses, voices to follow, mental models.
+- Master reading list (34 books, filterable by level and theme).
+- Glossary (55+ terms, searchable).
+
+**Practice mode**
+
+- Quiz: 30 questions with quick, full, and per-theme modes.
+- Flashcards: glossary terms with flip-to-reveal definitions.
+- Scenarios: 5 investment case drills with expandable analysis.
+
+Data sources:
+
+- `frontend/src/data/masteryGuideData.js` — reference content.
+- `frontend/src/data/academyData.js` — quiz and scenario content.
+
 ## APIs and data sources
 
 ### Anthropic Claude API

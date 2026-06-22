@@ -135,7 +135,7 @@ const Header = ({ onSync, syncState, lastUpdated }) => {
           </NavLink>
           <NavLink
             to="/mastery-guide"
-            title="Books, key concepts, glossary & mental models for all 7 investment themes"
+            title="Reference curriculum, quizzes, flashcards & scenario practice for all 7 themes"
             className={({ isActive }) =>
               `flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
                 isActive

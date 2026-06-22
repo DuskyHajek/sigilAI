@@ -4,12 +4,30 @@ A thesis-driven investment intelligence dashboard for the **Sigil Supernova** fu
 
 ## What It Shows
 
-The app is a single-page dashboard with four working sections:
+The app has two main areas:
+
+### Dashboard (`/`)
+
+Four working intelligence sections:
 
 1. **Analyst Brief** - a 3-4 sentence CIO-style summary of the strongest current signals.
 2. **Theme Pulse** - activity and thesis-fit scores for the 7 Supernova themes.
 3. **Watchlist** - 20 curated public names with price data, 52-week change, and a thesis-specific AI note.
 4. **Research Queue** - 3-7 suggested follow-up checks after each sync.
+
+### Learning Hub (`/mastery-guide`)
+
+Static curriculum and practice for all 7 investment themes. No API calls or sync required.
+
+**Reference mode** — books, key concepts, courses, voices, mental models, master reading list, and glossary.
+
+**Practice mode** — interactive study tools:
+
+- **Quiz** — 30 questions (quick, full, or by theme) with instant feedback.
+- **Flashcards** — glossary terms with flip-to-reveal definitions, filterable by theme.
+- **Scenarios** — 5 investment case drills with reveal analysis.
+
+Content lives in `frontend/src/data/masteryGuideData.js` and `frontend/src/data/academyData.js`.
 
 The product goal is not to be a Bloomberg clone. The value is the thesis-specific judgment layer on top of news and prices.
 
@@ -78,13 +96,22 @@ supernova-dashboard/
     ├── src/
     │   ├── App.jsx
     │   ├── api.js
+    │   ├── data/
+    │   │   ├── masteryGuideData.js   # Reference curriculum (themes, books, glossary)
+    │   │   └── academyData.js        # Quiz questions and scenario drills
+    │   ├── pages/
+    │   │   └── MasteryGuide.jsx      # Learning Hub (Reference + Practice)
     │   └── components/
     │       ├── Header.jsx
     │       ├── WhatIsThis.jsx
     │       ├── WeeklyBrief.jsx
     │       ├── ThemePulse.jsx
     │       ├── Watchlist.jsx
-    │       └── ResearchQueue.jsx
+    │       ├── ResearchQueue.jsx
+    │       └── learning/
+    │           ├── QuizSection.jsx
+    │           ├── FlashcardSection.jsx
+    │           └── ScenarioSection.jsx
     └── vite.config.js
 ```
 

@@ -146,3 +146,30 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+.flashcard-perspective {
+  perspective: 800px;
+}
+
+.flashcard-inner {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+
+.flashcard-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.flashcard-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+}
+
+.flashcard-back {
+  transform: rotateY(180deg);
+}

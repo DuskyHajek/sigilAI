@@ -2,6 +2,13 @@
 
 React + Vite frontend for the Sigil Supernova dashboard.
 
+## Routes
+
+| Path | Page | Notes |
+|---|---|---|
+| `/` | Dashboard | Live/cached intelligence: brief, theme pulse, watchlist, research queue |
+| `/mastery-guide` | Learning Hub | Static curriculum; Reference and Practice modes |
+
 ## Scripts
 
 Run from the repo root with `--prefix frontend`, or from this directory directly.
@@ -25,11 +32,15 @@ In local development, Vite proxies API requests to the Express backend. In produ
 
 ## Main files
 
-- `src/App.jsx` - dashboard composition and sync state.
+- `src/App.jsx` - routing, dashboard composition, and sync state.
 - `src/api.js` - API helpers.
-- `src/components/Header.jsx` - mode badge, sync button, last sync.
+- `src/pages/MasteryGuide.jsx` - Learning Hub shell (Reference | Practice toggle).
+- `src/data/masteryGuideData.js` - themes, books, reading list, glossary.
+- `src/data/academyData.js` - quiz questions and scenario cases.
+- `src/components/Header.jsx` - nav, mode badge, sync button, last sync.
 - `src/components/WhatIsThis.jsx` - product explainer.
 - `src/components/WeeklyBrief.jsx` - analyst brief.
 - `src/components/ThemePulse.jsx` - 7 theme pulse cards.
 - `src/components/Watchlist.jsx` - ticker list, filters, price/context rows.
 - `src/components/ResearchQueue.jsx` - follow-up analyst checklist.
+- `src/components/learning/` - Quiz, flashcards, and scenario practice sections.
