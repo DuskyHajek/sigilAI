@@ -5,7 +5,6 @@ const getTheme = (themeId) => THEMES.find((theme) => theme.id === themeId);
 
 const SOURCE_LABELS = {
   claude: "Claude · adversarial pass",
-  "claude-haiku": "Claude Haiku · fast adversarial pass",
   headlines: "High-sig bearish headlines only",
   none: "No counter-signals today",
   unavailable: "Unavailable this sync",

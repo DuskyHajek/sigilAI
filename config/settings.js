@@ -5,7 +5,6 @@ export const SETTINGS = {
   weekly_brief_max_tokens: 500,
   research_queue_max_tokens: 450,
   adversarial_max_tokens: 700,
-  adversarial_haiku_max_tokens: 500,
   adversarial_max_articles: 10,
   adversarial_min_significance: 3,
   thesis_drift_max_tokens: 800,

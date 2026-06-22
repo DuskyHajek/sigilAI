@@ -1,10 +1,8 @@
 import { SETTINGS } from "../../config/settings.js";
 import { THEMES } from "../../config/thesis.js";
 import { buildChallengeTheCioPrompt, buildThesisConfig } from "./prompts.js";
-import { callClaudeJSON, CLAUDE_HAIKU_MODEL } from "./llm.js";
+import { callClaudeJSON } from "./llm.js";
 import { sortArticlesByQuality } from "./newsAggregation.js";
-
-const IS_VERCEL = !!process.env.VERCEL;
 
 const CLEAN_EMPTY = {
   asymmetricRisks: [],
@@ -227,10 +225,10 @@ const buildStrictHeadlineFallback = (classifiedArticles, themePulse) => {
   };
 };
 
-const runAdversarialModel = async (prompt, maxTokens, model) => {
-  const result = await callClaudeJSON(prompt, maxTokens, { model });
-  return parseAdversarialResult(result);
-};
+const isApiUnavailableError = (message) =>
+  /credit|balance|billing|insufficient|402|401|payment|api key|authentication/i.test(
+    message || ""
+  );
 
 export const generateAdversarialAnalysis = async (
   classifiedArticles,
@@ -244,39 +242,28 @@ export const generateAdversarialAnalysis = async (
   }
 
   const prompt = buildChallengeTheCioPrompt(thesisConfig, newsItems);
-  const attempts = [
-    {
-      label: IS_VERCEL ? "sonnet" : "primary",
-      model: undefined,
-      maxTokens: SETTINGS.adversarial_max_tokens,
-      source: "claude",
-    },
-    {
-      label: "haiku",
-      model: CLAUDE_HAIKU_MODEL,
-      maxTokens: SETTINGS.adversarial_haiku_max_tokens,
-      source: "claude-haiku",
-    },
-  ];
 
-  for (const attempt of attempts) {
-    try {
-      const parsed = await runAdversarialModel(
-        prompt,
-        attempt.maxTokens,
-        attempt.model
-      );
-      if (parsed?.asymmetricRisks?.length >= 1) {
-        return { ...parsed, source: attempt.source };
-      }
-      if (parsed?.asymmetricRisks?.length === 0 && parsed.blindspotAlert) {
-        return { ...parsed, source: attempt.source };
-      }
-    } catch (err) {
-      console.error(
-        `Adversarial analysis failed (${attempt.label}):`,
-        err.message
-      );
+  try {
+    const result = await callClaudeJSON(
+      prompt,
+      SETTINGS.adversarial_max_tokens
+    );
+    const parsed = parseAdversarialResult(result);
+
+    if (parsed?.asymmetricRisks?.length >= 1) {
+      return { ...parsed, source: "claude" };
+    }
+    if (parsed?.asymmetricRisks?.length === 0 && parsed.blindspotAlert) {
+      return { ...parsed, source: "claude" };
+    }
+  } catch (err) {
+    console.error("Adversarial analysis failed:", err.message);
+    if (isApiUnavailableError(err.message)) {
+      return {
+        ...ADVERSARIAL_UNAVAILABLE,
+        blindspotAlert:
+          "Claude adversarial pass could not run — check Anthropic API credits and key on this deployment.",
+      };
     }
   }
 
