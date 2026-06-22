@@ -52,24 +52,18 @@ const pickBestThemeForArticle = (article, themePulse) => {
   })[0];
 };
 
-const assignArticlesForAdversarial = (classifiedArticles, themePulse) => {
-  const bearishNeutral = sortArticlesByQuality(
-    classifiedArticles.filter((a) => a.sentiment !== "bullish")
-  );
-  const seen = new Set();
+const assignArticlesFromPool = (articles, themePulse, seenKeys) => {
   const assigned = [];
-
-  for (const article of bearishNeutral) {
+  for (const article of sortArticlesByQuality(articles)) {
     const key = articleKey(article);
-    if (!key || seen.has(key)) continue;
+    if (!key || seenKeys.has(key)) continue;
 
     const assignedTheme = pickBestThemeForArticle(article, themePulse);
     if (!assignedTheme) continue;
 
-    seen.add(key);
+    seenKeys.add(key);
     assigned.push({ ...article, _assignedTheme: assignedTheme });
   }
-
   return assigned;
 };
 
@@ -82,11 +76,31 @@ const slimNewsItem = (article) => ({
   one_line: article.one_line,
 });
 
+const assignArticlesForAdversarial = (classifiedArticles, themePulse) => {
+  const seenKeys = new Set();
+  return assignArticlesFromPool(
+    classifiedArticles.filter((a) => a.sentiment !== "bullish"),
+    themePulse,
+    seenKeys
+  );
+};
+
 const selectAdversarialNewsItems = (classifiedArticles, themePulse) => {
   const limit = SETTINGS.adversarial_max_articles;
-  return assignArticlesForAdversarial(classifiedArticles, themePulse)
-    .slice(0, limit)
-    .map(slimNewsItem);
+  const seenKeys = new Set();
+
+  const bearishNeutral = assignArticlesFromPool(
+    classifiedArticles.filter((a) => a.sentiment !== "bullish"),
+    themePulse,
+    seenKeys
+  );
+  const bullish = assignArticlesFromPool(
+    classifiedArticles.filter((a) => a.sentiment === "bullish"),
+    themePulse,
+    seenKeys
+  );
+
+  return [...bearishNeutral, ...bullish].slice(0, limit).map(slimNewsItem);
 };
 
 const normalizeText = (value) =>
@@ -234,13 +248,16 @@ export const generateAdversarialAnalysis = async (
   classifiedArticles,
   themePulse
 ) => {
-  const thesisConfig = buildThesisConfig();
-  const newsItems = selectAdversarialNewsItems(classifiedArticles, themePulse);
-
-  if (newsItems.length === 0) {
-    return CLEAN_EMPTY;
+  if (classifiedArticles.length === 0) {
+    return {
+      ...CLEAN_EMPTY,
+      blindspotAlert:
+        "No classified headlines this sync — run Sync again when news flow is richer.",
+    };
   }
 
+  const thesisConfig = buildThesisConfig();
+  const newsItems = selectAdversarialNewsItems(classifiedArticles, themePulse);
   const prompt = buildChallengeTheCioPrompt(thesisConfig, newsItems);
 
   try {
@@ -272,6 +289,30 @@ export const generateAdversarialAnalysis = async (
     return fallback;
   }
 
+  return buildCleanEmptyFromFeed(classifiedArticles, themePulse);
+};
+
+const buildCleanEmptyFromFeed = (classifiedArticles, themePulse) => {
+  const bearishCount = classifiedArticles.filter(
+    (a) => a.sentiment === "bearish"
+  ).length;
+  const weakThemes = THEMES.filter(
+    (t) => (themePulse[t.id]?.thesis_score ?? 0) <= -1
+  ).length;
+
+  if (bearishCount === 0 && classifiedArticles.length > 0) {
+    return {
+      ...CLEAN_EMPTY,
+      blindspotAlert:
+        "Today's headline sample skews constructive — Claude found no material counter-thesis, but uniform bullish flow itself warrants skepticism.",
+    };
+  }
+  if (weakThemes > 0) {
+    return {
+      ...CLEAN_EMPTY,
+      blindspotAlert: `${weakThemes} theme(s) score challenged on thesis fit despite no extracted risk cards — review Theme Pulse evidence manually.`,
+    };
+  }
   return CLEAN_EMPTY;
 };
 

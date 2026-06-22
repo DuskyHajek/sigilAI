@@ -63,9 +63,16 @@ const ChallengeTheCio = ({ adversarialAssessment, isMock }) => {
             className={`mt-4 rounded-xl border p-4 ${
               isCleanEmpty
                 ? "border-slate-800 bg-slate-950/30"
-                : "border-slate-800 bg-slate-950/40"
+                : source === "claude"
+                  ? "border-rose-500/15 bg-rose-500/5"
+                  : "border-slate-800 bg-slate-950/40"
             }`}
           >
+            {source === "claude" && blindspotAlert && (
+              <p className="text-[10px] font-mono uppercase tracking-wide text-rose-400/90 mb-2">
+                Claude adversarial read
+              </p>
+            )}
             <p className="text-sm text-slate-400 leading-relaxed">
               {isUnavailable
                 ? "Adversarial analysis could not run this sync — usually a timeout or API error. Retry Sync once."

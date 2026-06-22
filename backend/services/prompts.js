@@ -243,6 +243,7 @@ CRITICAL INSTRUCTIONS:
 4. targetTheme MUST be a theme id: datacenters, application, robotics, warfare, space, biotech, or adversarial.
 5. headlineRisk MUST be a sharp, synthesized counter-thesis line (e.g. "Agent routing tools normalize cross-border model access — domestic workflow moats may be overstated"). NEVER paste the raw headline title or one_line verbatim.
 6. If the feed has no material bear cases, return asymmetricRisks: [] and explain why in blindspotAlert. Do not invent generic risks.
+7. Even when headlines read bullish for the thesis, extract how a skeptical CIO could still be wrong — contrarian reads on supportive news are valid.
 
 Return your response strictly as a valid JSON object matching this TypeScript interface:
 interface AdversarialBrief {
