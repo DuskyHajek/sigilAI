@@ -43,7 +43,7 @@ ANTHROPIC_API_KEY=your_anthropic_api_key
 NEWS_API_KEY=your_newsapi_key
 
 # Optional
-CLAUDE_MODEL=claude-sonnet-4-20250514
+CLAUDE_MODEL=claude-sonnet-4-6
 KV_REST_API_URL=your_vercel_kv_or_upstash_url
 KV_REST_API_TOKEN=your_vercel_kv_or_upstash_token
 ```

@@ -31,7 +31,7 @@ ANTHROPIC_API_KEY=your_anthropic_api_key
 NEWS_API_KEY=your_newsapi_key
 
 # Optional model override
-CLAUDE_MODEL=claude-sonnet-4-20250514
+CLAUDE_MODEL=claude-sonnet-4-6
 
 # Optional deployed cache
 KV_REST_API_URL=your_remote_cache_url

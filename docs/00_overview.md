@@ -42,7 +42,7 @@ After a sync, the backend generates 3-7 follow-up checks. These are practical an
 
 Claude is the judgment layer. It classifies articles, writes stock notes, scores theme pulses when appropriate, generates the analyst brief, and creates the research queue.
 
-Default model: `claude-sonnet-4-20250514`, configurable with `CLAUDE_MODEL`.
+Default model: `claude-sonnet-4-6`, configurable with `CLAUDE_MODEL`.
 
 ### NewsAPI.org
 

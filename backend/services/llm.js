@@ -11,7 +11,7 @@ dotenv.config({ path: path.join(__dirname, "../../.env") });
 const apiKey = process.env.ANTHROPIC_API_KEY;
 const client = apiKey ? new Anthropic({ apiKey }) : null;
 const CLAUDE_MODEL =
-  process.env.CLAUDE_MODEL || "claude-sonnet-4-20250514";
+  process.env.CLAUDE_MODEL || "claude-sonnet-4-6";
 
 export const isClaudeConfigured = () => !!client;
 
