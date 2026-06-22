@@ -129,6 +129,34 @@ There is no scheduled refresh in the current implementation. Sync is user-trigge
         tickers: ["000660.KS", "MU"]
       }
     ]
+  },
+  adversarialAssessment: {
+    asymmetricRisks: [
+      {
+        targetTheme: "datacenters",
+        headlineRisk: "HBM exclusivity may be a mirage",
+        adversarialArgument: "...",
+        counterIndicatorToWatch: "SK Hynix capacity utilization vs Samsung HBM3e yield rates"
+      }
+    ],
+    blindspotAlert: "..."
+  },
+  thesisDriftReport: {
+    detectedClusters: [
+      {
+        clusterName: "Advanced Packaging Supply Bottlenecks",
+        impactedThemes: ["datacenters"],
+        evidenceSummary: "...",
+        severityScore: 7
+      }
+    ],
+    themeStatusUpdate: [
+      {
+        themeId: "datacenters",
+        status: "ACCELERATING",
+        narrativeShiftDetails: "..."
+      }
+    ]
   }
 }
 ```
@@ -141,6 +169,9 @@ backend/services/news.js
 backend/services/prices.js
 backend/services/brief.js
 backend/services/researchQueue.js
+backend/services/adversarial.js
+backend/services/thesisDrift.js
+backend/services/newsAggregation.js
 backend/services/articleMatch.js
 backend/services/cache.js
 backend/services/llm.js
@@ -153,6 +184,7 @@ frontend/src/api.js
 frontend/src/components/Header.jsx
 frontend/src/components/WhatIsThis.jsx
 frontend/src/components/WeeklyBrief.jsx
+frontend/src/components/ChallengeTheCio.jsx
 frontend/src/components/ThemePulse.jsx
 frontend/src/components/Watchlist.jsx
 frontend/src/components/ResearchQueue.jsx
@@ -164,10 +196,11 @@ The dashboard should be demoed as a workflow:
 
 1. Load instantly from cache.
 2. Click **Sync live data**.
-3. Start with the analyst brief.
-4. Check which themes are active or challenged.
-5. Open a watchlist note and explain why that event matters to the thesis.
-6. Use the research queue as the next analyst checklist.
+3. Start with the analyst brief, then read **Challenge the CIO** for adversarial risks.
+4. Check which themes are active, challenged, or drifting in **Theme Pulse**.
+5. Review signal clusters when separate headlines hit the same macro bottleneck.
+6. Open a watchlist note and explain why that event matters to the thesis.
+7. Use the research queue as the next analyst checklist.
 
 ## Known constraints
 

@@ -65,6 +65,8 @@ export const SETTINGS = {
   theme_pulse_max_tokens: 150,
   weekly_brief_max_tokens: 500,
   research_queue_max_tokens: 450,
+  adversarial_max_tokens: 700,
+  thesis_drift_max_tokens: 800,
 
   significance_threshold: 2,
   max_articles_per_theme: 10,
@@ -91,6 +93,9 @@ Current prompt surfaces:
 - `buildThemePulsePrompt`
 - `buildWeeklyBriefPrompt`
 - `buildResearchQueuePrompt`
+- `buildChallengeTheCioPrompt`
+- `buildThesisDriftPrompt`
+- `buildThesisConfig`
 
 After changing a prompt:
 
@@ -108,12 +113,20 @@ Full sync does:
 2. Classify selected articles with Claude.
 3. Build theme pulse scores.
 4. Fetch Yahoo chart prices.
-5. Generate watchlist context lines.
-6. Generate the analyst brief.
-7. Generate the research queue.
+5. Generate watchlist context lines (runs in parallel with LLM passes below).
+6. Generate the analyst brief, adversarial assessment, and thesis drift report in parallel.
+7. Generate the research queue (after watchlist enrichment completes).
 8. Write cache.
 
 On Vercel, the backend uses lighter sync limits and the frontend aborts after 55 seconds. If hosted sync fails repeatedly, run locally with the same env vars to inspect logs and then redeploy.
+
+## Adversarial & thesis drift services
+
+- `backend/services/adversarial.js` — Challenge the CIO. Falls back to bearish-article and negative-`thesis_score` heuristics if Claude fails.
+- `backend/services/thesisDrift.js` — Signal clustering plus drift status. Falls back to `themePulse.thesis_score` mapping when Claude fails.
+- `backend/services/newsAggregation.js` — Sorts classified articles by significance before slicing the top 20 for LLM prompts.
+
+Both new payload fields use strict empty schemas so older cache entries and partial sync failures do not crash the UI.
 
 ## Cache behavior
 

@@ -1,4 +1,4 @@
-import { Activity, ArrowRight, Brain, FileText, LineChart, Newspaper, SearchCheck, Sparkles } from "lucide-react";
+import { Activity, ArrowRight, Brain, FileText, LineChart, Newspaper, SearchCheck, ShieldAlert, Sparkles } from "lucide-react";
 
 const PANELS = [
   {
@@ -7,9 +7,14 @@ const PANELS = [
     text: "Start here — a short AI summary of the strongest signals found in the current news pull.",
   },
   {
+    icon: ShieldAlert,
+    label: "01b · Challenge the CIO",
+    text: "Adversarial pass — asymmetric risks, blind spots, and bear cases to fight confirmation bias.",
+  },
+  {
     icon: Activity,
     label: "02 · Theme Pulse",
-    text: "Compares each sector thesis with recent headlines: active, supportive, neutral, or challenged.",
+    text: "Compares each sector thesis with recent headlines, plus daily drift status and signal clusters.",
   },
   {
     icon: Sparkles,
@@ -51,7 +56,7 @@ const WhatIsThis = () => {
           deserves a closer analyst look.
         </p>
 
-        <div className="mt-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+        <div className="mt-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
           {PANELS.map(({ icon: Icon, label, text }) => (
             <div
               key={label}

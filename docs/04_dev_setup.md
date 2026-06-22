@@ -66,15 +66,18 @@ supernova-dashboard/
 │   ├── server.js
 │   ├── services/
 │   │   ├── articleMatch.js
+│   │   ├── adversarial.js
 │   │   ├── brief.js
 │   │   ├── cache.js
 │   │   ├── concurrency.js
 │   │   ├── llm.js
 │   │   ├── mockData.js
 │   │   ├── news.js
+│   │   ├── newsAggregation.js
 │   │   ├── prices.js
 │   │   ├── prompts.js
-│   │   └── researchQueue.js
+│   │   ├── researchQueue.js
+│   │   └── thesisDrift.js
 │   └── data/
 │       └── cache.json
 ├── frontend/
@@ -86,6 +89,7 @@ supernova-dashboard/
 │       │   ├── Header.jsx
 │       │   ├── WhatIsThis.jsx
 │       │   ├── WeeklyBrief.jsx
+│       │   ├── ChallengeTheCio.jsx
 │       │   ├── ThemePulse.jsx
 │       │   ├── Watchlist.jsx
 │       │   └── ResearchQueue.jsx

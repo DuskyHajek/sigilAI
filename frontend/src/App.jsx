@@ -4,6 +4,7 @@ import { AlertTriangle, ServerCrash } from "lucide-react";
 import ThemePulse from "./components/ThemePulse";
 import Watchlist from "./components/Watchlist";
 import WeeklyBrief from "./components/WeeklyBrief";
+import ChallengeTheCio from "./components/ChallengeTheCio";
 import Header from "./components/Header";
 import WhatIsThis from "./components/WhatIsThis";
 import ResearchQueue from "./components/ResearchQueue";
@@ -127,16 +128,23 @@ function App() {
                 </div>
               ) : (
                 <>
-                  <div className="w-full">
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 w-full">
                     <WeeklyBrief
                       weeklyBriefText={data?.weeklyBrief}
                       isMock={data?.isMock}
                       generatedAt={data?.lastUpdated}
                     />
+                    <ChallengeTheCio
+                      adversarialAssessment={data?.adversarialAssessment}
+                      isMock={data?.isMock}
+                    />
                   </div>
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
                     <div className="lg:col-span-1 h-full">
-                      <ThemePulse themeData={data?.themePulse} />
+                      <ThemePulse
+                        themeData={data?.themePulse}
+                        thesisDriftReport={data?.thesisDriftReport}
+                      />
                     </div>
                     <div className="lg:col-span-2 h-full">
                       <Watchlist watchlistData={data?.watchlist} />

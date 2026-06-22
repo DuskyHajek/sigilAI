@@ -166,6 +166,83 @@ Important contract:
 
 The service has a programmatic fallback if Claude fails or returns invalid JSON.
 
+## Prompt 6 — Challenge the CIO (adversarial assessment)
+
+**Code:** `buildChallengeTheCioPrompt(thesisConfig, newsItems)`
+
+**Used by:** `backend/services/adversarial.js`
+
+**Purpose:** Produce a structured adversarial dossier — asymmetric risks, blindspot alert, and counter-indicators — to fight confirmation bias. Complements (does not replace) the analyst brief's single counter-signal sentence.
+
+**Inputs:**
+
+- `thesisConfig` from `buildThesisConfig()` — theme id, display name, descriptions, bull/bear signals from `config/thesis.js`.
+- Top 20 classified articles sorted by significance (bearish tie-break).
+
+**Expected output:** JSON
+
+```json
+{
+  "asymmetricRisks": [
+    {
+      "targetTheme": "datacenters",
+      "headlineRisk": "HBM exclusivity may be a mirage",
+      "adversarialArgument": "...",
+      "counterIndicatorToWatch": "SK Hynix capacity utilization vs Samsung HBM3e yield rates"
+    }
+  ],
+  "blindspotAlert": "..."
+}
+```
+
+Important contract:
+
+- 2–3 `asymmetricRisks` when signal exists.
+- Service accepts output only if at least one risk and a non-empty `blindspotAlert`; otherwise uses programmatic fallback from negative thesis scores and bearish articles.
+- Never returns `null` or `{}` — empty schema uses `asymmetricRisks: []` and a fallback alert string.
+
+## Prompt 7 — Thesis drift & signal clustering
+
+**Code:** `buildThesisDriftPrompt(thesisConfig, annotatedNewsFlow)`
+
+**Used by:** `backend/services/thesisDrift.js`
+
+**Purpose:** Detect cross-watchlist signal clusters and per-theme narrative drift status for the day.
+
+**Inputs:**
+
+- `thesisConfig` from `buildThesisConfig()`.
+- Annotated news flow from `buildAnnotatedNewsFlow()` — top 20 articles by significance with matched tickers/companies.
+
+**Expected output:** JSON
+
+```json
+{
+  "detectedClusters": [
+    {
+      "clusterName": "Advanced Packaging Supply Bottlenecks",
+      "impactedThemes": ["datacenters"],
+      "evidenceSummary": "...",
+      "severityScore": 7
+    }
+  ],
+  "themeStatusUpdate": [
+    {
+      "themeId": "datacenters",
+      "status": "ACCELERATING",
+      "narrativeShiftDetails": "..."
+    }
+  ]
+}
+```
+
+Important contract:
+
+- `status` must be `ACCELERATING`, `STAGNANT`, or `DRIFTING`.
+- `severityScore` clamped to 1–10 post-parse.
+- `themeId` validated against known theme ids.
+- On Claude failure, programmatic fallback derives `themeStatusUpdate` from `themePulse.thesis_score` and leaves `detectedClusters` empty.
+
 ## JSON parsing
 
 `backend/services/llm.js` strips markdown fences before parsing JSON:
@@ -184,6 +261,7 @@ Record meaningful prompt changes here:
 |---|---|---|---|
 | 2026-05-01 | All | Initial v0.1 prompts | First working dashboard |
 | 2026-05-27 | Research queue docs | Documented shipped research queue prompt | Docs refresh |
+| 2026-06-22 | Adversarial + thesis drift | Added Challenge the CIO and thesis drift prompts | Anti-confirmation-bias pipeline |
 
 ## Practical review checklist
 
@@ -193,4 +271,6 @@ After prompt changes, run a sync and inspect:
 - Do theme scores explain the news rather than just restating a headline?
 - Do watchlist notes connect to company angle, not just theme buzzwords?
 - Does the analyst brief include a real counter-signal?
+- Does Challenge the CIO surface distinct asymmetric risks (not duplicate brief copy)?
+- Do thesis drift badges and clusters match today's headline flow?
 - Does the research queue give concrete next actions?

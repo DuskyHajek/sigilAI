@@ -1,4 +1,4 @@
-import { WATCHLIST } from "../../config/thesis.js";
+import { WATCHLIST, THEMES } from "../../config/thesis.js";
 
 export const getMockThemePulse = () => ({
   datacenters: {
@@ -142,6 +142,89 @@ const mockChange = (ticker) => {
 export const getMockWeeklyBrief = () =>
   "Physical constraints dominate the Supernova thesis this week, led by Nvidia's Blackwell timeline validation and Freeport-McMoRan signaling acute structural copper deficits for power grid expansions. In warfare, record backlogs at AeroVironment and new drone contracts for Kratos demonstrate that the economic asymmetry of cheap attritable weapons is gaining rapid defense procurement traction. Meanwhile, the application layer continues to undergo valuation pressure, highlighting the risk of thin-wrapper enterprise software as competitors easily replicate user interfaces. Analysts should watch rising deepfake fraud waves, which are shifting defensive budgets toward zero-trust cybersecurity architectures.";
 
+export const getMockAdversarialAssessment = () => ({
+  asymmetricRisks: [
+    {
+      targetTheme: "datacenters",
+      headlineRisk: "HBM exclusivity may be a mirage",
+      adversarialArgument:
+        "SK Hynix capacity headlines mask Samsung HBM3e yield recovery — if memory bottlenecks ease faster than capex cycles, second-order picks re-rate down while Nvidia stays bid.",
+      counterIndicatorToWatch:
+        "SK Hynix capacity utilization vs Samsung HBM3e yield rates",
+    },
+    {
+      targetTheme: "application",
+      headlineRisk: "Agentic AI could collapse vertical SaaS moats faster than modeled",
+      adversarialArgument:
+        "Enterprise coding agents are shipping workflow replacement, not augmentation — PATH and CSU.TO angles assume sticky ops data; thin-wrapper churn may accelerate before incumbents adapt.",
+      counterIndicatorToWatch:
+        "Major enterprise replacing SaaS with custom AI build",
+    },
+    {
+      targetTheme: "space",
+      headlineRisk: "Launch cadence optimism ignores capital intensity",
+      adversarialArgument:
+        "Neutron milestones do not fix unit economics — constellation capex remains front-loaded while ASTS-style direct-to-cell bets need sustained funding in a higher-rate environment.",
+      counterIndicatorToWatch:
+        "Secondary offerings or capex pauses among small-cap space names",
+    },
+  ],
+  blindspotAlert:
+    "Three themes still score bullish on activity while thesis fit is mixed or negative — the portfolio may be overweight physical bottlenecks while underpricing software disruption velocity.",
+});
+
+const MOCK_DRIFT_STATUS = {
+  datacenters: "ACCELERATING",
+  application: "DRIFTING",
+  robotics: "STAGNANT",
+  warfare: "ACCELERATING",
+  space: "STAGNANT",
+  biotech: "ACCELERATING",
+  adversarial: "ACCELERATING",
+};
+
+const MOCK_DRIFT_NARRATIVES = {
+  datacenters:
+    "Blackwell ramp and HBM supply stories reinforce the physical bottleneck narrative.",
+  application:
+    "Thin-wrapper SaaS churn headlines are shifting sentiment away from broad software resilience.",
+  robotics:
+    "Industrial automation news is steady but not accelerating versus prior weeks.",
+  warfare:
+    "Attrition drone contracts and NATO ramp headlines cluster across KTOS, AVAV, and RHM.DE.",
+  space:
+    "Launch milestones continue but funding and constellation build timelines remain uncertain.",
+  biotech:
+    "AI diagnostics pipeline momentum is building faster than drug-discovery hype.",
+  adversarial:
+    "Deepfake fraud and agent-security stories are clustering across CRWD, PANW, and S.",
+};
+
+export const getMockThesisDriftReport = () => ({
+  detectedClusters: [
+    {
+      clusterName: "Advanced Packaging Supply Bottlenecks",
+      impactedThemes: ["datacenters"],
+      evidenceSummary:
+        "Multiple headlines tie NVDA ramp, AMAT bookings, and HBM allocation to the same advanced packaging constraint — not independent bullish datapoints.",
+      severityScore: 7,
+    },
+    {
+      clusterName: "NATO Attrition Procurement Wave",
+      impactedThemes: ["warfare"],
+      evidenceSummary:
+        "KTOS contract wins, AVAV backlog records, and Rheinmetall capacity expansion all point to the same European rearmament bottleneck.",
+      severityScore: 6,
+    },
+  ],
+  themeStatusUpdate: THEMES.map(({ id }) => ({
+    themeId: id,
+    status: MOCK_DRIFT_STATUS[id] || "STAGNANT",
+    narrativeShiftDetails:
+      MOCK_DRIFT_NARRATIVES[id] || "No major narrative shift detected in demo data.",
+  })),
+});
+
 export const getMockResearchQueue = () => ({
   items: [
     {
@@ -189,4 +272,6 @@ export const buildMockDashboard = () => ({
   watchlist: getMockWatchlist(),
   weeklyBrief: getMockWeeklyBrief(),
   researchQueue: getMockResearchQueue(),
+  adversarialAssessment: getMockAdversarialAssessment(),
+  thesisDriftReport: getMockThesisDriftReport(),
 });

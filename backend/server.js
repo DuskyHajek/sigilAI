@@ -11,6 +11,8 @@ import { fetchPrices, enrichWatchlistWithContext } from "./services/prices.js";
 import { fetchNewsAndProcess } from "./services/news.js";
 import { generateWeeklyBrief } from "./services/brief.js";
 import { generateResearchQueue } from "./services/researchQueue.js";
+import { generateAdversarialAnalysis } from "./services/adversarial.js";
+import { generateThesisDriftReport } from "./services/thesisDrift.js";
 import {
   readCache,
   writeCache,
@@ -70,21 +72,39 @@ const runFullSync = async () => {
     classifiedArticles,
     themePulse
   );
+  const adversarialPromise = generateAdversarialAnalysis(
+    classifiedArticles,
+    themePulse
+  );
+  const thesisDriftPromise = generateThesisDriftReport(
+    classifiedArticles,
+    watchlistWithPrices,
+    themePulse
+  );
 
-  await enrichWatchlistWithContext(watchlistWithPrices, classifiedArticles, {
-    maxStocks: IS_VERCEL ? 10 : undefined,
-    aiConcurrency: 5,
-    rawArticlesByTheme,
-  });
+  const enrichPromise = enrichWatchlistWithContext(
+    watchlistWithPrices,
+    classifiedArticles,
+    {
+      maxStocks: IS_VERCEL ? 10 : undefined,
+      aiConcurrency: 5,
+      rawArticlesByTheme,
+    }
+  );
 
-  const [weeklyBrief, researchQueue] = await Promise.all([
-    weeklyBriefPromise,
-    generateResearchQueue(
-      classifiedArticles,
-      themePulse,
-      watchlistWithPrices
-    ),
-  ]);
+  const [weeklyBrief, adversarialAssessment, thesisDriftReport] =
+    await Promise.all([
+      weeklyBriefPromise,
+      adversarialPromise,
+      thesisDriftPromise,
+      enrichPromise,
+    ]);
+
+  const researchQueue = await generateResearchQueue(
+    classifiedArticles,
+    themePulse,
+    watchlistWithPrices
+  );
 
   const liveData = {
     isMock: false,
@@ -95,6 +115,8 @@ const runFullSync = async () => {
     watchlist: watchlistWithPrices,
     weeklyBrief,
     researchQueue,
+    adversarialAssessment,
+    thesisDriftReport,
   };
 
   await writeCache(liveData);
