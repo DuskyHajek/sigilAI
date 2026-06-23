@@ -41,11 +41,11 @@ const TierExplorer = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
+      <div className="vc-filter-track sm:flex-wrap">
         <button
           type="button"
           onClick={() => onPhaseChange(null)}
-          className={filterBtn(!phaseId)}
+          className={`${filterBtn(!phaseId)} shrink-0 snap-start`}
         >
           All phases
         </button>
@@ -54,7 +54,7 @@ const TierExplorer = ({
             key={phase.id}
             type="button"
             onClick={() => onPhaseChange(phase.id)}
-            className={filterBtn(phaseId === phase.id)}
+            className={`${filterBtn(phaseId === phase.id)} shrink-0 snap-start`}
             style={
               phaseId === phase.id
                 ? { backgroundColor: phase.color, color: "#000" }

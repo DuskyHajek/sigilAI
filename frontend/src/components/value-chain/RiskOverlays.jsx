@@ -31,7 +31,7 @@ const OverlayCard = ({ overlay, onTierSelect }) => {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full text-left p-4 sm:p-5 group"
+        className="w-full text-left p-3.5 sm:p-5 group min-h-[44px]"
         aria-expanded={open}
       >
         <div className="flex items-start gap-3">

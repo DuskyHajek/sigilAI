@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import EssentialBadge from "../learning/EssentialBadge";
 import { getPhaseById, getTickersForTier } from "../../utils/valueChainUtils.js";
@@ -43,12 +42,12 @@ const TierCard = ({
       <button
         type="button"
         onClick={onToggle}
-        className="w-full text-left p-4 sm:p-5 group"
+        className="w-full text-left p-3.5 sm:p-5 group min-h-[44px]"
         aria-expanded={expanded}
       >
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-2.5 sm:gap-3">
           <span
-            className="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-xs font-mono font-bold border"
+            className="shrink-0 w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center text-[11px] sm:text-xs font-mono font-bold border"
             style={{
               color: phase?.color ?? "#a0a0a0",
               borderColor: `${phase?.color ?? "#a0a0a0"}44`,
@@ -58,19 +57,25 @@ const TierCard = ({
             T{tier.tier}
           </span>
           <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2 mb-0.5">
-              <h4 className="text-sm font-semibold text-white">{tier.name}</h4>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-0.5">
+              <h4 className="text-[13px] sm:text-sm font-semibold text-white leading-snug">
+                {tier.name}
+              </h4>
               {tier.essential && <EssentialBadge />}
-              {tickers.map((t) => (
-                <span
-                  key={t}
-                  className="text-[10px] font-mono px-2 py-0.5 rounded-full border border-sigil-gold/30 text-sigil-gold"
-                >
-                  {t}
-                </span>
-              ))}
             </div>
-            <p className="text-[11px] font-mono text-slate-500 mb-1.5">
+            {tickers.length > 0 && (
+              <div className="flex flex-wrap gap-1 mb-1.5">
+                {tickers.map((t) => (
+                  <span
+                    key={t}
+                    className="text-[10px] font-mono px-1.5 py-0.5 rounded-full border border-sigil-gold/30 text-sigil-gold"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            )}
+            <p className="text-[10px] sm:text-[11px] font-mono text-slate-500 mb-1 leading-relaxed">
               {tier.subtitle}
               {phase ? ` · ${phase.label}` : ""}
             </p>
@@ -83,29 +88,31 @@ const TierCard = ({
             </p>
           </div>
           {expanded ? (
-            <ChevronDown size={16} className="text-sigil-gold shrink-0 mt-1" />
+            <ChevronDown size={16} className="text-sigil-gold shrink-0 mt-0.5" />
           ) : (
             <ChevronRight
               size={16}
-              className="text-slate-500 group-hover:text-slate-300 shrink-0 mt-1"
+              className="text-slate-500 group-hover:text-slate-300 shrink-0 mt-0.5"
             />
           )}
         </div>
       </button>
 
       {expanded && (
-        <div className="px-4 sm:px-5 pb-4 sm:pb-5 space-y-3 border-t border-white/6 pt-4">
+        <div className="px-3.5 sm:px-5 pb-3.5 sm:pb-5 space-y-3 border-t border-white/6 pt-3 sm:pt-4">
           <DetailBlock label="Key players">
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2">
               {tier.players.map((player) => (
                 <span
                   key={player.name}
-                  className="inline-flex flex-col gap-0.5 rounded-lg border border-white/8 bg-[#1a1a1a] px-2.5 py-1.5"
+                  className="inline-flex flex-col gap-0.5 rounded-lg border border-white/8 bg-[#1a1a1a] px-2.5 py-1.5 sm:max-w-[280px]"
                 >
                   <span className="text-xs font-semibold text-white">
                     {player.name}
                   </span>
-                  <span className="text-[10px] text-slate-500">{player.note}</span>
+                  <span className="text-[10px] text-slate-500 leading-relaxed">
+                    {player.note}
+                  </span>
                 </span>
               ))}
             </div>
@@ -125,7 +132,7 @@ const TierCard = ({
           </DetailBlock>
 
           <DetailBlock label="Key metric">
-            <p className="text-xs font-mono text-sigil-gold/90 leading-relaxed">
+            <p className="text-xs font-mono text-sigil-gold/90 leading-relaxed break-words">
               {tier.metric}
             </p>
           </DetailBlock>

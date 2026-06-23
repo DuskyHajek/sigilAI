@@ -1,0 +1,125 @@
+/* Value Chain page — mobile scroll tracks and stable card interactions */
+
+.vc-phase-card {
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+@media (hover: hover) {
+  .vc-phase-card:not(.vc-phase-card--active):hover {
+    border-color: rgba(255, 255, 255, 0.14);
+    background-color: rgba(255, 255, 255, 0.025);
+  }
+}
+
+.vc-phase-card--active {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.vc-phase-track {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 0.125rem;
+}
+
+.vc-phase-track::-webkit-scrollbar {
+  display: none;
+}
+
+.vc-phase-track-wrap {
+  position: relative;
+}
+
+@media (max-width: 1023px) {
+  .vc-phase-track-wrap::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 1.75rem;
+    width: 2.5rem;
+    pointer-events: none;
+    background: linear-gradient(to left, #000000 10%, transparent 100%);
+  }
+}
+
+.vc-phase-insight {
+  animation: vc-fade-in 0.2s ease-out;
+}
+
+@keyframes vc-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Horizontal filter pill tracks (mobile) */
+.vc-filter-track {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 0.25rem;
+  margin: 0 -0.25rem;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+.vc-filter-track::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .vc-filter-track {
+    flex-wrap: wrap;
+    overflow: visible;
+    scroll-snap-type: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* Value Chain page — tighter mobile rhythm */
+.value-chain-page .dashboard-zone + .dashboard-zone {
+  margin-top: 2rem;
+  padding-top: 1.75rem;
+}
+
+@media (min-width: 640px) {
+  .value-chain-page .dashboard-zone + .dashboard-zone {
+    margin-top: 3rem;
+    padding-top: 2.5rem;
+  }
+}
+
+.value-chain-page .dashboard-zone {
+  scroll-margin-top: 5.5rem;
+}
+
+@media (min-width: 640px) {
+  .value-chain-page .dashboard-zone {
+    scroll-margin-top: 7rem;
+  }
+}
+
+/* Header nav — three pills on small screens */
+.app-main-nav {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.app-main-nav::-webkit-scrollbar {
+  display: none;
+}

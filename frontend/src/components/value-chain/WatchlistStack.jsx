@@ -9,7 +9,7 @@ const WatchlistStack = ({ onTierSelect }) => (
           key={ticker}
           type="button"
           onClick={() => onTierSelect(tierNumber)}
-          className="w-full text-left glass-panel rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 hover:border-sigil-gold/20 transition-colors group"
+          className="w-full text-left glass-panel rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 transition-colors group min-h-[44px] active:bg-white/[0.02] sm:hover:border-sigil-gold/20"
         >
           <div className="flex items-center gap-3 shrink-0">
             <span className="text-sm font-mono font-bold text-sigil-gold min-w-[4.5rem]">

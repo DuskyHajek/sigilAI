@@ -167,12 +167,12 @@ const Header = ({
           <ValueChainSectionNav variant="mobile" />
         )}
 
-        <nav className="flex items-center gap-1 border-t border-white/6 pt-2">
+        <nav className="app-main-nav flex items-center gap-1 border-t border-white/6 pt-2 overflow-x-auto -mx-1 px-1">
           <NavLink
             to="/"
             end
             className={({ isActive }) =>
-              `px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              `px-2.5 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-colors whitespace-nowrap shrink-0 ${
                 isActive
                   ? "bg-sigil-gold text-black"
                   : "text-white/60 hover:text-white hover:bg-white/5"
@@ -185,14 +185,14 @@ const Header = ({
             to="/value-chain"
             title="22-tier AI infrastructure value chain — phases, bottlenecks & watchlist mapping"
             className={({ isActive }) =>
-              `flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              `flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-colors whitespace-nowrap shrink-0 ${
                 isActive
                   ? "bg-sigil-gold text-black"
                   : "text-white/60 hover:text-white hover:bg-white/5"
               }`
             }
           >
-            <Layers size={12} aria-hidden="true" />
+            <Layers size={12} className="shrink-0" aria-hidden="true" />
             <span className="sm:hidden">Stack</span>
             <span className="hidden sm:inline">Value Chain</span>
           </NavLink>
@@ -200,14 +200,14 @@ const Header = ({
             to="/mastery-guide"
             title="Reference curriculum, quizzes, flashcards & scenario practice for all 7 themes"
             className={({ isActive }) =>
-              `flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              `flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-colors whitespace-nowrap shrink-0 ${
                 isActive
                   ? "bg-sigil-gold text-black"
                   : "text-white/60 hover:text-white hover:bg-white/5"
               }`
             }
           >
-            <BookOpen size={12} aria-hidden="true" />
+            <BookOpen size={12} className="shrink-0" aria-hidden="true" />
             <span className="sm:hidden">Learn</span>
             <span className="hidden sm:inline">Learning Hub</span>
           </NavLink>

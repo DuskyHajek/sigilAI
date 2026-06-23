@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { BookOpen, Layers } from "lucide-react";
+import "../styles/value-chain.css";
 import DashboardZone from "../components/DashboardZone";
 import StackMap from "../components/value-chain/StackMap";
 import TierExplorer from "../components/value-chain/TierExplorer";
@@ -66,8 +67,8 @@ export default function ValueChain() {
   };
 
   return (
-    <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex flex-col">
-      <div className="hero-guide rounded-2xl p-4 sm:p-6 mb-6 relative overflow-hidden border border-sigil-gold/10">
+    <main className="value-chain-page flex-1 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 w-full flex flex-col min-w-0">
+      <div className="hero-guide rounded-2xl p-3.5 sm:p-6 mb-4 sm:mb-6 relative overflow-hidden border border-sigil-gold/10">
         <div className="hero-guide__accent" />
         <div className="flex flex-col gap-4">
           <div className="min-w-0">
