@@ -16,6 +16,8 @@ import {
   SCENARIO_CATEGORY_STYLES,
   VIEW_MODES,
 } from "../utils/stressDisplay.js";
+import { SectionHeader } from "./learning/LearningUI";
+import { filterBtn } from "./learning/learningStyles";
 import "../styles/stress-test.css";
 
 const STEPS = [
@@ -157,39 +159,29 @@ const StressTestPanel = ({
     <section className={panelClass}>
       <div className="flex flex-col gap-4">
         {!embedded && (
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-            <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-sigil-gold/80 mb-1">
-                Counterfactual
-              </p>
-              <div className="flex items-center gap-2 flex-wrap">
-                <FlaskConical size={17} className="text-sigil-gold shrink-0" />
-                <h2 className="text-lg font-semibold text-slate-100">
-                  Thesis Stress Tester
-                </h2>
-                {isActive && (
-                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded border text-sigil-gold/90 border-sigil-gold/25 bg-sigil-gold/5">
-                    {sourceLabel}
-                  </span>
-                )}
-              </div>
-              <p className="mt-1.5 text-xs text-slate-400 leading-relaxed max-w-3xl">
-                Hypothetical &ldquo;what if&rdquo; simulator — pick a macro shock
-                and see how all seven pillars and watchlist names respond.
-              </p>
-            </div>
-
-            {isActive && !compactResults && (
-              <button
-                type="button"
-                onClick={handleClear}
-                className="inline-flex items-center gap-1.5 self-start px-3 py-1.5 rounded-lg border border-slate-700 text-[11px] font-mono uppercase tracking-wide text-slate-400 hover:text-slate-200 hover:border-slate-600 transition-colors"
-              >
-                <X size={13} />
-                Clear scenario
-              </button>
-            )}
-          </div>
+          <SectionHeader
+            eyebrow="Counterfactual"
+            title="Thesis Stress Tester"
+            description='Hypothetical "what if" simulator — pick a macro shock and see how all seven pillars and watchlist names respond.'
+            icon={FlaskConical}
+            size="lg"
+            action={
+              isActive && !compactResults ? (
+                <button
+                  type="button"
+                  onClick={handleClear}
+                  className="btn-sigil-outline !text-[11px] !py-1 !px-3 inline-flex items-center gap-1.5"
+                >
+                  <X size={13} />
+                  Clear
+                </button>
+              ) : isActive ? (
+                <span className="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full border text-sigil-gold/90 border-sigil-gold/25 bg-sigil-gold/5">
+                  {sourceLabel}
+                </span>
+              ) : null
+            }
+          />
         )}
 
         {embedded && (
@@ -295,11 +287,7 @@ const StressTestPanel = ({
                         type="button"
                         title={mode.hint}
                         onClick={() => setViewMode(mode.id)}
-                        className={`px-2.5 py-1 rounded-md text-[10px] font-mono uppercase tracking-wide border transition-colors ${
-                          viewMode === mode.id
-                            ? "bg-sigil-gold/10 text-sigil-gold border-sigil-gold/35"
-                            : "bg-slate-950/50 text-slate-500 border-slate-800 hover:text-slate-300"
-                        }`}
+                        className={filterBtn(viewMode === mode.id)}
                       >
                         {mode.label}
                       </button>

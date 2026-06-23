@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { RefreshCw, Cpu, Check, X, BookOpen } from "lucide-react";
+import { RefreshCw, Cpu, Check, X, BookOpen, ExternalLink } from "lucide-react";
 import { fetchHealth } from "../api";
 import SyncProgress from "./SyncProgress";
 import DashboardSectionNav from "./DashboardSectionNav";
@@ -58,18 +58,35 @@ const Header = ({ onSync, syncState, lastUpdated, showSectionNav = false }) => {
   const syncedAgo = formatLastSyncedAgo();
 
   return (
-    <header className="border-b border-slate-900 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50">
+    <header className="border-b border-white/6 bg-black/95 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col gap-2.5">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="p-2 rounded-xl bg-sigil-gold/10 border border-sigil-gold/30 text-sigil-gold shrink-0">
+            <a
+              href="https://sigil.fund"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-xl bg-sigil-gold/10 border border-sigil-gold/25 text-sigil-gold shrink-0 hover:bg-sigil-gold/15 transition-colors"
+              title="Sigil Fund"
+            >
               <Cpu size={22} />
-            </div>
+            </a>
             <div className="min-w-0">
-              <h1 className="text-lg font-bold tracking-tight text-white m-0 font-sans leading-none truncate">
-                SIGIL SUPERNOVA
-              </h1>
-              <p className="text-xs text-slate-500 font-sans mt-1 hidden sm:block">
+              <div className="flex items-center gap-2">
+                <h1 className="text-lg font-bold tracking-tight text-white m-0 font-sans leading-none truncate">
+                  SIGIL SUPERNOVA
+                </h1>
+                <a
+                  href="https://sigil.fund"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden sm:inline-flex items-center gap-0.5 text-[10px] text-[#a0a0a0] hover:text-sigil-gold transition-colors shrink-0"
+                >
+                  sigil.fund
+                  <ExternalLink size={10} />
+                </a>
+              </div>
+              <p className="text-xs text-[#a0a0a0] font-sans mt-1 hidden sm:block">
                 Thesis-aware intelligence
               </p>
             </div>
@@ -81,7 +98,38 @@ const Header = ({ onSync, syncState, lastUpdated, showSectionNav = false }) => {
             )}
 
             <div
-              className={`flex items-center gap-1 pl-2.5 pr-1 py-1 rounded-full border text-xs font-mono ${
+              className={`hidden sm:flex items-center gap-1 pl-2.5 pr-1 py-1 rounded-full border text-xs font-mono ${
+                isLive
+                  ? "border-emerald-500/20 text-emerald-400/90 bg-emerald-500/5"
+                  : "border-amber-500/20 text-amber-400/90 bg-amber-500/5"
+              }`}
+            >
+              <span className="whitespace-nowrap">
+                <span className={isLive ? "text-emerald-400" : "text-amber-400"}>
+                  ●
+                </span>{" "}
+                {statusLabel} · {syncedAgo}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={onSync}
+              disabled={syncState === "syncing"}
+              title={syncTitle()}
+              aria-label={syncTitle()}
+              className={`hidden sm:inline-flex btn-sigil-outline ml-1 !py-1 !px-3 !text-[11px] disabled:opacity-50 disabled:cursor-not-allowed ${
+                syncState === "error" ? "!border-rose-500/50 !text-rose-400" : ""
+              }`}
+            >
+              <SyncIcon
+                size={12}
+                className={syncState === "syncing" ? "animate-spin" : ""}
+              />
+              Sync
+            </button>
+            <div
+              className={`flex sm:hidden items-center gap-1 pl-2.5 pr-1 py-1 rounded-full border text-xs font-mono ${
                 isLive
                   ? "border-emerald-500/20 text-emerald-400/90 bg-emerald-500/5"
                   : "border-amber-500/20 text-amber-400/90 bg-amber-500/5"
@@ -104,7 +152,7 @@ const Header = ({ onSync, syncState, lastUpdated, showSectionNav = false }) => {
                     ? "text-emerald-400"
                     : syncState === "error"
                       ? "text-rose-400"
-                      : "text-slate-500 hover:text-sigil-gold hover:bg-slate-800/60"
+                      : "text-[#a0a0a0] hover:text-sigil-gold hover:bg-white/5"
                 }`}
               >
                 <SyncIcon
@@ -122,33 +170,33 @@ const Header = ({ onSync, syncState, lastUpdated, showSectionNav = false }) => {
           <DashboardSectionNav variant="mobile" />
         )}
 
-        <nav className="flex items-center gap-1 border-t border-slate-800/50 pt-2">
+        <nav className="flex items-center gap-1 border-t border-white/6 pt-2">
           <NavLink
             to="/"
             end
             className={({ isActive }) =>
-              `px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+              `px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
                 isActive
-                  ? "bg-sigil-gold/15 text-sigil-gold border border-sigil-gold/30"
-                  : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/60"
+                  ? "bg-sigil-gold text-black"
+                  : "text-white/60 hover:text-white hover:bg-white/5"
               }`
             }
           >
-            DASHBOARD
+            Dashboard
           </NavLink>
           <NavLink
             to="/mastery-guide"
             title="Reference curriculum, quizzes, flashcards & scenario practice for all 7 themes"
             className={({ isActive }) =>
-              `flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+              `flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
                 isActive
-                  ? "bg-sigil-gold/15 text-sigil-gold border border-sigil-gold/30"
-                  : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/60"
+                  ? "bg-sigil-gold text-black"
+                  : "text-white/60 hover:text-white hover:bg-white/5"
               }`
             }
           >
             <BookOpen size={12} />
-            LEARNING HUB
+            Learning Hub
           </NavLink>
         </nav>
       </div>

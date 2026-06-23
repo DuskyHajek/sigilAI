@@ -1,5 +1,5 @@
 .stress-panel {
-  --stress-accent: rgba(229, 193, 88, 0.35);
+  --stress-accent: rgba(0, 255, 136, 0.35);
 }
 
 .stress-step {
@@ -13,11 +13,11 @@
   width: 1.35rem;
   height: 1.35rem;
   border-radius: 999px;
-  border: 1px solid rgba(229, 193, 88, 0.35);
-  background: rgba(229, 193, 88, 0.08);
-  color: rgba(229, 193, 88, 0.95);
+  border: 1px solid rgba(0, 255, 136, 0.35);
+  background: rgba(0, 255, 136, 0.08);
+  color: rgba(0, 255, 136, 0.95);
   font-size: 0.65rem;
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", var(--font-mono), monospace;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -36,11 +36,11 @@
 }
 
 .stress-result-card {
-  border: 1px solid rgba(229, 193, 88, 0.18);
+  border: 1px solid rgba(0, 255, 136, 0.18);
   background: linear-gradient(
     135deg,
-    rgba(229, 193, 88, 0.04) 0%,
-    rgba(15, 23, 42, 0.2) 100%
+    rgba(0, 255, 136, 0.04) 0%,
+    rgba(0, 0, 0, 0.3) 100%
   );
 }
 
@@ -76,7 +76,7 @@
 }
 
 .thesis-radar-row--stress-active {
-  box-shadow: inset 0 0 0 1px rgba(229, 193, 88, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(0, 255, 136, 0.12);
 }
 
 .watchlist-row--stress-exposed {

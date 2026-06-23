@@ -26,21 +26,14 @@ import FlashcardSection from "../components/learning/FlashcardSection";
 import ScenarioSection from "../components/learning/ScenarioSection";
 import EssentialBadge from "../components/learning/EssentialBadge";
 import ThemeBadge from "../components/learning/ThemeBadge";
-import { ModeCard, SectionHeader, TipBox } from "../components/learning/LearningUI";
-import { filterBtn } from "../components/learning/learningStyles";
+import { ModeCard, SectionHeader, TipBox, SearchInput } from "../components/learning/LearningUI";
+import { filterBtn, tabBtn } from "../components/learning/learningStyles";
 
 const PRACTICE_TABS = [
   { id: "quiz", label: "Quiz", shortLabel: "Quiz", icon: HelpCircle },
   { id: "flashcards", label: "Flashcards", shortLabel: "Cards", icon: Layers },
   { id: "scenarios", label: "Scenarios", shortLabel: "Scenarios", icon: Sparkles },
 ];
-
-const tabBtn = (active) =>
-  `w-full text-center text-[10px] sm:text-xs font-mono font-bold px-2 sm:px-3 py-2 rounded-lg transition-all leading-snug ${
-    active
-      ? "bg-sigil-gold/15 text-sigil-gold border border-sigil-gold/30"
-      : "text-slate-500 hover:text-slate-200 bg-slate-800/40 border border-slate-700/30 hover:border-slate-600/40"
-  }`;
 
 // ─── Level badge ─────────────────────────────────────────────────────────────
 
@@ -361,11 +354,7 @@ function ReadingListSection() {
           <div className="flex flex-wrap gap-2">
             {levels.map(l => (
               <button key={l} onClick={() => setFilterLevel(l)}
-                className={`text-xs font-mono font-bold px-3 py-1 rounded-lg transition-all ${
-                  filterLevel === l
-                    ? "bg-sigil-gold/15 text-sigil-gold border border-sigil-gold/30"
-                    : "text-slate-500 hover:text-slate-300 bg-slate-800/40 border border-slate-700/40"
-                }`}>
+                className={filterBtn(filterLevel === l)}>
                 {l}
               </button>
             ))}
@@ -376,11 +365,7 @@ function ReadingListSection() {
           <div className="flex flex-wrap gap-2">
             {themes.map(t => (
               <button key={t} onClick={() => setFilterTheme(t)}
-                className={`text-xs font-mono font-bold px-3 py-1 rounded-lg transition-all ${
-                  filterTheme === t
-                    ? "bg-sigil-gold/15 text-sigil-gold border border-sigil-gold/30"
-                    : "text-slate-500 hover:text-slate-300 bg-slate-800/40 border border-slate-700/40"
-                }`}>
+                className={filterBtn(filterTheme === t)}>
                 {t}
               </button>
             ))}
@@ -437,26 +422,17 @@ function GlossarySection() {
       </TipBox>
 
       {/* Search */}
-      <div className="relative">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
-        <input
-          type="text"
-          placeholder="Search terms or definitions..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="w-full bg-slate-900/60 border border-slate-700/60 rounded-xl pl-9 pr-4 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sigil-gold/40"
-        />
-      </div>
+      <SearchInput
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search terms or definitions..."
+      />
 
       {/* Theme filter */}
       <div className="flex flex-wrap gap-2">
         {themes.map(t => (
           <button key={t} onClick={() => setFilterTheme(t)}
-            className={`text-xs font-mono font-bold px-3 py-1 rounded-lg transition-all ${
-              filterTheme === t
-                ? "bg-sigil-gold/15 text-sigil-gold border border-sigil-gold/30"
-                : "text-slate-500 hover:text-slate-300 bg-slate-800/40 border border-slate-700/40"
-            }`}>
+            className={filterBtn(filterTheme === t)}>
             {t}
           </button>
         ))}
@@ -543,7 +519,7 @@ export default function MasteryGuide() {
             {heroStats.map(s => (
               <div
                 key={s.label}
-                className="text-center px-2 sm:px-4 py-2 rounded-xl bg-slate-900/50 border border-slate-800/60"
+                className="text-center px-2 sm:px-4 py-2 rounded-xl bg-[#1a1a1a] border border-white/8"
               >
                 <p className="text-lg sm:text-xl font-bold text-sigil-gold">{s.value}</p>
                 <p className="text-[9px] sm:text-[10px] font-mono text-slate-500 uppercase tracking-widest leading-tight mt-0.5">

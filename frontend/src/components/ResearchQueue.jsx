@@ -1,5 +1,6 @@
 import { SearchCheck } from "lucide-react";
 import { THEMES } from "@config/thesis.js";
+import { SectionHeader } from "./learning/LearningUI";
 
 const getTheme = (themeId) => THEMES.find((theme) => theme.id === themeId);
 
@@ -29,29 +30,19 @@ const ResearchQueue = ({ researchQueue, isMock }) => {
   if (items.length === 0) return null;
 
   return (
-    <section className="glass-panel border border-slate-800 rounded-2xl p-5 md:p-6">
-      <div className="mb-4">
-        <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-sigil-gold/80 mb-1">
-          Next steps
-        </p>
-        <div className="flex items-center gap-2 mb-1">
-          <SearchCheck size={18} className="text-sigil-gold shrink-0" />
-          <h2 className="text-lg md:text-xl font-semibold text-slate-100">
-            Research Queue
-          </h2>
-        </div>
-        <p className="text-xs text-slate-400 leading-relaxed max-w-3xl">
-          A short list of what looks worth checking after this sync — built from
-          headlines, theme scores, and watchlist notes. Search terms are
-          suggestions, not conclusions.
-          {isMock ? " Demo data shown." : ""}
-        </p>
-      </div>
+    <section className="glass-panel rounded-2xl p-5 md:p-6">
+      <SectionHeader
+        eyebrow="Next steps"
+        title="Research Queue"
+        description={`A short list of what looks worth checking after this sync — built from headlines, theme scores, and watchlist notes.${isMock ? " Demo data shown." : ""}`}
+        icon={SearchCheck}
+        size="lg"
+      />
 
-      <ol className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+      <ol className="grid grid-cols-1 xl:grid-cols-2 gap-3 -mt-2">
         {items.map((item, index) => {
           const theme = getTheme(item.theme);
-          const themeColor = theme?.color_hex || "#D6A742";
+          const themeColor = theme?.color_hex || "#00ff88";
           const keywords = (item.keywords || [])
             .map(cleanKeyword)
             .filter(Boolean);
@@ -70,7 +61,7 @@ const ResearchQueue = ({ researchQueue, isMock }) => {
           return (
             <li
               key={`${item.action}-${index}`}
-              className="relative overflow-hidden rounded-xl border border-slate-900 bg-slate-950/20 p-3.5"
+              className="relative overflow-hidden rounded-xl border border-white/8 bg-[#1a1a1a] p-3.5 transition-colors hover:border-white/15 hover:bg-[#222]"
             >
               <div
                 className="absolute left-0 top-0 h-full w-1"
@@ -94,11 +85,11 @@ const ResearchQueue = ({ researchQueue, isMock }) => {
                       className={`px-2 py-0.5 rounded-full text-[10px] font-mono border ${
                         secondaryBadge.type === "ticker"
                           ? "border-sigil-gold/30 text-sigil-gold/90"
-                          : "border-slate-700 text-slate-500"
+                          : "border-white/10 text-[#a0a0a0]"
                       }`}
                       style={
                         secondaryBadge.type === "ticker"
-                          ? outlineBadgeStyle("#e5c158")
+                          ? outlineBadgeStyle("#00ff88")
                           : undefined
                       }
                     >
@@ -106,13 +97,13 @@ const ResearchQueue = ({ researchQueue, isMock }) => {
                     </span>
                   )}
                   {overflowCount > 0 && (
-                    <span className="text-[10px] font-mono text-slate-600">
+                    <span className="text-[10px] font-mono text-[#a0a0a0]">
                       +{overflowCount} more
                     </span>
                   )}
                 </div>
 
-                <p className="text-sm text-slate-100 leading-relaxed">
+                <p className="text-sm text-white leading-relaxed">
                   {cleanAction(item.action)}
                 </p>
               </div>

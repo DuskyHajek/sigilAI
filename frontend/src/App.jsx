@@ -13,6 +13,7 @@ import DashboardZone from "./components/DashboardZone";
 import EditorialSpotlight from "./components/EditorialSpotlight";
 import ResearchQueue from "./components/ResearchQueue";
 import MasteryGuide from "./pages/MasteryGuide";
+import SiteFooter from "./components/SiteFooter";
 import { fetchDashboard, fetchHealth, triggerSync } from "./api";
 import {
   editorialShowsBlindspot,
@@ -175,7 +176,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-bg-dark text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-bg-dark text-white flex flex-col font-sans">
       <Header
         onSync={handleSync}
         syncState={syncState}
@@ -290,19 +291,21 @@ function App() {
                     />
                   </DashboardZone>
 
-                  <footer className="text-center pb-4 pt-8 mt-4 border-t border-white/[0.04]">
-                    <p className="text-[11px] font-mono text-slate-600">
-                      Application demo · Supernova thesis encoded in{" "}
-                      <span className="text-slate-500">config/thesis.js</span> · AI
-                      prompts in <span className="text-slate-500">services/prompts.js</span>
-                    </p>
-                  </footer>
+                  <SiteFooter />
                 </>
               )}
             </main>
           }
         />
-        <Route path="/mastery-guide" element={<MasteryGuide />} />
+        <Route
+          path="/mastery-guide"
+          element={
+            <>
+              <MasteryGuide />
+              <SiteFooter />
+            </>
+          }
+        />
       </Routes>
     </div>
   );

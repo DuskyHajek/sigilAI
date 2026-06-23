@@ -69,12 +69,12 @@ const EditorialSpotlight = ({
 
   return (
     <section
-      className={`editorial-spotlight rounded-xl border ${styles.border} ${styles.bg} px-4 py-3`}
+      className={`editorial-spotlight glass-panel glass-panel-hover rounded-2xl border ${styles.border} ${styles.bg} px-4 py-4 md:px-5 md:py-5`}
       aria-label="Editorial spotlight"
     >
       <div className="flex items-start gap-3">
         <div
-          className={`p-2 rounded-lg border shrink-0 ${styles.iconWrap}`}
+          className={`p-2 rounded-xl border shrink-0 ${styles.iconWrap}`}
           aria-hidden="true"
         >
           <Icon size={16} />
@@ -82,17 +82,17 @@ const EditorialSpotlight = ({
 
         <div className="min-w-0 flex-1">
           <p
-            className={`text-[11px] font-mono uppercase tracking-[0.15em] ${styles.labelColor} mb-1`}
+            className={`text-[10px] font-mono uppercase tracking-[0.15em] ${styles.labelColor} mb-1`}
           >
             {styles.label}
           </p>
 
           {spotlight.kind === "ticker" && (
             <>
-              <p className="text-sm font-semibold text-slate-100 leading-snug">
+              <p className="text-base font-semibold text-white leading-snug">
                 {spotlight.title}
               </p>
-              <p className="text-sm text-slate-300 leading-relaxed mt-0.5">
+              <p className="text-sm text-[#a0a0a0] leading-relaxed mt-1">
                 {spotlight.body.split(spotlight.ticker).map((part, index, arr) =>
                   index < arr.length - 1 ? (
                     <span key={index}>
@@ -110,17 +110,17 @@ const EditorialSpotlight = ({
           )}
 
           {spotlight.kind === "blindspot" && (
-            <p className="text-sm text-slate-200 leading-relaxed">
+            <p className="text-sm text-[#a0a0a0] leading-relaxed">
               {spotlight.text}
             </p>
           )}
 
           {spotlight.kind === "signal" && (
             <>
-              <p className="text-sm font-semibold text-slate-100 leading-snug">
+              <p className="text-base font-semibold text-white leading-snug">
                 {spotlight.cluster.clusterName}
               </p>
-              <p className="text-sm text-slate-400 leading-relaxed mt-0.5 line-clamp-2">
+              <p className="text-sm text-[#a0a0a0] leading-relaxed mt-1 line-clamp-2">
                 {spotlight.cluster.evidenceSummary}
               </p>
             </>
@@ -130,11 +130,11 @@ const EditorialSpotlight = ({
             <button
               type="button"
               onClick={handleAction}
-              className="mt-2 text-[11px] font-mono text-slate-500 hover:text-sigil-gold transition-colors"
+              className="btn-sigil-outline mt-3 !text-[11px] !py-1 !px-3"
             >
               {spotlight.kind === "ticker"
-                ? `Jump to ${spotlight.ticker} in watchlist →`
-                : "Jump to impacted theme →"}
+                ? `View ${spotlight.ticker} in watchlist`
+                : "View impacted theme"}
             </button>
           )}
         </div>

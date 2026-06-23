@@ -4,10 +4,11 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Filter,
-  Search,
   ChevronDown,
 } from "lucide-react";
 import { THEMES } from "@config/thesis.js";
+import { SectionHeader, SearchInput } from "./learning/LearningUI";
+import { filterBtn } from "./learning/learningStyles";
 
 const SPOTLIGHT_LABELS = {
   ipo: "IPO",
@@ -126,54 +127,40 @@ const Watchlist = ({ watchlistData, stressResult }) => {
   };
 
   return (
-    <div className="glass-panel border border-slate-800 p-5 md:p-6 rounded-2xl flex flex-col h-full min-h-[480px] max-h-[min(720px,75vh)]">
-      <div className="mb-4">
-        <div className="flex items-center gap-2 mb-1">
-          <Sparkles size={18} className="text-sigil-gold shrink-0" />
-          <h2 className="text-base font-semibold text-slate-100">Watchlist</h2>
-        </div>
-        <p className="text-xs text-slate-500 mb-4 leading-relaxed">
-          {stocks.length} public names · search or filter by theme
-          {stressActive && (
-            <span className="block mt-1 text-sigil-gold/80">
-              Rose border = exposed · green = resilient for active scenario
-            </span>
-          )}
-        </p>
+    <div className="glass-panel p-5 md:p-6 rounded-2xl flex flex-col h-full min-h-[480px] max-h-[min(720px,75vh)]">
+      <SectionHeader
+        eyebrow="Portfolio"
+        title="Watchlist"
+        description={
+          stressActive
+            ? `${stocks.length} public names · rose border = exposed · green = resilient`
+            : `${stocks.length} public names · search or filter by theme`
+        }
+        icon={Sparkles}
+        size="lg"
+      />
 
-        <div className="flex flex-col gap-3">
-          <div className="relative">
-            <Search
-              size={14}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600"
-            />
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search ticker, company, or note..."
-              className="w-full rounded-xl border border-slate-800 bg-slate-950/60 py-2 pl-9 pr-3 text-sm text-slate-200 outline-none transition-colors placeholder:text-slate-600 focus:border-sigil-gold/40"
-            />
-          </div>
+      <div className="flex flex-col gap-3 -mt-2 mb-4">
+        <SearchInput
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Search ticker, company, or note..."
+        />
 
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <Filter size={12} className="text-slate-500 shrink-0 mr-0.5" />
-            {themeFilters.map((theme) => (
-              <button
-                key={theme}
-                onClick={() => setSelectedTheme(theme)}
-                className={`px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all ${
-                  selectedTheme === theme
-                    ? "bg-sigil-gold/10 text-sigil-gold border-sigil-gold/40"
-                    : "bg-slate-900/40 text-slate-400 border-slate-800 hover:text-slate-300 hover:border-slate-700"
-                }`}
-              >
-                {FILTER_SHORT_NAMES[theme] ?? theme}
-              </button>
-            ))}
-            <span className="ml-auto text-[11px] font-mono text-slate-600">
-              {filteredData.length}/{stocks.length}
-            </span>
-          </div>
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <Filter size={12} className="text-[#a0a0a0] shrink-0 mr-0.5" />
+          {themeFilters.map((theme) => (
+            <button
+              key={theme}
+              onClick={() => setSelectedTheme(theme)}
+              className={filterBtn(selectedTheme === theme)}
+            >
+              {FILTER_SHORT_NAMES[theme] ?? theme}
+            </button>
+          ))}
+          <span className="ml-auto text-[11px] font-mono text-[#a0a0a0]">
+            {filteredData.length}/{stocks.length}
+          </span>
         </div>
       </div>
 

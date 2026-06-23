@@ -15,10 +15,10 @@ const SectionNavButtons = ({ activeId, onSelect, compact = false }) => (
         key={id}
         type="button"
         onClick={() => onSelect(id)}
-        className={`${compact ? "px-2.5 py-1 shrink-0" : "px-2 py-1"} rounded-md text-[11px] font-mono transition-colors whitespace-nowrap ${
+        className={`${compact ? "px-2.5 py-1 shrink-0" : "px-3 py-1"} rounded-full text-[11px] font-semibold transition-colors whitespace-nowrap ${
           activeId === id
-            ? "text-sigil-gold bg-sigil-gold/10"
-            : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/50"
+            ? "bg-sigil-gold text-black"
+            : "text-white/60 hover:text-white hover:bg-white/5"
         }`}
       >
         {label}
