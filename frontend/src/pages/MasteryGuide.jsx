@@ -9,7 +9,6 @@ import {
   HelpCircle,
   Layers,
   Library,
-  MessageSquareQuote,
   Search,
   Sparkles,
 } from "lucide-react";
@@ -21,11 +20,10 @@ import {
   MENTAL_MODELS,
   ESSENTIAL_CONCEPT_COUNT,
 } from "../data/masteryGuideData";
-import { QUIZ_QUESTIONS, SCENARIOS, INTERVIEW_QUESTIONS } from "../data/academyData";
+import { QUIZ_QUESTIONS, SCENARIOS } from "../data/academyData";
 import QuizSection from "../components/learning/QuizSection";
 import FlashcardSection from "../components/learning/FlashcardSection";
 import ScenarioSection from "../components/learning/ScenarioSection";
-import InterviewPrepSection from "../components/learning/InterviewPrepSection";
 import EssentialBadge from "../components/learning/EssentialBadge";
 import ThemeBadge from "../components/learning/ThemeBadge";
 import { ModeCard, SectionHeader, TipBox } from "../components/learning/LearningUI";
@@ -35,7 +33,6 @@ const PRACTICE_TABS = [
   { id: "quiz", label: "Quiz", shortLabel: "Quiz", icon: HelpCircle },
   { id: "flashcards", label: "Flashcards", shortLabel: "Cards", icon: Layers },
   { id: "scenarios", label: "Scenarios", shortLabel: "Scenarios", icon: Sparkles },
-  { id: "interview", label: "Interview Prep", shortLabel: "Interview", icon: MessageSquareQuote },
 ];
 
 const tabBtn = (active) =>
@@ -519,7 +516,7 @@ export default function MasteryGuide() {
         ]
       : [
           { value: String(QUIZ_QUESTIONS.length), label: "Questions" },
-          { value: String(INTERVIEW_QUESTIONS.length), label: "Interview Qs" },
+          { value: String(GLOSSARY.length), label: "Flashcards" },
           { value: String(SCENARIOS.length), label: "Scenarios" },
         ];
 
@@ -535,7 +532,7 @@ export default function MasteryGuide() {
             <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
               {mode === "reference"
                 ? "Books, concepts, mental models & glossary for all 7 themes"
-                : "Quizzes, flashcards, scenarios & interview prep to test your mastery"}
+                : "Quizzes, flashcards & scenarios to test your mastery"}
             </p>
             <p className="text-[11px] font-mono text-slate-600 mt-2 flex items-center gap-1.5">
               <GraduationCap size={12} className="text-sigil-gold/60 shrink-0" />
@@ -571,7 +568,7 @@ export default function MasteryGuide() {
           active={mode === "practice"}
           icon={Brain}
           label="Practice"
-          description="Active study — quiz yourself, flip flashcards, walk through scenarios & interview prep"
+          description="Active study — quiz yourself, flip flashcards, walk through scenarios"
           onClick={() => switchMode("practice")}
         />
       </div>
@@ -582,7 +579,7 @@ export default function MasteryGuide() {
         className={`grid gap-1.5 mb-4 sm:mb-6 ${
           mode === "reference"
             ? "grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-11"
-            : "grid-cols-2 sm:grid-cols-4"
+            : "grid-cols-3"
         }`}
       >
         {mode === "reference"
@@ -642,18 +639,6 @@ export default function MasteryGuide() {
               icon={Sparkles}
             />
             <ScenarioSection />
-          </>
-        )}
-
-        {mode === "practice" && practiceTab === "interview" && (
-          <>
-            <SectionHeader
-              eyebrow="Interview Ready"
-              title={`Interview Prep — ${INTERVIEW_QUESTIONS.length} Questions`}
-              description="Motivation, thesis depth, dashboard fluency, and curveballs — practice out loud before your session."
-              icon={MessageSquareQuote}
-            />
-            <InterviewPrepSection />
           </>
         )}
 

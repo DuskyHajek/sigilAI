@@ -27,10 +27,9 @@ Static curriculum and practice for all 7 investment themes. No API calls or sync
 
 - **Quiz** — 60 questions (quick 10, full 60, or by theme) with difficulty badges and instant feedback.
 - **Flashcards** — glossary terms with flip-to-reveal definitions, filterable by theme.
-- **Scenarios** — 10 investment case drills with expandable analysis; ⭐ Interview priority on high-relevance cases.
-- **Interview Prep** — 10 questions with hints and sample answers (motivation, thesis, dashboard, curveball).
+- **Scenarios** — 10 investment case drills with expandable analysis.
 
-Content lives in `frontend/src/data/masteryGuideData.js`, `academyData.js`, and split modules `quizQuestionsExtended.js`, `scenariosExtended.js`, `interviewQuestions.js`. Offline HTML exports in `docs/`; regenerate via `scripts/generate-learning-*.mjs`.
+Content lives in `frontend/src/data/masteryGuideData.js`, `academyData.js`, and split modules `quizQuestionsExtended.js`, `scenariosExtended.js`. Offline HTML exports in `docs/`; regenerate via `scripts/generate-learning-*.mjs`.
 
 The product goal is not to be a Bloomberg clone. The value is the thesis-specific judgment layer on top of news and prices.
 
@@ -105,10 +104,9 @@ supernova-dashboard/
     │   ├── utils/thesisRadarUtils.js
     │   ├── data/
     │   │   ├── masteryGuideData.js   # Reference curriculum (themes, books, glossary, mental models)
-    │   │   ├── academyData.js        # Quiz, scenarios, interview prep (merged exports)
+    │   │   ├── academyData.js        # Quiz, scenarios (merged exports)
     │   │   ├── quizQuestionsExtended.js
     │   │   ├── scenariosExtended.js
-    │   │   └── interviewQuestions.js
     │   ├── pages/
     │   │   └── MasteryGuide.jsx      # Learning Hub (Reference + Practice)
     │   └── components/
@@ -124,7 +122,6 @@ supernova-dashboard/
     │           ├── QuizSection.jsx
     │           ├── FlashcardSection.jsx
     │           ├── ScenarioSection.jsx
-    │           ├── InterviewPrepSection.jsx
     │           └── EssentialBadge.jsx
     └── vite.config.js
 ```
