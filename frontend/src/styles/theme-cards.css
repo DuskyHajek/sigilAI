@@ -288,3 +288,131 @@
   gap: 6px;
 }
 
+/* Thesis Radar — 7 pillars visible without list scroll when collapsed */
+.thesis-radar-list {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 3px;
+  overflow: hidden;
+}
+
+.thesis-radar-list .theme-card {
+  padding: 0;
+  border-radius: 8px;
+  min-height: 0;
+}
+
+.thesis-radar-list:not(.thesis-radar-list--detail) .thesis-radar-row {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.thesis-radar-list--detail .thesis-radar-row:not(.thesis-radar-row--expanded) {
+  flex: 0 0 auto;
+}
+
+.thesis-radar-row--expanded {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.thesis-radar-row__trigger {
+  width: 100%;
+  text-align: left;
+  padding: 6px 8px;
+  flex-shrink: 0;
+}
+
+.thesis-radar-row__inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.thesis-radar-row__icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 13px;
+}
+
+.thesis-radar-row__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+.thesis-radar-row__name {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1 1 72px;
+  max-width: 9rem;
+}
+
+.thesis-radar-row__meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.thesis-radar-row__tickers {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.thesis-radar-row__detail {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  border-top: 1px solid rgba(15, 23, 42, 0.6);
+  margin: 0 8px 8px;
+  padding-top: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(229, 193, 88, 0.35) transparent;
+}
+
+.thesis-radar-row__detail::-webkit-scrollbar {
+  width: 5px;
+}
+
+.thesis-radar-row__detail::-webkit-scrollbar-thumb {
+  background: rgba(229, 193, 88, 0.3);
+  border-radius: 3px;
+}
+
+@media (max-width: 1279px) {
+  .thesis-radar-list:not(.thesis-radar-list--detail) {
+    min-height: 420px;
+  }
+
+  .thesis-radar-row__name {
+    max-width: 6rem;
+  }
+
+  .thesis-radar-row__tickers span:nth-child(n + 3) {
+    display: none;
+  }
+}
+
