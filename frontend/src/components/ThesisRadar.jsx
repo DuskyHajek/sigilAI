@@ -87,7 +87,7 @@ const ThesisRadar = ({
     setExpandedTheme((current) => (current === themeId ? null : themeId));
 
   return (
-    <div className="glass-panel border-gold-glow p-5 rounded-2xl h-full flex flex-col min-h-[520px] lg:min-h-0">
+    <div className="glass-panel border-gold-glow p-5 rounded-2xl h-full flex flex-col min-h-0 lg:max-h-[680px]">
       <div className="mb-3 shrink-0">
         <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-sigil-gold/80 mb-1">
           Panel 02
@@ -99,15 +99,15 @@ const ThesisRadar = ({
         <p className="text-[11px] text-slate-400 mt-0.5 leading-snug">
           {stressActive
             ? stressViewMode === "stress"
-              ? "Scenario impact on each pillar — expand for transmission chain. Today’s drift stays visible in each row."
-              : "Today’s drift plus scenario overlay — expand a row for both reads."
-            : "All seven pillars — expand one row for headlines and evidence."}
+              ? "Each pillar shows a scenario read — click for the full transmission chain."
+              : "Today's signal preview on every row — click any pillar for headlines and evidence."
+            : "Today's top signal preview on every row — click any pillar for headlines and evidence."}
         </p>
       </div>
 
       <div
         className={`thesis-radar-list${
-          expandedTheme ? " thesis-radar-list--detail" : ""
+          expandedTheme ? " thesis-radar-list--detail" : " thesis-radar-list--compact"
         }`}
       >
         {THEMES.map((theme) => {
@@ -126,12 +126,21 @@ const ThesisRadar = ({
           const icon = THEME_ICONS[theme.id] ?? "ti-server-2";
           const shortName = SHORT_THEME_NAMES[theme.id] || theme.display_name;
 
+          const previewText =
+            showStress && stress?.rationale && stressViewMode === "stress"
+              ? stress.rationale
+              : topHeadline ||
+                drift?.narrativeShiftDetails ||
+                (headlineCount === 0
+                  ? null
+                  : pulse.reason || "Headlines available — click to expand");
+
           return (
             <div
               key={theme.id}
               id={`thesis-row-${theme.id}`}
               className={`theme-card theme-card--${color} thesis-radar-row border transition-colors ${
-                isExpanded ? "thesis-radar-row--expanded" : ""
+                isExpanded ? "thesis-radar-row--expanded" : "thesis-radar-row--collapsed"
               } ${isHighlighted ? "border-sigil-gold/40 ring-1 ring-sigil-gold/20" : ""} ${
                 showStress && stress ? "thesis-radar-row--stress-active" : ""
               }`}
@@ -139,9 +148,11 @@ const ThesisRadar = ({
               <button
                 type="button"
                 onClick={() => toggleTheme(theme.id)}
-                className="thesis-radar-row__trigger"
+                className={`thesis-radar-row__trigger${
+                  isExpanded ? " thesis-radar-row__trigger--expanded" : ""
+                }`}
                 aria-expanded={isExpanded}
-                title={theme.display_name}
+                aria-label={`${isExpanded ? "Collapse" : "Expand"} ${theme.display_name} — headlines and evidence`}
               >
                 <div className="thesis-radar-row__inner">
                   <div className="theme-card__icon thesis-radar-row__icon">
@@ -168,9 +179,12 @@ const ThesisRadar = ({
                           title={`Scenario · ${stressDisplay.hint}`}
                         />
                       )}
-                      {showLiveRow && (
-                        <span className="text-[9px] font-mono text-slate-500 shrink-0 whitespace-nowrap">
-                          {headlineCount === 0 ? "0" : headlineCount}
+                      {showLiveRow && headlineCount > 0 && (
+                        <span
+                          className="text-[8px] font-mono uppercase tracking-wide px-1 py-px rounded border border-slate-700/80 text-slate-400 bg-slate-950/50 shrink-0"
+                          title={`${headlineCount} headline${headlineCount === 1 ? "" : "s"} this sync`}
+                        >
+                          {headlineCount} hl
                         </span>
                       )}
                     </div>
@@ -190,13 +204,32 @@ const ThesisRadar = ({
                     </div>
                   </div>
 
-                  <ChevronDown
-                    size={14}
-                    className={`shrink-0 text-slate-500 transition-transform ${
-                      isExpanded ? "rotate-180" : ""
-                    }`}
-                  />
+                  <div className="thesis-radar-row__expand-hint shrink-0 flex flex-col items-center gap-0.5">
+                    <ChevronDown
+                      size={14}
+                      className={`text-slate-500 transition-transform ${
+                        isExpanded ? "rotate-180 text-sigil-gold/80" : ""
+                      }`}
+                    />
+                    {!isExpanded && (
+                      <span className="text-[7px] font-mono uppercase tracking-wide text-slate-600">
+                        More
+                      </span>
+                    )}
+                  </div>
                 </div>
+
+                {!isExpanded && (
+                  <div className="thesis-radar-row__preview-wrap">
+                    {previewText ? (
+                      <p className="thesis-radar-row__preview">{previewText}</p>
+                    ) : (
+                      <p className="thesis-radar-row__preview thesis-radar-row__preview--empty">
+                        No headlines this sync · expand for thesis scope
+                      </p>
+                    )}
+                  </div>
+                )}
               </button>
 
               {isExpanded && (

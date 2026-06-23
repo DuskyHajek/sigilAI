@@ -19,7 +19,7 @@ const PANELS = [
   {
     icon: Activity,
     label: "02 · Thesis Radar",
-    text: "All seven pillars — today's drift plus scenario overlay when a stress test is active.",
+    text: "All seven pillars with a headline preview on each row — click for full evidence.",
   },
   {
     icon: Sparkles,

@@ -288,14 +288,28 @@
   gap: 6px;
 }
 
-/* Thesis Radar — 7 pillars visible without list scroll when collapsed */
+/* Thesis Radar — compact rows with preview; expand one for full detail */
 .thesis-radar-list {
   display: flex;
   flex-direction: column;
   flex: 1;
   min-height: 0;
-  gap: 3px;
-  overflow: hidden;
+  gap: 4px;
+}
+
+.thesis-radar-list--compact {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(229, 193, 88, 0.35) transparent;
+}
+
+.thesis-radar-list--compact::-webkit-scrollbar {
+  width: 5px;
+}
+
+.thesis-radar-list--compact::-webkit-scrollbar-thumb {
+  background: rgba(229, 193, 88, 0.3);
+  border-radius: 3px;
 }
 
 .thesis-radar-list .theme-card {
@@ -304,9 +318,13 @@
   min-height: 0;
 }
 
-.thesis-radar-list:not(.thesis-radar-list--detail) .thesis-radar-row {
-  flex: 1 1 0;
-  min-height: 0;
+/* Collapsed: content-height rows — no empty vertical stretch */
+.thesis-radar-list--compact .thesis-radar-row {
+  flex: 0 0 auto;
+}
+
+.thesis-radar-list--detail {
+  overflow: hidden;
 }
 
 .thesis-radar-list--detail .thesis-radar-row:not(.thesis-radar-row--expanded) {
@@ -321,11 +339,51 @@
   overflow: hidden;
 }
 
+.thesis-radar-row--collapsed {
+  cursor: pointer;
+}
+
+.thesis-radar-row--collapsed:hover {
+  filter: brightness(1.06);
+}
+
 .thesis-radar-row__trigger {
   width: 100%;
   text-align: left;
-  padding: 6px 8px;
+  padding: 6px 8px 0;
   flex-shrink: 0;
+  display: block;
+}
+
+.thesis-radar-row__trigger--expanded {
+  padding-bottom: 0;
+}
+
+.thesis-radar-row__preview-wrap {
+  padding: 0 8px 7px 42px;
+}
+
+.thesis-radar-row__preview {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.45;
+  color: rgba(148, 163, 184, 0.95);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  border-left: 2px solid rgba(229, 193, 88, 0.22);
+  padding-left: 8px;
+}
+
+.thesis-radar-row__preview--empty {
+  color: rgba(100, 116, 139, 0.85);
+  font-style: italic;
+  border-left-color: rgba(51, 65, 85, 0.8);
+}
+
+.thesis-radar-row__expand-hint {
+  min-width: 1.75rem;
 }
 
 .thesis-radar-row__inner {
@@ -352,7 +410,8 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  row-gap: 3px;
 }
 
 .thesis-radar-row__name {
@@ -363,8 +422,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
-  flex: 1 1 72px;
-  max-width: 9rem;
+  flex: 1 1 100%;
+  max-width: none;
 }
 
 .thesis-radar-row__meta {
@@ -379,7 +438,21 @@
   align-items: center;
   gap: 3px;
   flex-shrink: 0;
-  margin-left: auto;
+  flex: 1 1 auto;
+}
+
+@media (max-width: 1279px) {
+  .thesis-radar-list--compact {
+    max-height: 420px;
+  }
+
+  .thesis-radar-row__preview-wrap {
+    padding-left: 38px;
+  }
+
+  .thesis-radar-row__tickers span:nth-child(n + 3) {
+    display: none;
+  }
 }
 
 .thesis-radar-row__detail {
@@ -401,18 +474,3 @@
   background: rgba(229, 193, 88, 0.3);
   border-radius: 3px;
 }
-
-@media (max-width: 1279px) {
-  .thesis-radar-list:not(.thesis-radar-list--detail) {
-    min-height: 420px;
-  }
-
-  .thesis-radar-row__name {
-    max-width: 6rem;
-  }
-
-  .thesis-radar-row__tickers span:nth-child(n + 3) {
-    display: none;
-  }
-}
-
