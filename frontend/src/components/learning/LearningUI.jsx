@@ -11,10 +11,10 @@ export function TipBox({ children, icon: Icon }) {
 
 export function SectionHeader({ eyebrow, title, description, icon: Icon }) {
   return (
-    <div className="mb-6">
+    <div className="mb-4 sm:mb-6">
       <div className="flex items-start gap-3">
         {Icon && (
-          <div className="shrink-0 w-9 h-9 rounded-lg bg-sigil-gold/10 border border-sigil-gold/20 flex items-center justify-center">
+          <div className="shrink-0 w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-sigil-gold/10 border border-sigil-gold/20 flex items-center justify-center">
             <Icon size={18} className="text-sigil-gold" aria-hidden="true" />
           </div>
         )}
@@ -24,9 +24,9 @@ export function SectionHeader({ eyebrow, title, description, icon: Icon }) {
               {eyebrow}
             </p>
           )}
-          <h3 className="text-lg font-bold text-white mb-1">{title}</h3>
+          <h3 className="text-base sm:text-lg font-bold text-white mb-1 leading-snug">{title}</h3>
           {description && (
-            <p className="text-sm text-slate-400 leading-relaxed">{description}</p>
+            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">{description}</p>
           )}
         </div>
       </div>
@@ -39,7 +39,7 @@ export function ModeCard({ active, icon: Icon, label, description, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className={`flex-1 min-w-[140px] text-left rounded-xl p-4 transition-all border ${
+      className={`w-full min-w-0 text-left rounded-xl p-3 sm:p-4 transition-all border ${
         active
           ? "bg-sigil-gold/10 border-sigil-gold/35 shadow-[0_0_20px_rgba(229,193,88,0.06)]"
           : "bg-slate-900/40 border-slate-800/60 hover:border-slate-600/50 hover:bg-slate-800/30"

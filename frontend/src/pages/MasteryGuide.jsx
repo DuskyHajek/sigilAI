@@ -32,14 +32,14 @@ import { ModeCard, SectionHeader, TipBox } from "../components/learning/Learning
 import { filterBtn } from "../components/learning/learningStyles";
 
 const PRACTICE_TABS = [
-  { id: "quiz", label: "Quiz", icon: HelpCircle },
-  { id: "flashcards", label: "Flashcards", icon: Layers },
-  { id: "scenarios", label: "Scenarios", icon: Sparkles },
-  { id: "interview", label: "Interview Prep", icon: MessageSquareQuote },
+  { id: "quiz", label: "Quiz", shortLabel: "Quiz", icon: HelpCircle },
+  { id: "flashcards", label: "Flashcards", shortLabel: "Cards", icon: Layers },
+  { id: "scenarios", label: "Scenarios", shortLabel: "Scenarios", icon: Sparkles },
+  { id: "interview", label: "Interview Prep", shortLabel: "Interview", icon: MessageSquareQuote },
 ];
 
 const tabBtn = (active) =>
-  `shrink-0 text-xs font-mono font-bold px-3 py-2 rounded-lg transition-all whitespace-nowrap ${
+  `w-full text-center text-[10px] sm:text-xs font-mono font-bold px-2 sm:px-3 py-2 rounded-lg transition-all leading-snug ${
     active
       ? "bg-sigil-gold/15 text-sigil-gold border border-sigil-gold/30"
       : "text-slate-500 hover:text-slate-200 bg-slate-800/40 border border-slate-700/30 hover:border-slate-600/40"
@@ -184,7 +184,16 @@ function ThemeSection({ data }) {
 
       {/* Voices */}
       <SubSection title="Voices to Follow" count={data.voices.length} hint="Newsletters, podcasts & analysts">
-        <div className="overflow-x-auto">
+        <div className="md:hidden space-y-3">
+          {data.voices.map((v, i) => (
+            <div key={i} className="glass-panel rounded-xl p-4">
+              <p className="text-sm font-semibold text-white mb-1">{v.name}</p>
+              <p className="text-[10px] font-mono text-slate-500 mb-2">{v.type}</p>
+              <p className="text-xs text-slate-400 leading-relaxed">{v.focus}</p>
+            </div>
+          ))}
+        </div>
+        <div className="hidden md:block">
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-slate-800">
@@ -335,14 +344,14 @@ function ReadingListSection() {
       </TipBox>
 
       {/* Stats row */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
         {[
           { label: "Start Here", count: READING_LIST.filter(b => b.level === "Start Here").length, color: "text-emerald-400" },
           { label: "Intermediate", count: READING_LIST.filter(b => b.level === "Intermediate").length, color: "text-sky-400" },
           { label: "Advanced", count: READING_LIST.filter(b => b.level === "Advanced").length, color: "text-amber-400" },
         ].map(s => (
-          <div key={s.label} className="glass-panel rounded-xl p-4 text-center">
-            <p className={`text-2xl font-bold ${s.color}`}>{s.count}</p>
+          <div key={s.label} className="glass-panel rounded-xl p-3 sm:p-4 text-center">
+            <p className={`text-xl sm:text-2xl font-bold ${s.color}`}>{s.count}</p>
             <p className="text-[10px] font-mono text-slate-500 mt-1 uppercase tracking-widest">{s.label}</p>
           </div>
         ))}
@@ -515,32 +524,34 @@ export default function MasteryGuide() {
         ];
 
   return (
-    <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+    <main className="flex-1 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 w-full min-w-0">
       {/* Hero */}
-      <div className="hero-guide rounded-2xl p-6 mb-6 relative overflow-hidden border border-sigil-gold/10">
+      <div className="hero-guide rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 relative overflow-hidden border border-sigil-gold/10">
         <div className="hero-guide__accent" />
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
+        <div className="flex flex-col gap-4">
+          <div className="min-w-0">
             <p className="text-[10px] font-mono text-sigil-gold uppercase tracking-widest mb-1">Sigil Supernova</p>
-            <h2 className="text-2xl font-bold text-white mb-1">Learning Hub</h2>
-            <p className="text-sm text-slate-400">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-1">Learning Hub</h2>
+            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
               {mode === "reference"
                 ? "Books, concepts, mental models & glossary for all 7 themes"
                 : "Quizzes, flashcards, scenarios & interview prep to test your mastery"}
             </p>
             <p className="text-[11px] font-mono text-slate-600 mt-2 flex items-center gap-1.5">
-              <GraduationCap size={12} className="text-sigil-gold/60" />
+              <GraduationCap size={12} className="text-sigil-gold/60 shrink-0" />
               Reference to learn · Practice to retain
             </p>
           </div>
-          <div className="flex gap-3 shrink-0">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
             {heroStats.map(s => (
               <div
                 key={s.label}
-                className="text-center px-4 py-2 rounded-xl bg-slate-900/50 border border-slate-800/60 min-w-[72px]"
+                className="text-center px-2 sm:px-4 py-2 rounded-xl bg-slate-900/50 border border-slate-800/60"
               >
-                <p className="text-xl font-bold text-sigil-gold">{s.value}</p>
-                <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">{s.label}</p>
+                <p className="text-lg sm:text-xl font-bold text-sigil-gold">{s.value}</p>
+                <p className="text-[9px] sm:text-[10px] font-mono text-slate-500 uppercase tracking-widest leading-tight mt-0.5">
+                  {s.label}
+                </p>
               </div>
             ))}
           </div>
@@ -548,7 +559,7 @@ export default function MasteryGuide() {
       </div>
 
       {/* Mode toggle */}
-      <div className="flex flex-col sm:flex-row gap-2 mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4 sm:mb-5">
         <ModeCard
           active={mode === "reference"}
           icon={Library}
@@ -565,8 +576,15 @@ export default function MasteryGuide() {
         />
       </div>
 
-      {/* Tab navigation */}
-      <div className="flex gap-1.5 overflow-x-auto pb-2 mb-6 scrollbar-none">
+      {/* Tab navigation — wrapping grid, no horizontal scroll */}
+      <nav
+        aria-label={mode === "reference" ? "Reference sections" : "Practice sections"}
+        className={`grid gap-1.5 mb-4 sm:mb-6 ${
+          mode === "reference"
+            ? "grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-11"
+            : "grid-cols-2 sm:grid-cols-4"
+        }`}
+      >
         {mode === "reference"
           ? NAV_TABS.map(tab => (
               <button
@@ -574,8 +592,9 @@ export default function MasteryGuide() {
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
                 className={tabBtn(activeTab === tab.id)}
+                title={tab.label}
               >
-                {tab.label}
+                {tab.shortLabel}
               </button>
             ))
           : PRACTICE_TABS.map(tab => {
@@ -585,17 +604,19 @@ export default function MasteryGuide() {
                   key={tab.id}
                   type="button"
                   onClick={() => setPracticeTab(tab.id)}
-                  className={`${tabBtn(practiceTab === tab.id)} flex items-center gap-1.5`}
+                  className={`${tabBtn(practiceTab === tab.id)} flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5`}
+                  title={tab.label}
                 >
-                  <Icon size={12} />
-                  {tab.label}
+                  <Icon size={12} className="shrink-0" />
+                  <span className="hidden sm:inline">{tab.label}</span>
+                  <span className="sm:hidden">{tab.shortLabel}</span>
                 </button>
               );
             })}
-      </div>
+      </nav>
 
       {/* Content panel */}
-      <div className="glass-panel rounded-2xl p-6">
+      <div className="glass-panel rounded-2xl p-4 sm:p-6 min-w-0">
         {mode === "practice" && practiceTab === "quiz" && (
           <QuizSection onReviewFlashcards={goToFlashcards} />
         )}

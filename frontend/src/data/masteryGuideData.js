@@ -1,15 +1,15 @@
 export const NAV_TABS = [
-  { id: "overview",      label: "Overview" },
-  { id: "datacentres",   label: "1. AI Infrastructure" },
-  { id: "application",   label: "2. Application Layer" },
-  { id: "robotics",      label: "3. Robotics" },
-  { id: "defence",       label: "4. Warfare" },
-  { id: "space",         label: "5. Space" },
-  { id: "biotech",       label: "6. Biotech" },
-  { id: "cybersecurity", label: "7. Cybersecurity" },
-  { id: "mental-models", label: "Mental Models" },
-  { id: "reading",       label: "Reading List" },
-  { id: "glossary",      label: "Glossary" },
+  { id: "overview",      label: "Overview",              shortLabel: "Overview" },
+  { id: "datacentres",   label: "1. AI Infrastructure",  shortLabel: "AI Infra" },
+  { id: "application",   label: "2. Application Layer",  shortLabel: "App Layer" },
+  { id: "robotics",      label: "3. Robotics",           shortLabel: "Robotics" },
+  { id: "defence",       label: "4. Warfare",            shortLabel: "Warfare" },
+  { id: "space",         label: "5. Space",              shortLabel: "Space" },
+  { id: "biotech",       label: "6. Biotech",            shortLabel: "Biotech" },
+  { id: "cybersecurity", label: "7. Cybersecurity",      shortLabel: "Cyber" },
+  { id: "mental-models", label: "Mental Models",         shortLabel: "Models" },
+  { id: "reading",       label: "Reading List",          shortLabel: "Reading" },
+  { id: "glossary",      label: "Glossary",              shortLabel: "Glossary" },
 ];
 
 /** Maps theme section ids to academy/quiz slug for badges and filters */
