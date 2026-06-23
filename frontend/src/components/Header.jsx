@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { RefreshCw, Cpu, Check, X, BookOpen, ExternalLink } from "lucide-react";
+import { RefreshCw, Cpu, Check, X, BookOpen } from "lucide-react";
 import { fetchHealth } from "../api";
 import SyncProgress from "./SyncProgress";
 import DashboardSectionNav from "./DashboardSectionNav";
@@ -62,30 +62,13 @@ const Header = ({ onSync, syncState, lastUpdated, showSectionNav = false }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col gap-2.5">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
-            <a
-              href="https://sigil.fund"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-xl bg-sigil-gold/10 border border-sigil-gold/25 text-sigil-gold shrink-0 hover:bg-sigil-gold/15 transition-colors"
-              title="Sigil Fund"
-            >
+            <div className="p-2 rounded-xl bg-sigil-gold/10 border border-sigil-gold/25 text-sigil-gold shrink-0">
               <Cpu size={22} />
-            </a>
+            </div>
             <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <h1 className="text-lg font-bold tracking-tight text-white m-0 font-sans leading-none truncate">
-                  SIGIL SUPERNOVA
-                </h1>
-                <a
-                  href="https://sigil.fund"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hidden sm:inline-flex items-center gap-0.5 text-[10px] text-[#a0a0a0] hover:text-sigil-gold transition-colors shrink-0"
-                >
-                  sigil.fund
-                  <ExternalLink size={10} />
-                </a>
-              </div>
+              <h1 className="text-lg font-bold tracking-tight text-white m-0 font-sans leading-none truncate">
+                SIGIL SUPERNOVA
+              </h1>
               <p className="text-xs text-[#a0a0a0] font-sans mt-1 hidden sm:block">
                 Thesis-aware intelligence
               </p>
@@ -195,8 +178,9 @@ const Header = ({ onSync, syncState, lastUpdated, showSectionNav = false }) => {
               }`
             }
           >
-            <BookOpen size={12} />
-            Learning Hub
+            <BookOpen size={12} aria-hidden="true" />
+            <span className="sm:hidden">Learn</span>
+            <span className="hidden sm:inline">Learning Hub</span>
           </NavLink>
         </nav>
       </div>

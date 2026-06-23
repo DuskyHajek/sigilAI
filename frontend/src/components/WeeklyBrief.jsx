@@ -25,7 +25,7 @@ const WeeklyBrief = ({ weeklyBriefText, isMock, generatedAt }) => {
   );
 
   return (
-    <div className="glass-panel p-6 md:p-7 rounded-2xl">
+    <div className="glass-panel p-4 sm:p-6 md:p-7 rounded-2xl">
       <SectionHeader
         eyebrow="Daily read"
         title="Analyst Brief"
@@ -35,7 +35,7 @@ const WeeklyBrief = ({ weeklyBriefText, isMock, generatedAt }) => {
         action={badge}
       />
 
-      <p className="text-[17px] md:text-xl text-white leading-relaxed whitespace-pre-wrap border-l-2 border-sigil-gold/40 pl-4 py-0.5 font-sans -mt-2">
+      <p className="text-base sm:text-[17px] md:text-xl text-white leading-relaxed whitespace-pre-wrap border-l-2 border-sigil-gold/40 pl-3 sm:pl-4 py-0.5 font-sans -mt-2">
         {weeklyBriefText || "Click Sync to generate the latest brief."}
       </p>
     </div>

@@ -26,7 +26,7 @@ export function SectionHeader({
 
   return (
     <div className="mb-4 sm:mb-6">
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
         <div className="flex items-start gap-3 min-w-0">
           {Icon && (
             <div className="shrink-0 w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-sigil-gold/10 border border-sigil-gold/20 flex items-center justify-center">
@@ -47,7 +47,7 @@ export function SectionHeader({
             )}
           </div>
         </div>
-        {action && <div className="shrink-0">{action}</div>}
+        {action && <div className="shrink-0 self-start sm:self-auto">{action}</div>}
       </div>
     </div>
   );

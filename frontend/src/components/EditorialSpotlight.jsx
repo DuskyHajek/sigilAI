@@ -69,7 +69,7 @@ const EditorialSpotlight = ({
 
   return (
     <section
-      className={`editorial-spotlight glass-panel glass-panel-hover rounded-2xl border ${styles.border} ${styles.bg} px-4 py-4 md:px-5 md:py-5`}
+      className={`editorial-spotlight glass-panel rounded-2xl border-2 ${styles.border} ${styles.bg} px-4 py-4 md:px-5 md:py-5 shadow-[0_0_24px_rgba(0,255,136,0.06)]`}
       aria-label="Editorial spotlight"
     >
       <div className="flex items-start gap-3">
@@ -130,10 +130,13 @@ const EditorialSpotlight = ({
             <button
               type="button"
               onClick={handleAction}
-              className="btn-sigil-outline mt-3 !text-[11px] !py-1 !px-3"
+              className="btn-sigil-outline mt-3 !text-[11px] !py-2 !px-3 w-full sm:w-auto"
             >
               {spotlight.kind === "ticker"
-                ? `View ${spotlight.ticker} in watchlist`
+                ? <>
+                    <span className="sm:hidden">View {spotlight.ticker}</span>
+                    <span className="hidden sm:inline">View {spotlight.ticker} in watchlist</span>
+                  </>
                 : "View impacted theme"}
             </button>
           )}

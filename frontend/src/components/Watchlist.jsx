@@ -127,14 +127,14 @@ const Watchlist = ({ watchlistData, stressResult }) => {
   };
 
   return (
-    <div className="glass-panel p-5 md:p-6 rounded-2xl flex flex-col h-full min-h-[480px] max-h-[min(720px,75vh)]">
+    <div className="glass-panel p-4 sm:p-5 md:p-6 rounded-2xl flex flex-col h-full min-h-[320px] sm:min-h-[420px] max-h-[min(720px,70vh)] sm:max-h-[min(720px,75vh)]">
       <SectionHeader
         eyebrow="Portfolio"
         title="Watchlist"
         description={
           stressActive
-            ? `${stocks.length} public names · rose border = exposed · green = resilient`
-            : `${stocks.length} public names · search or filter by theme`
+            ? `${stocks.length} names · rose = exposed · green = resilient`
+            : `${stocks.length} names · search or filter by theme`
         }
         icon={Sparkles}
         size="lg"
@@ -147,8 +147,8 @@ const Watchlist = ({ watchlistData, stressResult }) => {
           placeholder="Search ticker, company, or note..."
         />
 
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <Filter size={12} className="text-[#a0a0a0] shrink-0 mr-0.5" />
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 -mx-1 px-1 sm:flex-wrap sm:overflow-visible sm:mx-0 sm:px-0 dashboard-section-nav-mobile">
+          <Filter size={12} className="text-[#a0a0a0] shrink-0 mr-0.5 hidden sm:block" />
           {themeFilters.map((theme) => (
             <button
               key={theme}
@@ -158,13 +158,20 @@ const Watchlist = ({ watchlistData, stressResult }) => {
               {FILTER_SHORT_NAMES[theme] ?? theme}
             </button>
           ))}
-          <span className="ml-auto text-[11px] font-mono text-[#a0a0a0]">
+          <span className="text-[11px] font-mono text-[#a0a0a0] sm:ml-auto shrink-0 pl-1">
             {filteredData.length}/{stocks.length}
           </span>
         </div>
       </div>
 
-      <div className="overflow-y-auto flex-1 min-h-0 pr-1 divide-y divide-slate-800/70">
+      <div className="overflow-y-auto flex-1 min-h-0 pr-1">
+        <div className="hidden xl:grid grid-cols-[minmax(200px,0.9fr)_minmax(0,1.4fr)_minmax(110px,auto)] gap-3 px-2 pb-2 mb-1 border-b border-white/6 text-[10px] font-mono uppercase tracking-widest text-[#a0a0a0]">
+          <span>Company</span>
+          <span>Thesis note</span>
+          <span className="text-right">Price · 52W</span>
+        </div>
+
+        <div className="divide-y divide-white/6">
         {filteredData.length === 0 ? (
           <div className="text-center py-10 text-slate-500 text-sm">
             No tickers match this view.
@@ -194,10 +201,11 @@ const Watchlist = ({ watchlistData, stressResult }) => {
             return (
               <div
                 key={stock.ticker}
-                className={`watchlist-row group py-3 pl-2 pr-1 transition-colors hover:bg-white/[0.02] ${rowAccent}`}
+                className={`watchlist-row group py-4 pl-2 pr-2 sm:pr-1 transition-colors hover:bg-white/[0.03] ${rowAccent}`}
               >
-                <div className="grid grid-cols-1 xl:grid-cols-[minmax(200px,0.9fr)_minmax(0,1.4fr)_minmax(110px,auto)] gap-3 xl:items-start">
-                  <div className="min-w-0">
+                <div className="space-y-3 xl:grid xl:grid-cols-[minmax(200px,0.9fr)_minmax(0,1.4fr)_minmax(110px,auto)] xl:gap-3 xl:items-start xl:space-y-0">
+                  <div className="flex items-start justify-between gap-3 min-w-0">
+                    <div className="min-w-0 flex-1">
                     <p className="text-[15px] font-semibold text-slate-100 group-hover:text-sigil-gold transition-colors leading-snug break-words">
                       {displayName}
                     </p>
@@ -232,6 +240,44 @@ const Watchlist = ({ watchlistData, stressResult }) => {
                         {stock.angle}
                       </p>
                     )}
+                    </div>
+
+                    <div className="shrink-0 tabular-nums text-right xl:hidden">
+                      <span className="text-[15px] font-mono font-semibold text-white whitespace-nowrap block">
+                        {formatPrice(stock.price, stock.ticker, stock.currency)}
+                      </span>
+                      <span
+                        className={`text-[11px] font-mono font-medium inline-flex items-center gap-0.5 justify-end whitespace-nowrap ${
+                          isPositive ? "text-bullish" : "text-bearish"
+                        }`}
+                      >
+                        {isPositive ? (
+                          <ArrowUpRight size={12} />
+                        ) : (
+                          <ArrowDownRight size={12} />
+                        )}
+                        <span className="text-[9px] opacity-70 mr-0.5">
+                          {stock.spotlight === "ipo" ? "IPO" : "52W"}
+                        </span>
+                        {isPositive ? "+" : ""}
+                        {change}%
+                      </span>
+                      {stock.priceSource !== "yahoo" && (
+                        <span
+                          className={`text-[9px] font-mono uppercase block mt-0.5 ${
+                            stock.priceSource === "unavailable"
+                              ? "text-rose-400/90"
+                              : "text-slate-600"
+                          }`}
+                        >
+                          {stock.priceSource === "mock"
+                            ? "demo"
+                            : stock.priceSource === "yahoo_cached"
+                              ? "cached"
+                              : "unavailable"}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   <div className="min-w-0">
@@ -288,8 +334,8 @@ const Watchlist = ({ watchlistData, stressResult }) => {
                     </div>
                   </div>
 
-                  <div className="flex xl:flex-col items-end justify-between xl:justify-start gap-1 shrink-0">
-                    <span className="text-[15px] font-mono font-semibold text-slate-200 whitespace-nowrap">
+                  <div className="hidden xl:flex xl:flex-col items-end justify-start gap-1 shrink-0 tabular-nums">
+                    <span className="text-[15px] font-mono font-semibold text-white whitespace-nowrap">
                       {formatPrice(stock.price, stock.ticker, stock.currency)}
                     </span>
                     <span
@@ -329,6 +375,7 @@ const Watchlist = ({ watchlistData, stressResult }) => {
             );
           })
         )}
+        </div>
       </div>
     </div>
   );

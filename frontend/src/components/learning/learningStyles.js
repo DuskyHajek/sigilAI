@@ -1,6 +1,6 @@
-/** Active filter / nav pill — solid neon green, black text (sigil.fund style) */
+/** Active filter / nav pill — solid neon green, black text */
 export const filterBtn = (active) =>
-  `text-xs font-semibold px-4 py-1.5 rounded-full transition-all ${
+  `text-[11px] sm:text-xs font-semibold px-3 sm:px-4 py-2 sm:py-1.5 rounded-full transition-all whitespace-nowrap shrink-0 ${
     active
       ? "bg-sigil-gold text-black"
       : "text-white/70 hover:text-white bg-[#1a1a1a] border border-white/8 hover:border-white/15"

@@ -13,7 +13,6 @@ import DashboardZone from "./components/DashboardZone";
 import EditorialSpotlight from "./components/EditorialSpotlight";
 import ResearchQueue from "./components/ResearchQueue";
 import MasteryGuide from "./pages/MasteryGuide";
-import SiteFooter from "./components/SiteFooter";
 import { fetchDashboard, fetchHealth, triggerSync } from "./api";
 import {
   editorialShowsBlindspot,
@@ -290,22 +289,12 @@ function App() {
                       isMock={data?.isMock}
                     />
                   </DashboardZone>
-
-                  <SiteFooter />
                 </>
               )}
             </main>
           }
         />
-        <Route
-          path="/mastery-guide"
-          element={
-            <>
-              <MasteryGuide />
-              <SiteFooter />
-            </>
-          }
-        />
+        <Route path="/mastery-guide" element={<MasteryGuide />} />
       </Routes>
     </div>
   );
