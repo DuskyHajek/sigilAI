@@ -55,7 +55,10 @@ This starts:
 
 Open `http://localhost:5173`. The dashboard should load from cache or demo data. Click **Sync live data** to run the live pipeline when keys are configured.
 
-Learning Hub: `http://localhost:5173/mastery-guide` (Reference: concepts, mental models, reading list, glossary · Practice: quiz, flashcards, scenarios, interview prep).
+Static routes (no API):
+
+- Value Chain: `http://localhost:5173/value-chain`
+- Learning Hub: `http://localhost:5173/mastery-guide` (Reference: concepts, mental models, reading list, glossary · Practice: quiz, flashcards, scenarios)
 
 ## Current project structure
 
@@ -90,13 +93,19 @@ supernova-dashboard/
 │       ├── data/
 │       │   ├── masteryGuideData.js
 │       │   ├── academyData.js
+│       │   ├── aiInfraData.js
 │       │   ├── quizQuestionsExtended.js
-│       │   ├── scenariosExtended.js
-│       │   └── interviewQuestions.js
+│       │   └── scenariosExtended.js
 │       ├── pages/
-│       │   └── MasteryGuide.jsx
+│       │   ├── MasteryGuide.jsx
+│       │   └── ValueChain.jsx
+│       ├── utils/
+│       │   ├── thesisRadarUtils.js
+│       │   └── valueChainUtils.js
 │       ├── components/
 │       │   ├── Header.jsx
+│       │   ├── ValueChainSectionNav.jsx
+│       │   ├── value-chain/
 │       │   ├── WhatIsThis.jsx
 │       │   ├── SignalStrip.jsx
 │       │   ├── WeeklyBrief.jsx
@@ -108,7 +117,6 @@ supernova-dashboard/
 │       │       ├── QuizSection.jsx
 │       │       ├── FlashcardSection.jsx
 │       │       ├── ScenarioSection.jsx
-│       │       ├── InterviewPrepSection.jsx
 │       │       └── EssentialBadge.jsx
 │       └── styles/
 │           └── theme-cards.css
@@ -146,7 +154,9 @@ The current `vercel.json` builds:
 
 - `backend/server.js` with `@vercel/node`;
 - `frontend/package.json` with `@vercel/static-build`;
-- routes `/api/*` to the backend and everything else to the built frontend.
+- routes `/api/*` to the backend;
+- SPA fallbacks for `/mastery-guide` and `/value-chain` → `frontend/index.html`;
+- all other static assets → `frontend/$1`.
 
 Current `vercel.json` does not define cron jobs.
 

@@ -35,11 +35,23 @@ Example:
 
 The current UI shows all configured watchlist names. `priority` is available in the payload but is not currently used as a visible filter.
 
+If the name maps to the AI infrastructure physical stack, also add an entry to `WATCHLIST_TIER_MAP` in `frontend/src/data/aiInfraData.js` (integer `tier` + one-line `note`). See `docs/06_value_chain.md`.
+
 ## Remove a watchlist stock
 
 1. Delete the object from `WATCHLIST` in `config/thesis.js`.
 2. Restart the backend or run a sync.
 3. The next dashboard payload will reflect the smaller watchlist.
+4. Remove any matching entry from `WATCHLIST_TIER_MAP` in `frontend/src/data/aiInfraData.js` if present.
+
+## Update Value Chain content
+
+1. Edit `frontend/src/data/aiInfraData.js` (`PHASES`, `TIERS`, `RISK_OVERLAYS`, `WATCHLIST_TIER_MAP`).
+2. Use integer `tier.tier` (1–22) for all cross-references — not string slugs in maps.
+3. Run `npm run build --prefix frontend`.
+4. No backend sync or cache invalidation required.
+
+Full reference: `docs/06_value_chain.md`.
 
 ## Change theme thesis or keywords
 

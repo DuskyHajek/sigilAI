@@ -4,7 +4,7 @@ A thesis-driven investment intelligence dashboard for the **Sigil Supernova** fu
 
 ## What It Shows
 
-The app has two main areas:
+The app has three main areas:
 
 ### Dashboard (`/`)
 
@@ -16,6 +16,19 @@ Four working intelligence sections plus a signal strip:
 3. **Thesis Radar** — all 7 pillars at a glance: drift status (Accelerating / Mixed / Diverging), headline count, watchlist tickers; expand for evidence.
 4. **Watchlist** — 21 curated public names with price data, change, and a thesis-specific AI note (SPCX spotlight for SpaceX IPO).
 5. **Research Queue** — 3–7 suggested follow-up checks after each sync.
+
+### Value Chain (`/value-chain`)
+
+Static map of the AI infrastructure physical stack — 7 phases, 22 tiers, watchlist placement, and 3 risk overlays. No API or sync required.
+
+- **Stack map** — phase pipeline with thesis roles; click to filter tiers.
+- **Tier explorer** — searchable tiers with players, moat, bottleneck, metric, Sigil angle.
+- **Holdings on the stack** — watchlist tickers mapped via `WATCHLIST_TIER_MAP`.
+- **Risk overlays** — institutional bear/cyclical/bull signals with affected tiers.
+
+Shareable URL filters: `?tier=10`, `?phase=3`, `?essential=1`, etc. See `docs/06_value_chain.md`.
+
+Data: `frontend/src/data/aiInfraData.js`.
 
 ### Learning Hub (`/mastery-guide`)
 
@@ -105,12 +118,16 @@ supernova-dashboard/
     │   ├── data/
     │   │   ├── masteryGuideData.js   # Reference curriculum (themes, books, glossary, mental models)
     │   │   ├── academyData.js        # Quiz, scenarios (merged exports)
+    │   │   ├── aiInfraData.js        # Value Chain (phases, tiers, overlays, watchlist map)
     │   │   ├── quizQuestionsExtended.js
     │   │   ├── scenariosExtended.js
     │   ├── pages/
-    │   │   └── MasteryGuide.jsx      # Learning Hub (Reference + Practice)
+    │   │   ├── MasteryGuide.jsx      # Learning Hub (Reference + Practice)
+    │   │   └── ValueChain.jsx        # AI Infrastructure Value Chain
     │   └── components/
     │       ├── Header.jsx
+    │       ├── ValueChainSectionNav.jsx
+    │       ├── value-chain/          # StackMap, TierExplorer, RiskOverlays, …
     │       ├── WhatIsThis.jsx
     │       ├── SignalStrip.jsx       # Page-level signal clusters
     │       ├── WeeklyBrief.jsx
@@ -163,9 +180,13 @@ There are no background cron jobs in the current app. Hosted sync can be constra
 
 ## Docs
 
-- `docs/00_overview.md` - product narrative and current behavior.
-- `docs/supernova_dashboard_spec.md` - current architecture spec.
-- `docs/01_thesis_config.md` - thesis and watchlist reference.
-- `docs/02_prompt_library.md` - prompt reference and tuning notes.
-- `docs/03_maintenance_playbook.md` - common maintenance tasks.
-- `docs/04_dev_setup.md` - local setup and Vercel deployment.
+Start at [`docs/README.md`](docs/README.md) for the full index.
+
+- `docs/00_overview.md` — product narrative and current behavior.
+- `docs/supernova_dashboard_spec.md` — current architecture spec.
+- `docs/06_value_chain.md` — Value Chain explorer reference.
+- `docs/01_thesis_config.md` — thesis and watchlist reference.
+- `docs/02_prompt_library.md` — prompt reference and tuning notes.
+- `docs/03_maintenance_playbook.md` — common maintenance tasks.
+- `docs/04_dev_setup.md` — local setup and Vercel deployment.
+- `docs/archive/` — implemented feature specs (historical).

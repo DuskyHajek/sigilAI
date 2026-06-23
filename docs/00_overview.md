@@ -49,7 +49,25 @@ The stock price is useful context, but the note is the product. It explains why 
 
 After a sync, the backend generates 3-7 follow-up checks. These are practical analyst prompts: what to read, compare, verify, or search next. They are suggestions, not conclusions or investment advice.
 
-### 6. Learning Hub
+### 6. Value Chain
+
+Route: `/value-chain`. Header nav: **VALUE CHAIN** (mobile: **Stack**).
+
+A static structural map of the AI infrastructure physical stack. No backend or sync dependency.
+
+**Stack map** — 7 phases from pre-silicon inputs to compute monetisation; click to filter tiers.
+
+**Tier explorer** — 22 tiers with players, moat, bottleneck, key metric, and Sigil angle. Filters: phase, essentials, watchlist exposure, search.
+
+**Holdings on the stack** — watchlist tickers mapped via `WATCHLIST_TIER_MAP` (8 names on the physical stack).
+
+**Risk overlays** — 3 institutional sizing signals (obsolescence trap, CapEx air pocket, power arbitrage).
+
+URL params are shareable: `?tier=10`, `?phase=3`, `?essential=1`. Full reference: `docs/06_value_chain.md`.
+
+Data source: `frontend/src/data/aiInfraData.js`.
+
+### 7. Learning Hub
 
 Route: `/mastery-guide`. Header nav: **LEARNING HUB**.
 
@@ -67,15 +85,14 @@ A static study companion for the 7 Supernova themes. No backend or sync dependen
 - Quiz: 60 questions with quick (10), full (60), and per-theme modes; difficulty badges.
 - Flashcards: glossary terms with flip-to-reveal definitions.
 - Scenarios: 10 investment case drills; high interview-relevance cases marked.
-- Interview Prep: 10 questions with hints and sample answers.
 
 Data sources:
 
 - `frontend/src/data/masteryGuideData.js` — reference content, essential flags, mental models export.
 - `frontend/src/data/academyData.js` — quiz and scenario content (merges extended modules).
-- `frontend/src/data/interviewQuestions.js`, `quizQuestionsExtended.js`, `scenariosExtended.js`.
+- `frontend/src/data/quizQuestionsExtended.js`, `scenariosExtended.js`.
 
-Offline review exports: `docs/sigil-supernova-learning-hub-export.html`, `docs/sigil-supernova-learning-academy.html`. See `docs/LEARNING_HUB_UPGRADE_SPEC.md` for the upgrade changelog.
+Offline review exports: `docs/sigil-supernova-learning-hub-export.html`, `docs/sigil-supernova-learning-academy.html`. Regenerate via `scripts/generate-learning-*.mjs`. Historical upgrade spec: `docs/archive/LEARNING_HUB_UPGRADE_SPEC.md`.
 
 ## APIs and data sources
 

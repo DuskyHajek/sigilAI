@@ -1,5 +1,7 @@
 # Sigil Supernova Learning Hub — Upgrade Spec
 
+> **Archived.** Implemented June 2026. See [../00_overview.md](../00_overview.md) and live app at `/mastery-guide`.
+
 **Prepared for:** Developer implementing changes in `frontend/src/data/`  
 **Sources analysed:** `masteryGuideData.js`, `academyData.js` (via full HTML export)  
 **Goal:** Transform the Learning Hub from a reference library into an interview-grade prep tool with clear prioritisation, more practice content, and interview-specific scenarios.

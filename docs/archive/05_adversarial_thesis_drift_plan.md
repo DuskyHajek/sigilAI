@@ -1,5 +1,7 @@
 # Backend Implementation Plan: Challenge the CIO & Thesis Drift
 
+> **Archived.** Implemented in `backend/services/adversarial.js` and `thesisDrift.js`. See [../00_overview.md](../00_overview.md).
+
 **Status:** Finalized — ready for implementation  
 **Scope:** Backend pipeline only (frontend is a separate pass)  
 **Last updated:** 2026-06-22

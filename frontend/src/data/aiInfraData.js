@@ -1,7 +1,7 @@
 /**
  * Sigil Supernova — AI Infrastructure Value Chain
  * Source: Merged from ai_infrastructure_thesis_framework.md (18-tier) + gemini-code (22-tier)
- * For use in: frontend/src/data/aiInfraData.js
+ * For use in: frontend/src/data/aiInfraData.js (single source of truth — do not duplicate under docs/)
  *
  * PANEL INTENT:
  * Standalone Value Chain reference at /value-chain.

@@ -9,7 +9,7 @@ The dashboard is a lightweight investment intelligence demo for the Sigil Supern
 
 ## Current scope
 
-Two frontend routes:
+Three frontend routes:
 
 ### Dashboard (`/`)
 
@@ -20,12 +20,25 @@ Two frontend routes:
 4. **Watchlist** — 21 curated names with price data, change, thesis notes, and IPO spotlight (SPCX).
 5. **Research Queue** — follow-up checks for an analyst after sync.
 
+### Value Chain (`/value-chain`)
+
+Static AI infrastructure stack reference. No API dependency.
+
+- **Stack map** — 7 phases; click to filter tiers.
+- **Tier explorer** — 22 tiers (role, players, moat, bottleneck, metric, Sigil angle).
+- **Holdings** — watchlist tickers mapped to tiers (`WATCHLIST_TIER_MAP`).
+- **Risk overlays** — 3 institutional alpha signals.
+
+Shareable filters via URL params (`?tier=10`, `?phase=3`). See `docs/06_value_chain.md`.
+
+Data: `frontend/src/data/aiInfraData.js`.
+
 ### Learning Hub (`/mastery-guide`)
 
 Static curriculum and practice. No API dependency.
 
 - **Reference** — themes (⚡ essential concepts), books, courses, voices, mental models; dedicated Mental Models tab; reading list; glossary.
-- **Practice** — quiz (60 Q, difficulty badges), flashcards (from glossary), scenarios (10 cases, interview priority badges), interview prep (10 Q).
+- **Practice** — quiz (60 Q, difficulty badges), flashcards (from glossary), scenarios (10 cases, interview priority badges).
 
 Regenerate offline HTML after data edits: `node scripts/generate-learning-hub-export.mjs`, `node scripts/generate-learning-academy-html.mjs`.
 
@@ -33,7 +46,7 @@ Regenerate offline HTML after data edits: `node scripts/generate-learning-hub-ex
 
 | Layer | Choice | Notes |
 |---|---|---|
-| Frontend | React + Vite + React Router | Dashboard at `/`, Learning Hub at `/mastery-guide`. |
+| Frontend | React + Vite + React Router | Dashboard `/`, Value Chain `/value-chain`, Learning Hub `/mastery-guide`. |
 | Styling | Tailwind CSS v4 + local CSS | Vite plugin setup; custom dashboard styles in `src/index.css` and `src/styles/`. |
 | Backend | Node.js + Express | Small API and sync pipeline. |
 | Hosting | Vercel | Dual build: Express server + static frontend build. |
@@ -194,12 +207,20 @@ backend/services/concurrency.js
 
 frontend/src/App.jsx
 frontend/src/api.js
+frontend/src/pages/ValueChain.jsx
 frontend/src/pages/MasteryGuide.jsx
+frontend/src/data/aiInfraData.js
 frontend/src/data/masteryGuideData.js
 frontend/src/data/academyData.js
 frontend/src/data/quizQuestionsExtended.js
 frontend/src/data/scenariosExtended.js
-frontend/src/data/interviewQuestions.js
+frontend/src/utils/valueChainUtils.js
+frontend/src/components/ValueChainSectionNav.jsx
+frontend/src/components/value-chain/StackMap.jsx
+frontend/src/components/value-chain/TierExplorer.jsx
+frontend/src/components/value-chain/TierCard.jsx
+frontend/src/components/value-chain/WatchlistStack.jsx
+frontend/src/components/value-chain/RiskOverlays.jsx
 frontend/src/components/Header.jsx
 frontend/src/components/WhatIsThis.jsx
 frontend/src/components/SignalStrip.jsx
@@ -212,7 +233,6 @@ frontend/src/components/ResearchQueue.jsx
 frontend/src/components/learning/QuizSection.jsx
 frontend/src/components/learning/FlashcardSection.jsx
 frontend/src/components/learning/ScenarioSection.jsx
-frontend/src/components/learning/InterviewPrepSection.jsx
 frontend/src/components/learning/EssentialBadge.jsx
 frontend/src/components/learning/ThemeBadge.jsx
 ```
