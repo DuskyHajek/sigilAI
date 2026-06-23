@@ -13,6 +13,6 @@ export const SETTINGS = {
   significance_threshold: 2,
   max_articles_per_theme: 10,
 
-  // Restore to 1+ for prod — 0 forces a full sync every click (often hits Vercel 60s limit).
-  cache_ttl_hours: 1,
+  // Set to 0 to always run a full sync on "Sync live data" (testing). Restore to 1+ for prod.
+  cache_ttl_hours: 0,
 };
