@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Sigil Supernova — Learning Hub (Full Export)</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#1a1a1a;line-height:1.55;background:#fff;font-size:11pt}
+.container{max-width:980px;margin:0 auto;padding:32px 40px 60px}
+.sync{background:#f7f7f5;border:1px solid #ddd;border-radius:8px;padding:14px 18px;margin-bottom:28px;font-size:10pt;color:#444}
+.sync code{font-size:9pt;background:#eee;padding:1px 5px;border-radius:3px}
+.cover{border-bottom:3px solid #111;padding-bottom:28px;margin-bottom:32px}
+.cover-label{font-size:8pt;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#666;margin-bottom:8px}
+.cover h1{font-size:22pt;font-weight:700;line-height:1.15;margin-bottom:8px}
+.cover-sub{font-size:12pt;color:#555;margin-bottom:20px}
+.stats{display:flex;flex-wrap:wrap;gap:24px;margin-bottom:16px}
+.stat-val{font-size:18pt;font-weight:700;line-height:1}
+.stat-lbl{font-size:7.5pt;color:#777;text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+.toc{margin-bottom:36px;padding:20px;background:#fafafa;border:1px solid #eee;border-radius:8px}
+.toc h2{font-size:13pt;margin-bottom:12px}
+.toc ul{list-style:none}
+.toc li{padding:4px 0;border-bottom:1px dotted #ddd;font-size:10pt}
+.toc a{color:#111;text-decoration:none}
+.toc a:hover{text-decoration:underline}
+.toc-sub{color:#888;font-size:9pt;margin-left:6px}
+.part{margin:48px 0 24px;padding-top:20px;border-top:2px solid #111}
+.part h2{font-size:16pt;margin-bottom:6px}
+.part-desc{font-size:10pt;color:#555;margin-bottom:24px}
+.section{margin-bottom:48px;padding-top:8px}
+.section-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:10px}
+.section-num{font-size:10pt;font-weight:700;color:#888;min-width:28px;padding-top:4px}
+.section h2{font-size:14pt;margin-bottom:4px}
+.tagline{font-size:10pt;color:#555;font-style:italic}
+.desc{font-size:10pt;color:#333;background:#f7f7f7;border-left:3px solid #111;padding:12px 14px;margin:12px 0}
+.counts{font-size:9pt;color:#888;margin-bottom:16px}
+h3{font-size:10pt;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#444;margin:22px 0 10px;padding-bottom:4px;border-bottom:1px solid #e0e0e0}
+table{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:9.5pt}
+th{background:#f0f0f0;text-align:left;padding:7px 9px;font-size:8pt;text-transform:uppercase;letter-spacing:.04em;color:#555;border:1px solid #ddd}
+td{padding:7px 9px;border:1px solid #e8e8e8;vertical-align:top}
+.term{font-weight:600;white-space:nowrap}
+.badge{display:inline-block;padding:2px 7px;border-radius:3px;font-size:7.5pt;font-weight:600}
+.badge-start{background:#e0f2e8;color:#1b6a3e}
+.badge-intermediate{background:#dbeeff;color:#1a4d8f}
+.badge-advanced{background:#fef0d8;color:#7a4a08}
+.badge-theme{background:#f0f0f0;color:#444}
+.block,.model{margin-bottom:10px;padding:10px 12px;border:1px solid #e8e8e8;border-radius:6px;background:#fafafa}
+.block-title,.model-title{font-weight:700;font-size:10pt;margin-bottom:2px}
+.block-meta{font-size:8.5pt;color:#777;margin-bottom:4px}
+.block-body,.model-body{font-size:9.5pt;color:#444}
+.quiz-item,.scenario{margin-bottom:18px;padding:14px;border:1px solid #e0e0e0;border-radius:8px}
+.quiz-meta,.scenario h4{font-size:9pt;font-weight:700;margin-bottom:6px;color:#666}
+.quiz-q{font-weight:600;margin-bottom:8px}
+.choices{margin:0 0 8px 20px;font-size:9.5pt}
+.choices li{margin-bottom:3px}
+.choices li.correct{font-weight:700;color:#0a5c3a}
+.quiz-explain,.analysis{font-size:9.5pt;color:#444;background:#f7f7f7;padding:10px;border-radius:4px;margin-top:8px}
+.scenario p{font-size:9.5pt;margin-bottom:6px}
+.footer{margin-top:48px;padding-top:16px;border-top:1px solid #ddd;font-size:8pt;color:#aaa;text-align:center}
+@media print{.container{padding:20px}.sync{display:none}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="sync">
+  <strong>Full Learning Hub export</strong> — static snapshot for review and gap analysis.
+  Source: <code>frontend/src/data/masteryGuideData.js</code> + <code>academyData.js</code>.
+  Regenerate: <code>node scripts/generate-learning-hub-export.mjs</code>.
+  Live app: <code>/mastery-guide</code> (Reference + Practice modes).
+</div>
+
+<div class="cover">
+  <div class="cover-label">Sigil Supernova · Learning Hub</div>
+  <h1>Complete Curriculum Export</h1>
+  <p class="cover-sub">Everything currently in the Learning Hub — reference curriculum and practice content</p>
+  <div class="stats">
+    <div><div class="stat-val">8</div><div class="stat-lbl">Theme sections</div></div>
+    <div><div class="stat-val">97</div><div class="stat-lbl">Key concepts</div></div>
+    <div><div class="stat-val">41</div><div class="stat-lbl">Theme books</div></div>
+    <div><div class="stat-val">34</div><div class="stat-lbl">Reading list</div></div>
+    <div><div class="stat-val">32</div><div class="stat-lbl">Courses</div></div>
+    <div><div class="stat-val">34</div><div class="stat-lbl">Voices</div></div>
+    <div><div class="stat-val">26</div><div class="stat-lbl">Mental models</div></div>
+    <div><div class="stat-val">56</div><div class="stat-lbl">Glossary terms</div></div>
+    <div><div class="stat-val">60</div><div class="stat-lbl">Quiz questions</div></div>
+    <div><div class="stat-val">10</div><div class="stat-lbl">Scenarios</div></div>
+  </div>
+</div>
+
+<nav class="toc">
+  <h2>Contents</h2>
+  <ul>
+    <li><a href="#part-reference">Part 1 — Reference curriculum</a></li>
+    <li><a href="#theme-overview">00 — Overview &amp; Investment Frameworks</a> <span class="toc-sub">11 concepts</span></li>
+<li><a href="#theme-datacentres">01 — 1. AI Infrastructure</a> <span class="toc-sub">16 concepts</span></li>
+<li><a href="#theme-application">02 — 2. Application Layer</a> <span class="toc-sub">13 concepts</span></li>
+<li><a href="#theme-robotics">03 — 3. Robotics &amp; Automation</a> <span class="toc-sub">10 concepts</span></li>
+<li><a href="#theme-defence">04 — 4. Future of Warfare</a> <span class="toc-sub">13 concepts</span></li>
+<li><a href="#theme-space">05 — 5. Space Race 2.0</a> <span class="toc-sub">11 concepts</span></li>
+<li><a href="#theme-biotech">06 — 6. Biotech &amp; Healthcare</a> <span class="toc-sub">11 concepts</span></li>
+<li><a href="#theme-cybersecurity">07 — 7. Adversarial AI &amp; Cybersecurity</a> <span class="toc-sub">12 concepts</span></li>
+    <li><a href="#reading-list">Master reading list</a> <span class="toc-sub">34 books</span></li>
+    <li><a href="#glossary">Glossary</a> <span class="toc-sub">56 terms</span></li>
+    <li><a href="#part-practice">Part 2 — Practice content</a></li>
+    <li><a href="#quiz">Quiz bank</a> <span class="toc-sub">60 questions</span></li>
+    <li><a href="#scenarios">Scenario drills</a> <span class="toc-sub">10 cases</span></li>
+  </ul>
+</nav>
+
+<div id="part-reference" class="part">
+  <h2>Part 1 — Reference curriculum</h2>
+  <p class="part-desc">Per-theme key concepts, books, courses, voices, and mental models. This is what appears under Reference mode in the app.</p>
+</div>
+
+
+<section id="theme-overview" class="section">
+  <div class="section-head">
+    <div class="section-num">00</div>
+    <div>
+      <h2>Overview &amp; Investment Frameworks</h2>
+      <p class="tagline">The meta-layer — how to think before what to think</p>
+    </div>
+  </div>
+  <p class="desc">Before diving into the 7 specific themes, master the thinking frameworks Sigil applies across all bets. Disruptive technology investing requires a different toolkit than traditional value or growth investing. These mental models are the foundation for everything else.</p>
+  <p class="counts">11 concepts · 8 books · 5 courses · 5 voices · 6 mental models</p>
+
+  <h3>Key concepts</h3>
+  <table><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody><tr><td class="term">Gartner Hype Cycle</td><td>5-stage tech adoption model: Innovation Trigger → Peak of Inflated Expectations → Trough of Disillusionment → Slope of Enlightenment → Plateau of Productivity. Sigil explicitly builds their AI portfolio to navigate this cycle — critical for timing entries and exits in each of the 7 themes.</td></tr>
+<tr><td class="term">Technology S-Curve</td><td>Adoption curve: slow start (early adopters) → rapid growth (mainstream) → plateau (saturation). Stacked S-curves drive sequential investment waves. Knowing where a technology sits on its S-curve determines risk/reward.</td></tr>
+<tr><td class="term">First / Second / Third Order Effects</td><td>1st order: AI GPU demand spikes. 2nd order: energy demand surges. 3rd order: nuclear power renaissance, copper mining boom. Sigil's entire 7-theme framework is second/third order thinking from the LLM breakthrough.</td></tr>
+<tr><td class="term">Innovator's Dilemma</td><td>Christensen: incumbents rationally ignore disruptive tech because existing customers don't need it — until it's too late. The key lens for analyzing every SaaS company facing AI disruption.</td></tr>
+<tr><td class="term">Economic Moat (5 Types)</td><td>Durable competitive advantage. Five types: (1) Network effects. (2) Switching costs. (3) Cost advantages. (4) Intangible assets (brands, patents). (5) Efficient scale (natural monopoly in limited markets).</td></tr>
+<tr><td class="term">Capital Cycle Theory</td><td>Marathon AM: high returns attract capital → overcapacity → returns fall → capital exits → returns recover. Explains why Sigil tracks 'cyclical PTSD' in semiconductor fabs — conservative capacity adds extend the up-cycle.</td></tr>
+<tr><td class="term">Asymmetric Risk / Reward</td><td>Bet structures where potential upside massively outweighs downside. Sigil's 2019 crypto thesis: risk 1 to win 50. Core skill: identifying these bets before consensus forms — by definition they are contrarian at entry.</td></tr>
+<tr><td class="term">Secular vs. Cyclical Trend</td><td>Secular: long-duration structural change driven by fundamentals (AI adoption, demographics). Cyclical: short-duration waves driven by credit/inventory cycles (semiconductor boom/bust). Getting this wrong is the most common mistake in tech investing.</td></tr>
+<tr><td class="term">K-Shaped Economy</td><td>Economic bifurcation where upper-income groups grow rapidly while lower-income groups stagnate. AI expected to widen this divide by automating middle-skill work. Political risk (UBI, anti-tech regulation) is a direct investment implication.</td></tr>
+<tr><td class="term">Path Dependence</td><td>Future outcomes shaped by historical decision sequences. Early platform choices (chip architecture, OS) produce winner-take-most dynamics that persist for decades. Invest in the platform that paths are being locked into.</td></tr>
+<tr><td class="term">Active vs. Passive Investing</td><td>Passive: track an index, capture market beta, low cost. Active: try to beat the market through research and selection. Active outperformance requires genuine informational or analytical edge. Sigil argues disruptive tech markets offer this edge.</td></tr></tbody></table>
+
+  <h3>Essential books</h3>
+  <table><thead><tr><th>Title</th><th>Author</th><th>Level</th><th>Why read it</th></tr></thead><tbody><tr><td>Poor Charlie's Almanack</td><td>Charles T. Munger</td><td><span class="badge badge-start">Start Here</span></td><td>The bible of mental models for investors. Munger's latticework — from psychology to physics — is the exact thinking framework Sigil uses. Start here before anything else.</td></tr>
+<tr><td>The Intelligent Investor</td><td>Benjamin Graham</td><td><span class="badge badge-start">Start Here</span></td><td>Foundational investment rationality: Mr. Market metaphor, margin of safety, investment vs. speculation. The baseline for all rational capital allocation.</td></tr>
+<tr><td>Zero to One</td><td>Peter Thiel</td><td><span class="badge badge-start">Start Here</span></td><td>What makes a technology venture worth backing: monopoly, secrets, going from 0 to 1. Framework for identifying which startups across Sigil's 7 themes are genuine innovations.</td></tr>
+<tr><td>The Innovator's Dilemma</td><td>Clayton M. Christensen</td><td><span class="badge badge-start">Start Here</span></td><td>The theory of why incumbents lose. Required reading before analyzing any industry Sigil targets as 'being disrupted.' Especially applicable to the SaaS repricing thesis.</td></tr>
+<tr><td>Thinking in Bets</td><td>Annie Duke</td><td><span class="badge badge-start">Start Here</span></td><td>Probabilistic thinking: evaluate decisions by process, not outcome. Sigil's bear case section is a masterclass in this — probability-weighted scenarios stated honestly.</td></tr>
+<tr><td>More Than You Know</td><td>Michael J. Mauboussin</td><td><span class="badge badge-intermediate">Intermediate</span></td><td>Investment decisions through complexity theory, psychology, and base rates. Bridges academic finance and practical tech investing better than any other book.</td></tr>
+<tr><td>Capital Returns</td><td>Edward Chancellor (ed.)</td><td><span class="badge badge-intermediate">Intermediate</span></td><td>Marathon AM letters on capital cycle theory. The definitive guide to how capital flows create and destroy returns — essential for the semiconductor hardware cycle.</td></tr>
+<tr><td>The Art of Thinking Clearly</td><td>Rolf Dobelli</td><td><span class="badge badge-start">Start Here</span></td><td>99 cognitive biases every investor must recognize in themselves. Awareness of your blindspots is a genuine edge in active management.</td></tr></tbody></table>
+
+  <h3>Courses &amp; resources</h3>
+  <div class="block"><div class="block-title">Financial Markets (Robert Shiller)</div><div class="block-meta">Coursera / Yale</div><div class="block-body">History and psychology of markets, bubbles, and behavioral finance. Shiller on narrative economics is directly applicable to hype cycle investing.</div></div>
+<div class="block"><div class="block-title">AI for Everyone (Andrew Ng)</div><div class="block-meta">Coursera / DeepLearning.ai</div><div class="block-body">Non-technical intro to AI capabilities and limitations. The minimum baseline for investing intelligently across Sigil's 7 themes.</div></div>
+<div class="block"><div class="block-title">The Great Mental Models (Vol. 1–4)</div><div class="block-meta">Farnam Street / Shane Parrish</div><div class="block-body">Operationalizing mental models: first principles, inversion, second-order thinking, Occam's razor.</div></div>
+<div class="block"><div class="block-title">CFA Level 1 Curriculum</div><div class="block-meta">CFA Institute</div><div class="block-body">The gold standard grounding in equity analysis, portfolio theory, and economics. If you can only do one formal qualification, this is it.</div></div>
+<div class="block"><div class="block-title">Security Analysis</div><div class="block-meta">Columbia Business School (free recordings)</div><div class="block-body">Graham &amp; Dodd deep fundamental analysis. The analytical foundation for understanding intrinsic value vs. market price.</div></div>
+
+  <h3>Voices to follow</h3>
+  <table><thead><tr><th>Name</th><th>Format</th><th>Focus</th></tr></thead><tbody><tr><td>Ben Thompson (Stratechery)</td><td>Newsletter / Podcast</td><td>Technology strategy and aggregation theory. Essential for understanding software moats and how AI is reshuffling platform power.</td></tr>
+<tr><td>Howard Marks (Oaktree Capital)</td><td>Memos — oaktreecapital.com</td><td>Risk, market cycles, and second-level thinking. His memos are among the best investment writing produced in 30 years.</td></tr>
+<tr><td>Michael Mauboussin</td><td>Research / Books</td><td>Expectations investing, ROIC, competitive advantage periods. The most rigorous academic bridge to practical tech investing.</td></tr>
+<tr><td>Tren Griffin (25iq.com)</td><td>Blog (free)</td><td>Munger-style mental models applied to technology companies. Deep dives on moat analysis for Google, Amazon, Netflix.</td></tr>
+<tr><td>Patrick O'Shaughnessy (ILTB)</td><td>Podcast</td><td>Long-form conversations with leading investors. Best podcast for how serious people think about tech and disruptive trends.</td></tr></tbody></table>
+
+  <h3>Mental models</h3>
+  <div class="model"><div class="model-title">Inversion</div><div class="model-body">Instead of 'How do we succeed?' ask 'What would guarantee failure?' Work backwards from catastrophic outcomes. Sigil's entire bear case section is exactly this — structured inversion of their own thesis. Apply it to every investment before committing.</div></div>
+<div class="model"><div class="model-title">Circle of Competence</div><div class="model-body">Only invest where you have genuine, deep understanding. The boundary of your circle matters as much as its size. Sigil explicitly acknowledges their 'Day 0' position in AI — knowing what you don't know is itself an edge.</div></div>
+<div class="model"><div class="model-title">The Map is Not the Territory</div><div class="model-body">Frameworks like the Gartner Hype Cycle are simplifications of reality. Reality will always surprise. Sigil calls their hype cycle placement 'honest but likely imprecise.' Holding models loosely while using them rigorously is a critical skill.</div></div>
+<div class="model"><div class="model-title">Opportunity Cost</div><div class="model-body">Every investment forecloses alternatives. The relevant comparison for any AI infrastructure bet isn't zero — it's the best alternative use of that capital. Forces explicit prioritization across Sigil's 7 competing themes.</div></div>
+<div class="model"><div class="model-title">Second-Level Thinking (Howard Marks)</div><div class="model-body">First-level thinking: 'This is a good company, buy it.' Second-level thinking: 'This is a good company, but everyone knows it, so the price already reflects that goodness — is there a reason the price is still wrong?' Apply before any investment decision: what does consensus think, and what might they be missing? Sigil's entire 7-theme framework is second-level: 'Everyone knows AI is big (first level). The bottleneck is physical, not digital, and most investors are missing it (second level).'</div></div>
+<div class="model"><div class="model-title">Confirmation Bias Audit</div><div class="model-body">Before finalising any investment thesis, list the 3 strongest arguments AGAINST it. Force yourself to steelman the bear case. Sigil built 'Challenge the CIO' directly into their dashboard for exactly this reason — systematic anti-confirmation-bias process. The most dangerous time is when evidence is accumulating in your favour: that's when disconfirming signals are most likely to be ignored.</div></div>
+</section>
+
+<section id="theme-datacentres" class="section">
+  <div class="section-head">
+    <div class="section-num">01</div>
+    <div>
+      <h2>1. AI Infrastructure</h2>
+      <p class="tagline">Semiconductors, data centers, energy, and the physical layer of intelligence</p>
+    </div>
+  </div>
+  <p class="desc">The AI infrastructure buildout is the defining capex story of this decade. The most technically dense theme — but also the one with the clearest near-term bottlenecks and investment signals. Hyperscalers are spending $200B+ combined on AI capex in 2025, driving demand through 2027+.</p>
+  <p class="counts">16 concepts · 5 books · 5 courses · 5 voices · 4 mental models</p>
+
+  <h3>Key concepts</h3>
+  <table><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody><tr><td class="term">GPU</td><td>Graphics Processing Unit. Originally for 3D graphics, now the primary AI training compute unit. Thousands of parallel cores. NVIDIA's H100 (~$30-40K each) and B200 dominate. NVIDIA controls ~80%+ of the AI GPU market. The most critical bottleneck in the AI stack since 2023.</td></tr>
+<tr><td class="term">ASIC / TPU</td><td>Application-Specific Integrated Circuit: a chip designed for exactly one task. More efficient than GPUs but less flexible. Google's TPU, AWS Trainium, Intel Gaudi are examples. Increasingly competing with NVIDIA in inference workloads.</td></tr>
+<tr><td class="term">TSMC</td><td>Taiwan Semiconductor Manufacturing Company. World's most advanced chip foundry — manufactures chips for NVIDIA, Apple, AMD, Qualcomm. Controls ~90% of sub-5nm chip production. Located in Taiwan — the geopolitical single point of failure for the entire global technology supply chain.</td></tr>
+<tr><td class="term">ASML / EUV Lithography</td><td>ASML makes the only machines capable of printing chips at the most advanced nodes (sub-7nm) using Extreme Ultraviolet light. A single machine costs ~$200M. ASML has a global monopoly. The Netherlands export controls on ASML are a primary US-China semiconductor battleground.</td></tr>
+<tr><td class="term">HBM (High Bandwidth Memory)</td><td>Memory stacked directly on processor dies, providing 10x+ the bandwidth of conventional DRAM. SK Hynix, Samsung, and Micron supply HBM. The 'memory wall' is one of AI's key hardware bottlenecks. HBM demand is a direct proxy for GPU demand.</td></tr>
+<tr><td class="term">Hyperscaler</td><td>Mega-scale cloud and AI infrastructure operators: Amazon AWS, Microsoft Azure, Google Cloud, Meta. Spending $200B+ combined on AI capex in 2025, driving the entire semiconductor and energy demand cycle.</td></tr>
+<tr><td class="term">Neocloud</td><td>Specialized AI-first data center operators renting GPU compute: CoreWeave, Lambda Labs, Vast.ai. Focused purely on AI compute. Bitcoin miners converting to Neoclouds is a capital-allocation arbitrage Sigil specifically highlights in their memo.</td></tr>
+<tr><td class="term">Fabless vs. Fab</td><td>Fabless: companies design chips but outsource manufacturing (NVIDIA, Qualcomm, AMD, Apple). Fab: companies manufacture chips (TSMC, Samsung, Intel Foundry). The separation between design and manufacturing is the defining feature of the modern semiconductor industry.</td></tr>
+<tr><td class="term">Photonics / Silicon Photonics</td><td>Using light instead of electrical signals for data transmission within data centers. Optical interconnects offer massively higher bandwidth and lower power consumption than copper. Sigil notes photonics is entering a 'productive phase' — moving from R&amp;D to deployment.</td></tr>
+<tr><td class="term">Rare Earth Elements</td><td>17 metals (neodymium, dysprosium, terbium) critical for EV motors, missile guidance, wind turbines. China controls ~85% of global processing. A key geopolitical chokepoint. Sigil identifies 2-3 decades of Western underinvestment as creating a structural bottleneck.</td></tr>
+<tr><td class="term">Behind-the-Meter Generation</td><td>On-site power generation bypassing the public grid — natural gas, solar, or small nuclear reactors. Hyperscalers increasingly use this for AI data centers to secure reliable, cheap power without grid capacity constraints. Microsoft's Three Mile Island deal is an early example.</td></tr>
+<tr><td class="term">Memory Wall</td><td>The growing gap between processor speed and memory bandwidth. As GPUs get faster, they increasingly idle waiting for data. HBM partially addresses this. One of the key frontier hardware bottlenecks in AI scaling.</td></tr>
+<tr><td class="term">Semiconductor Supply Chain</td><td>EDA software (Synopsys, Cadence) → chip design → lithography (ASML) → fab (TSMC) → advanced packaging (TSMC CoWoS, ASE) → test (Teradyne). Each step is a potential bottleneck. Advanced packaging is the newest bottleneck after GPUs.</td></tr>
+<tr><td class="term">Semiconductor Fab Capex Cycle</td><td>Fab construction takes 3–5 years and $10–20B+ per leading-edge facility. After bust cycles, fabs add capacity conservatively ('cyclical PTSD') — extending up-cycles. High returns attract capex → overcapacity → returns fall. Marathon AM's capital cycle theory applied directly to TSMC, Intel Foundry, and Samsung fab investment decisions.</td></tr>
+<tr><td class="term">SLM / Edge Inference</td><td>Small Language Models running on-device (phones, cars, robots) rather than data centers. Microsoft Phi, Google Gemma, Meta Llama. Sigil identifies edge inference as the 'opposite trend' — both centralized buildout and edge inference matter simultaneously.</td></tr>
+<tr><td class="term">PUE (Power Usage Effectiveness)</td><td>Ratio of total data center energy to IT equipment energy. Industry average ~1.5; hyperscalers target 1.1-1.2. AI data centers are more power-intensive, driving innovation in liquid cooling and behind-the-meter generation.</td></tr></tbody></table>
+
+  <h3>Essential books</h3>
+  <table><thead><tr><th>Title</th><th>Author</th><th>Level</th><th>Why read it</th></tr></thead><tbody><tr><td>Chip War</td><td>Chris Miller</td><td><span class="badge badge-start">Start Here</span></td><td>The essential book on the semiconductor industry: its history, geopolitics, and why TSMC and ASML became the most strategically important companies in the world. Every Sigil infrastructure investment makes more sense after reading this.</td></tr>
+<tr><td>The Innovators</td><td>Walter Isaacson</td><td><span class="badge badge-start">Start Here</span></td><td>History of computing and semiconductor innovation. Essential context for the technology lineage leading to GPUs and the current AI buildout.</td></tr>
+<tr><td>The New Map: Energy, Climate, and the Clash of Nations</td><td>Daniel Yergin</td><td><span class="badge badge-intermediate">Intermediate</span></td><td>Energy, geopolitics, and commodities. Data centers are now among the largest energy consumers globally. Understanding the global energy map is table stakes for the AI infrastructure thesis.</td></tr>
+<tr><td>Material World</td><td>Ed Conway</td><td><span class="badge badge-intermediate">Intermediate</span></td><td>Deep dive into the raw materials underpinning modern technology. Sigil's 'third order' bottleneck thesis — critical materials — examined from first principles.</td></tr>
+<tr><td>The Race for a New Game Machine</td><td>David Shippy &amp; Mickie Phipps</td><td><span class="badge badge-advanced">Advanced</span></td><td>Inside story of designing IBM's Cell processor. Rare account of how cutting-edge chip design actually works under competitive and timeline pressure.</td></tr></tbody></table>
+
+  <h3>Courses &amp; resources</h3>
+  <div class="block"><div class="block-title">SemiAnalysis Newsletter (Dylan Patel)</div><div class="block-meta">semianalysis.com (paid)</div><div class="block-body">Most rigorous public analysis of semiconductor supply chains: TSMC capacity, GPU architectures, HBM demand, data center economics. Essential paid reading for serious AI infrastructure investing.</div></div>
+<div class="block"><div class="block-title">Moore's Law Is Dead (Ian Cutress)</div><div class="block-meta">YouTube (free)</div><div class="block-body">Technical deep dives on chip architecture, semiconductor nodes, and packaging innovations. Best free technical education on semiconductor engineering for non-engineers.</div></div>
+<div class="block"><div class="block-title">NVIDIA GTC Keynotes (Jensen Huang)</div><div class="block-meta">YouTube / NVIDIA (free)</div><div class="block-body">Annual state of AI and GPU computing. Watch every GTC. Dense with roadmap signals. Jensen's blackboard sketches are the best visual model of how the AI stack is organized.</div></div>
+<div class="block"><div class="block-title">MIT 6.004: Computation Structures</div><div class="block-meta">MIT OpenCourseWare (free)</div><div class="block-body">Fundamentals of digital systems and computer architecture. Builds technical vocabulary to evaluate hardware claims from first principles.</div></div>
+<div class="block"><div class="block-title">SIA Annual Reports</div><div class="block-meta">semiconductors.org (free)</div><div class="block-body">Industry statistics, trade data, policy reports. Primary data source for semiconductor demand, production, and geopolitical trends.</div></div>
+
+  <h3>Voices to follow</h3>
+  <table><thead><tr><th>Name</th><th>Format</th><th>Focus</th></tr></thead><tbody><tr><td>Dylan Patel (SemiAnalysis)</td><td>Newsletter / Twitter</td><td>Most detailed public analysis of semiconductor supply chains and GPU economics. The go-to primary source for AI infrastructure deep dives.</td></tr>
+<tr><td>Patrick Moorhead (Moor Insights)</td><td>Blog / Media</td><td>Industry analyst on chip companies, data center trends, and competitive dynamics between Intel, AMD, NVIDIA, and custom silicon.</td></tr>
+<tr><td>Ian Cutress (Moore's Law Is Dead)</td><td>YouTube / Podcast</td><td>Best technical chip architecture communicator for non-engineers. Bridges the gap between chip marketing claims and actual silicon performance.</td></tr>
+<tr><td>Matt Ball (Epyllion)</td><td>Essays / Newsletter</td><td>Best long-form essays on the economics of data centers and the physical layer of the digital economy.</td></tr>
+<tr><td>Tim Culpan (Bloomberg Opinion)</td><td>Journalism</td><td>Best mainstream journalist on the intersection of geopolitics and semiconductor supply chains. Essential for tracking TSMC/ASML/China developments.</td></tr></tbody></table>
+
+  <h3>Mental models</h3>
+  <div class="model"><div class="model-title">Picks and Shovels</div><div class="model-body">During a gold rush, sell picks and shovels — not gold. The infrastructure enablers (ASML, TSMC, NVIDIA) often have more durable economics than the AI companies they serve. The constraint captures the margin: whoever controls the bottleneck extracts the value.</div></div>
+<div class="model"><div class="model-title">Bottleneck Theory (Theory of Constraints)</div><div class="model-body">Every system has one binding constraint. In AI: 2022 = software (no good models). 2023-24 = GPU supply. 2025 = HBM and advanced packaging. 2026+ = energy and power delivery. Identifying the current bottleneck tells you exactly where value is concentrating today.</div></div>
+<div class="model"><div class="model-title">Geopolitical Risk Layering</div><div class="model-body">Taiwan Strait risk exists on a spectrum: trade tensions → export controls → blockade → invasion. Model each scenario's impact on the portfolio separately. A partial TSMC disruption (export controls) is very different from a full invasion scenario.</div></div>
+<div class="model"><div class="model-title">Bottleneck Migration</div><div class="model-body">In any constrained system, fixing one bottleneck immediately reveals the next. AI infrastructure bottleneck timeline: 2022 = models (no capable models existed). 2023-24 = GPU supply. 2025 = HBM and advanced packaging. 2026+ = energy and power delivery. Investment implication: don't buy the previous bottleneck — buy what becomes the next bottleneck BEFORE consensus identifies it. The edge is in early bottleneck prediction, not late bottleneck confirmation.</div></div>
+</section>
+
+<section id="theme-application" class="section">
+  <div class="section-head">
+    <div class="section-num">02</div>
+    <div>
+      <h2>2. Application Layer</h2>
+      <p class="tagline">LLMs, AI agents, SaaS disruption, and the software economy repricing</p>
+    </div>
+  </div>
+  <p class="desc">The application layer is where AI touches every business and consumer. The key insight: moats built on UI/UX friction are dying; moats built on proprietary data, distribution, and regulatory lock-in are strengthening. This is the theme with the most nuanced investment approach — not simply 'buy AI, sell SaaS.'</p>
+  <p class="counts">13 concepts · 6 books · 4 courses · 5 voices · 3 mental models</p>
+
+  <h3>Key concepts</h3>
+  <table><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody><tr><td class="term">LLM (Large Language Model)</td><td>Neural networks trained on vast text using transformer architecture. Key properties: in-context learning (learns from examples in prompt), emergent capabilities (appear at scale), hallucination tendency (generates false information confidently). GPT-4, Claude 3, Gemini Ultra are frontier models.</td></tr>
+<tr><td class="term">Foundation Model</td><td>A large model trained on broad data adapted for specific tasks via fine-tuning or prompting. The 'platform layer' of AI. OpenAI, Anthropic, Google DeepMind, Meta are the foundation model labs. The race: best foundation = most compute + highest-quality data.</td></tr>
+<tr><td class="term">RAG (Retrieval Augmented Generation)</td><td>Architecture connecting an LLM to an external database. Before generating, the model retrieves relevant context. Reduces hallucinations, enables private/proprietary data use, avoids constant retraining. The dominant enterprise AI architecture in 2024-2026.</td></tr>
+<tr><td class="term">AI Agent</td><td>Software entity autonomously perceiving its environment, making decisions, and taking actions to achieve goals without continuous human direction. The shift from AI as tool (you use it) to AI as worker (it does the job).</td></tr>
+<tr><td class="term">Agentic Workflow</td><td>A sequence of AI agent actions completing a complex, multi-step task autonomously. E.g., 'research competitors, write analysis, send report' — all without human handoffs. The most disruptive paradigm in enterprise software since cloud computing.</td></tr>
+<tr><td class="term">Software Moat Taxonomy</td><td>Four types in decreasing AI-resistance: (1) Proprietary data — datasets no competitor can replicate. (2) Regulatory/distribution lock-in. (3) Switching costs — workflow migration is painful. (4) UI/UX friction — DYING. AI agents collapse the friction that justified paying for many SaaS tools.</td></tr>
+<tr><td class="term">SaaS Metrics: ARR / NRR</td><td>ARR (Annual Recurring Revenue): subscription revenue annualized. NRR (Net Revenue Retention): revenue from existing customers including expansion minus churn. &gt;120% NRR means customers expand spend over time — one of the strongest product-market fit signals.</td></tr>
+<tr><td class="term">Token Budget / AI OPEX</td><td>The computational cost of AI inference is becoming a major operating expense for companies. As compute becomes a real budget line, low-value AI tasks are priced out or shifted to open-source models. Resets the business case for many SaaS products.</td></tr>
+<tr><td class="term">Aggregation Theory</td><td>Ben Thompson: platforms aggregating consumer demand extract value from suppliers. Google, Amazon, Apple built moats through demand aggregation. AI agents may disrupt even these aggregators by navigating directly to content — disintermediating the aggregators themselves.</td></tr>
+<tr><td class="term">Agentic Payments</td><td>Ability of AI agents to transact value autonomously — paying for services, receiving payments, managing budgets. A key infrastructure need for the agentic economy. Where Sigil's crypto expertise directly translates.</td></tr>
+<tr><td class="term">Multi-agent System</td><td>Networks of AI agents, each specialized for subtasks, coordinating to complete complex workflows. Analogous to a company org chart. The architecture for serious enterprise AI deployment at scale.</td></tr>
+<tr><td class="term">Fine-tuning</td><td>Additional training of a pre-trained foundation model on domain-specific data to optimize for a specific task. Creates more durable product differentiation but requires proprietary data and engineering resources.</td></tr>
+<tr><td class="term">Dead Internet Theory (Operational)</td><td>The observation that most internet content is now AI-generated or bot-amplified. Implications: every platform dependent on authentic human content faces structural degradation of its value proposition.</td></tr></tbody></table>
+
+  <h3>Essential books</h3>
+  <table><thead><tr><th>Title</th><th>Author</th><th>Level</th><th>Why read it</th></tr></thead><tbody><tr><td>The Innovator's Dilemma</td><td>Clayton M. Christensen</td><td><span class="badge badge-start">Start Here</span></td><td>THE theory explaining SaaS disruption by AI. Every company facing AI disruption is a Christensen case study. Read before analyzing any software company as a long or short.</td></tr>
+<tr><td>Zero to One</td><td>Peter Thiel</td><td><span class="badge badge-start">Start Here</span></td><td>What makes a startup worth backing: monopoly, secrets, going from 0 to 1. Framework for identifying AI companies with real moats vs. those simply riding the wave.</td></tr>
+<tr><td>Platform Revolution</td><td>Parker, Van Alstyne &amp; Choudary</td><td><span class="badge badge-intermediate">Intermediate</span></td><td>The mechanics of platform businesses and network effects. Understanding why some AI platforms will dominate requires this framework.</td></tr>
+<tr><td>The Cold Start Problem</td><td>Andrew Chen</td><td><span class="badge badge-intermediate">Intermediate</span></td><td>How network effects start, grow, and become defensible. Evaluating which AI applications will have lasting moats vs. which are features that platforms absorb.</td></tr>
+<tr><td>AI Superpowers</td><td>Kai-Fu Lee</td><td><span class="badge badge-start">Start Here</span></td><td>US-China AI competition, economics of AI implementation, role of data. Essential for geopolitical context of AI deployment.</td></tr>
+<tr><td>Competing Against Luck</td><td>Clayton M. Christensen</td><td><span class="badge badge-intermediate">Intermediate</span></td><td>Jobs-to-be-done theory. Framework for identifying which AI applications will stick (doing jobs people desperately need done) vs. which are features looking for a problem.</td></tr></tbody></table>
+
+  <h3>Courses &amp; resources</h3>
+  <div class="block"><div class="block-title">Neural Networks: Zero to Hero (Andrej Karpathy)</div><div class="block-meta">YouTube (free)</div><div class="block-body">Build a GPT from scratch. Former OpenAI co-founder. Nothing builds genuine AI literacy faster. Even non-technical investors benefit enormously.</div></div>
+<div class="block"><div class="block-title">Practical Deep Learning for Coders</div><div class="block-meta">fast.ai (Jeremy Howard, free)</div><div class="block-body">Hands-on AI implementation. After this, you can evaluate AI company technical claims from a position of genuine understanding, not just what founders tell you.</div></div>
+<div class="block"><div class="block-title">Stratechery Annual</div><div class="block-meta">stratechery.com (paid newsletter)</div><div class="block-body">Technology strategy, platform economics, and AI business models. Ben Thompson's aggregation theory is the single most useful framework for understanding software moats disrupted by AI.</div></div>
+<div class="block"><div class="block-title">CS224N: NLP with Deep Learning</div><div class="block-meta">Stanford (YouTube, free)</div><div class="block-body">Academic foundation for LLMs and transformer architecture. The 'advanced track' — gives vocabulary to assess AI company claims rigorously.</div></div>
+
+  <h3>Voices to follow</h3>
+  <table><thead><tr><th>Name</th><th>Format</th><th>Focus</th></tr></thead><tbody><tr><td>Ben Thompson (Stratechery)</td><td>Newsletter (paid)</td><td>Aggregation theory, platform business models, AI strategy. The most important voice for understanding the software layer of AI.</td></tr>
+<tr><td>Andrej Karpathy</td><td>YouTube / Twitter (free)</td><td>Technical AI implementation explained accessibly. Former OpenAI/Tesla. Rare combination of frontier research depth and teaching clarity.</td></tr>
+<tr><td>Benedict Evans</td><td>Newsletter / Talks (mostly free)</td><td>Broad technology trend analysis on enterprise software disruption patterns. Exceptional at separating AI signal from noise over long time horizons.</td></tr>
+<tr><td>Simon Willison (simonwillison.net)</td><td>Blog (free)</td><td>Practical AI capabilities and limitations. Best source for understanding what agents can actually do today vs. what is marketing hype.</td></tr>
+<tr><td>Matt Turck (FirstMark)</td><td>Blog / Twitter (free)</td><td>Annual AI Landscape charts. The best visual map of the application layer ecosystem.</td></tr></tbody></table>
+
+  <h3>Mental models</h3>
+  <div class="model"><div class="model-title">Aggregation Theory Applied to AI</div><div class="model-body">Whoever controls consumer demand (the aggregator) captures value from suppliers. Key question for every AI company: are they aggregating demand, or being disaggregated by someone at a higher layer? Foundation model labs may be disaggregated by OS-level AI (Apple, Microsoft) which is disaggregated by hardware (NVIDIA).</div></div>
+<div class="model"><div class="model-title">Moat Classification Test</div><div class="model-body">Before every software investment, classify the moat: (1) UI/UX friction — dying, avoid or short. (2) Workflow switching costs — at risk but time-delayed. (3) Proprietary data — resilient, seek. (4) Regulatory/distribution lock-in — growing, priority. This matrix determines sizing and time horizons.</div></div>
+<div class="model"><div class="model-title">The Second-Derivative Bet</div><div class="model-body">Rather than picking which AI application wins (first-order), bet on the infrastructure all applications need: orchestration layers, agent security, inference optimization. Picks-and-shovels at the application layer — they win regardless of which specific apps succeed.</div></div>
+</section>
+
+<section id="theme-robotics" class="section">
+  <div class="section-head">
+    <div class="section-num">03</div>
+    <div>
+      <h2>3. Robotics &amp; Automation</h2>
+      <p class="tagline">Automation of physical work — the last frontier of intelligent systems</p>
+    </div>
+  </div>
+  <p class="desc">70% of the global economy is still physical. Robotics has been overhyped for decades, but AI is finally changing the capability curve. The near-term opportunity isn't humanoids — it's specialized robots in high-labor, lower-margin industries where AI dramatically changes the ROI math. Sigil's portfolio company Budbreak Innovations (vineyard disease detection) exemplifies this approach.</p>
+  <p class="counts">10 concepts · 4 books · 3 courses · 3 voices · 2 mental models</p>
+
+  <h3>Key concepts</h3>
+  <table><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody><tr><td class="term">Degrees of Freedom (DoF)</td><td>The number of independent movements a robotic system can make. Human arm: ~7 DoF. Industrial robot: typically 6 DoF. More DoF enables more complex manipulation but requires more sophisticated control algorithms and more expensive hardware.</td></tr>
+<tr><td class="term">SLAM</td><td>Simultaneous Localization and Mapping. Algorithm allowing a robot to build a map of an unknown environment while simultaneously tracking its own location. Core algorithm enabling autonomous navigation — now augmented with deep learning for much more robust performance.</td></tr>
+<tr><td class="term">World Model</td><td>An AI's internal representation of the physical environment, used for planning and prediction. The critical missing piece in pre-AI robotics. Robots now build these dynamically from sensor data (cameras, LiDAR, IMUs).</td></tr>
+<tr><td class="term">End-Effector</td><td>The device at the end of a robotic arm: grippers, welders, spray nozzles, surgical tools. Dexterous end-effectors for delicate tasks remain a hard engineering problem — and a key hardware investment opportunity.</td></tr>
+<tr><td class="term">Collaborative Robot (Cobot)</td><td>Robots designed to work safely alongside humans without barriers. Lower cost ($50-100K vs. $500K+ for traditional industrial robots), easily reprogrammable. Universal Robots pioneered this category. Key for services and light manufacturing.</td></tr>
+<tr><td class="term">Actuator Types</td><td>The 'muscles' of a robot. Electric actuators (servo motors, most common) use rare earth magnets — a supply chain link. The shift from hydraulic to all-electric is a major materials demand trend.</td></tr>
+<tr><td class="term">Humanoid Robot</td><td>Bipedal robots shaped like humans. Companies: Figure AI, Tesla Optimus, Agility Robotics, Boston Dynamics Atlas. The most hyped category. Sigil is cautious here — humanoids only make engineering sense where environments are built specifically for human form factors.</td></tr>
+<tr><td class="term">Agricultural Robotics</td><td>Specialized robots for farming: planting, harvesting, pruning, spraying, disease detection. Large TAM ($100B+), high labor intensity, narrow AI requirement (not generalist AGI). The investable near-term robotics frontier Sigil prefers over humanoids.</td></tr>
+<tr><td class="term">Local Inference Unit</td><td>On-board AI processor enabling real-time robot decision-making without cloud connectivity. Critical for latency-sensitive applications: self-driving, surgical robotics, manufacturing QC. Links the robotics theme to the AI inference hardware theme.</td></tr>
+<tr><td class="term">Automation Paradox / Jevons Paradox</td><td>Counterintuitive finding that partial automation can increase total demand for human labor by creating new job categories (supervising, maintaining, programming automated systems). Historical data from manufacturing automation supports this pattern.</td></tr></tbody></table>
+
+  <h3>Essential books</h3>
+  <table><thead><tr><th>Title</th><th>Author</th><th>Level</th><th>Why read it</th></tr></thead><tbody><tr><td>The Second Machine Age</td><td>Brynjolfsson &amp; McAfee</td><td><span class="badge badge-start">Start Here</span></td><td>The most rigorous academic analysis of automation's economic impact. Essential for the labor economics framework underlying the entire robotics investment thesis.</td></tr>
+<tr><td>Rise of the Robots</td><td>Martin Ford</td><td><span class="badge badge-start">Start Here</span></td><td>Which jobs are most at risk from robotics — directly actionable for identifying which industries face robotic disruption first and where to invest.</td></tr>
+<tr><td>Human Compatible</td><td>Stuart Russell</td><td><span class="badge badge-advanced">Advanced</span></td><td>Berkeley AI professor on building machines aligned with human preferences. Most rigorous academic treatment of autonomous systems — especially important for robots given physical-world consequences.</td></tr>
+<tr><td>Rethinking Competitive Advantage</td><td>Ram Charan</td><td><span class="badge badge-intermediate">Intermediate</span></td><td>How incumbents in 'physical' industries compete using digital platforms and robotics. Framework for identifying which established industrial companies will be robotics winners vs. losers.</td></tr></tbody></table>
+
+  <h3>Courses &amp; resources</h3>
+  <div class="block"><div class="block-title">Modern Robotics (Northwestern University)</div><div class="block-meta">Coursera (free to audit)</div><div class="block-body">Theoretical foundations: kinematics, dynamics, motion planning. Core robotics curriculum for understanding what is genuinely hard about building robots vs. marketing claims.</div></div>
+<div class="block"><div class="block-title">Deep Learning for Robotics (Stanford CS329L)</div><div class="block-meta">Stanford (YouTube, free)</div><div class="block-body">How deep learning is applied to robot perception, navigation, and manipulation. Bridges AI and robotics at the current frontier.</div></div>
+<div class="block"><div class="block-title">ARK Invest Big Ideas Reports</div><div class="block-meta">ARKInvest.com (free, annual)</div><div class="block-body">Market sizing and trend analysis for robotics and automation. Useful for TAM estimation, though often optimistic on timelines.</div></div>
+
+  <h3>Voices to follow</h3>
+  <table><thead><tr><th>Name</th><th>Format</th><th>Focus</th></tr></thead><tbody><tr><td>Pieter Abbeel (UC Berkeley / Covariant)</td><td>Academic / Founder</td><td>Robot learning through imitation and reinforcement learning. One of the world's leading researchers on making robots learn from human demonstration.</td></tr>
+<tr><td>Gill Pratt (Toyota Research Institute)</td><td>Research Director</td><td>Practical robotics at scale. TRI is one of the best-funded robotics research orgs, doing serious work on manipulation and human-robot collaboration.</td></tr>
+<tr><td>Hod Lipson (Columbia)</td><td>Academic</td><td>Self-modeling robots and evolutionary robotics. Broader thinking about the future of autonomous physical systems beyond current paradigms.</td></tr></tbody></table>
+
+  <h3>Mental models</h3>
+  <div class="model"><div class="model-title">Form Factor Follows Function</div><div class="model-body">Humanoid robots are engineering optimal only where environments are built for human form factors and cannot be modified. For agriculture, warehousing, and mining, purpose-built specialized robots are more practical, cheaper, and closer to commercial viability. Invest in practical form factors first.</div></div>
+<div class="model"><div class="model-title">Hardware BOM Analysis</div><div class="model-body">Unlike software, robot economics are determined by the hardware Bill of Materials: motors, sensors, processors, cameras, end-effectors. Analyze the BOM for cost reduction curves. Robot deployment at scale only becomes economically viable when BOM costs fall below $20-30K per unit.</div></div>
+</section>
+
+<section id="theme-defence" class="section">
+  <div class="section-head">
+    <div class="section-num">04</div>
+    <div>
+      <h2>4. Future of Warfare</h2>
+      <p class="tagline">Autonomous systems, drone economics, and the defence tech renaissance</p>
+    </div>
+  </div>
+  <p class="desc">NATO budgets are rising at Cold War rates. Ukraine demonstrated autonomous loitering munitions permanently restructured warfare economics — a $20K drone destroying a $3M tank is a 150:1 cost asymmetry. Mastering this theme requires understanding defence procurement, the Innovator's Dilemma in military technology, and the critical materials underpinning modern weapons.</p>
+  <p class="counts">13 concepts · 5 books · 4 courses · 4 voices · 4 mental models</p>
+
+  <h3>Key concepts</h3>
+  <table><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody><tr><td class="term">C4ISR</td><td>Command, Control, Communications, Computers, Intelligence, Surveillance and Reconnaissance. The nervous system of modern military operations. AI is transforming every layer — from real-time battlefield data aggregation to autonomous targeting decision-support.</td></tr>
+<tr><td class="term">Loitering Munition</td><td>A drone that 'loiters' over an area autonomously until it identifies a target, then strikes. Also called 'suicide drone.' Lancet (Russian), Shahed (Iranian/Russian), Switchblade (US). Ukraine's use against Russian tanks redefined cost-exchange ratios permanently.</td></tr>
+<tr><td class="term">Counter-UAV (C-UAV)</td><td>Systems to detect, track, and neutralize enemy drones. Methods: RF jamming, GPS spoofing, kinetic (missiles, cannons), directed energy (lasers), interceptor drones. One of the fastest-growing defence categories globally as drone proliferation accelerates.</td></tr>
+<tr><td class="term">Directed Energy Weapon (DEW)</td><td>Weapons using focused energy instead of projectiles: lasers (HELIOS by Raytheon), high-power microwave. Key advantages: speed-of-light delivery, very low cost per shot (dollars of electricity vs. $1M+ missiles), essentially unlimited 'ammunition' as long as power is available.</td></tr>
+<tr><td class="term">NATO 2% GDP Target</td><td>NATO members' commitment to spend 2%+ of GDP on defence. Many European countries now exceeding this — Germany targeting 2-3%, Poland at 4%+. Creates structural, multi-year demand expansion for European and NATO-aligned defence companies.</td></tr>
+<tr><td class="term">Cost-Exchange Ratio</td><td>Ratio of attacker cost to defender cost. Historical norm: slight defender advantage. Ukraine showed 150:1 attacker advantage with loitering munitions vs. tanks. This drives the entire NATO force structure rethink toward drone swarms and C-UAV.</td></tr>
+<tr><td class="term">Innovator's Dilemma in Defence</td><td>Large prime contractors (Lockheed, Raytheon, BAE) are optimized for slow, complex, expensive programs and cannot produce fast, cheap, software-first solutions. Procurement bureaucracy is their moat. Creates the gap that startups (Palantir, Anduril, Shield AI) are filling.</td></tr>
+<tr><td class="term">Attritable Systems</td><td>Low-cost, expendable autonomous platforms designed to be lost in combat without strategic impact — the opposite of $13B aircraft carriers and $3M tanks. Ukraine demonstrated that attritable $20K drones can destroy high-value assets. Kratos, Anduril, and loitering munition makers express this thesis.</td></tr>
+<tr><td class="term">OSINT (Open Source Intelligence)</td><td>Intelligence from public sources: commercial satellite imagery, social media, commercial databases. AI dramatically amplifies OSINT capabilities. Ukraine used commercial OSINT to track Russian forces in near-real-time — satellite intelligence is no longer a state monopoly.</td></tr>
+<tr><td class="term">Dual-use Technology</td><td>Technology with both civilian and military applications. Most deep tech today is dual-use: drones, satellite imagery, AI, advanced manufacturing. Regulatory treatment varies significantly by jurisdiction and export destination.</td></tr>
+<tr><td class="term">Critical Materials for Defence</td><td>Tungsten (armor-piercing rounds), rare earth elements (missile guidance, radar), titanium (airframes), lithium (autonomous system batteries). China controls processing of most of these. Western reshoring is both a strategic necessity and a direct investment opportunity.</td></tr>
+<tr><td class="term">Grey Zone Warfare</td><td>Hostile activities below the threshold of conventional war: cyberattacks, election interference, economic coercion, proxy conflicts, information warfare, undersea cable sabotage. The primary mode of great power conflict short of direct war.</td></tr>
+<tr><td class="term">ISR</td><td>Intelligence, Surveillance, Reconnaissance. Historically expensive (spy planes, KH satellites). Now increasingly democratized via commercial satellites and OSINT. ISR quality — seeing the battlefield better — is increasingly decisive in modern conflict.</td></tr></tbody></table>
+
+  <h3>Essential books</h3>
+  <table><thead><tr><th>Title</th><th>Author</th><th>Level</th><th>Why read it</th></tr></thead><tbody><tr><td>The Kill Chain</td><td>Christian Brose</td><td><span class="badge badge-start">Start Here</span></td><td>Best book on the future of warfare from a congressional insider (now Palantir CSO). Argues the US military-industrial complex is building the wrong weapons. The intellectual framework for the entire defence tech investment thesis.</td></tr>
+<tr><td>The Drone Age</td><td>Michael J. Boyle</td><td><span class="badge badge-start">Start Here</span></td><td>Comprehensive analysis of drone proliferation reshaping conflict. The empirical foundation for the loitering munition and counter-UAV investment theses.</td></tr>
+<tr><td>The Pentagon's Brain</td><td>Annie Jacobsen</td><td><span class="badge badge-intermediate">Intermediate</span></td><td>DARPA's history funding moonshot military technology that became commercial. Understanding the innovation pipeline from defence R&amp;D to commercial deployment.</td></tr>
+<tr><td>Ghost Fleet</td><td>P.W. Singer &amp; August Cole</td><td><span class="badge badge-start">Start Here</span></td><td>Techno-thriller based entirely on real emerging military technology. Doubles as serious scenario planning for a US-China conflict. Accessible and clarifying.</td></tr>
+<tr><td>The Strategy of Denial</td><td>Elbridge Colby</td><td><span class="badge badge-advanced">Advanced</span></td><td>The most rigorous framework for US defence strategy against China. Essential for understanding the Taiwan Strait risk Sigil identifies as their primary bear case scenario.</td></tr></tbody></table>
+
+  <h3>Courses &amp; resources</h3>
+  <div class="block"><div class="block-title">War on the Rocks</div><div class="block-meta">warontherocks.com (mostly free)</div><div class="block-body">Best source for serious analysis of military strategy, defence procurement, and geopolitics. Daily articles and weekly podcast from practitioners.</div></div>
+<div class="block"><div class="block-title">RAND Corporation Research</div><div class="block-meta">rand.org (free)</div><div class="block-body">World's premier defence policy research org. Authoritative analysis on drone warfare, NATO, AI in defence, China military strategy.</div></div>
+<div class="block"><div class="block-title">Lawfare Blog</div><div class="block-meta">lawfaremedia.org (free)</div><div class="block-body">National security law, cyber policy, and autonomous weapons regulation. Essential for regulatory/legal frameworks around dual-use tech.</div></div>
+<div class="block"><div class="block-title">Belfer Center Publications</div><div class="block-meta">Harvard Kennedy School (mostly free)</div><div class="block-body">Policy-relevant research on great power competition, nuclear security, cybersecurity.</div></div>
+
+  <h3>Voices to follow</h3>
+  <table><thead><tr><th>Name</th><th>Format</th><th>Focus</th></tr></thead><tbody><tr><td>Christian Brose (Palantir CSO)</td><td>Books / Interviews</td><td>The intellectual framework for the defence tech transformation. Former Senate Armed Services Committee staff director — Author of The Kill Chain.</td></tr>
+<tr><td>Elbridge Colby</td><td>Books / Twitter</td><td>Author of The Strategy of Denial. Leading voice on US-China military competition and Taiwan Strait risk.</td></tr>
+<tr><td>Peter W. Singer</td><td>Books / Useful Friction Podcast</td><td>Defence futurist and novelist. Best communicator on the intersection of emerging technology and military strategy.</td></tr>
+<tr><td>Mick Ryan (Australian Army, ret.)</td><td>Newsletter (Futura Doctrina)</td><td>How militaries are actually adapting to drone warfare, AI, and high-tech conflict. Practitioner perspective.</td></tr></tbody></table>
+
+  <h3>Mental models</h3>
+  <div class="model"><div class="model-title">OODA Loop (Boyd)</div><div class="model-body">Observe, Orient, Decide, Act. The side completing this loop faster wins. AI compresses the Orient and Decide phases. Understanding Boyd's framework is the key to grasping why AI in C4ISR is strategically decisive — speed of decision, not just quality, wins modern conflicts.</div></div>
+<div class="model"><div class="model-title">Cost-Exchange Ratio Analysis</div><div class="model-body">Model every weapon system as a cost-exchange ratio. A $3M tank vs. a $20K loitering munition (150:1 attacker advantage). A $13B aircraft carrier vs. a $100M drone swarm (130:1). These asymmetries define the direction of force structure investment and the procurement categories that will grow fastest.</div></div>
+<div class="model"><div class="model-title">Innovator's Dilemma in Procurement</div><div class="model-body">Large prime contractors are rational in not building cheap, fast, software-first solutions — their customers (DoD bureaucracy) don't demand it. Startups filling the gap (Anduril, Shield AI) are classic disruptors. Invest in the disruptors; be cautious on the long-term moats of the primes.</div></div>
+<div class="model"><div class="model-title">Dual-Use Value Premium</div><div class="model-body">Any technology serving both commercial and defence markets commands a higher valuation than a pure commercial or pure defence play. Commercial: unlimited TAM, fast iteration cycles. Defence: government-backed revenue, high barriers to entry, strategic importance. The premium is especially large at the intersection of AI + space + defence — where a satellite is simultaneously a broadband asset, an intelligence asset, and potentially a weapon system. Screen for companies where the dual-use case is genuine (Starlink, Palantir AIP) vs. companies claiming dual-use for valuation purposes without credible defence application.</div></div>
+</section>
+
+<section id="theme-space" class="section">
+  <div class="section-head">
+    <div class="section-num">05</div>
+    <div>
+      <h2>5. Space Race 2.0</h2>
+      <p class="tagline">Satellite economies, launch economics, and the commercialization of orbit</p>
+    </div>
+  </div>
+  <p class="desc">Three converging forces — collapsed launch costs (SpaceX), strategic competition (US-China), and AI-driven demand — are creating the first commercially viable space economy since the Apollo era. Sigil holds SpaceX as a core holding and has private positions in ground-station infrastructure and microgravity biochemical manufacturing.</p>
+  <p class="counts">11 concepts · 4 books · 3 courses · 4 voices · 2 mental models</p>
+
+  <h3>Key concepts</h3>
+  <table><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody><tr><td class="term">Low Earth Orbit (LEO)</td><td>200–2,000 km altitude. Where Starlink, ISS, and most Earth observation satellites operate. Short orbital period (~90 min), relatively low launch cost. SpaceX's primary commercial frontier. The 'hottest' orbital real estate in the New Space era.</td></tr>
+<tr><td class="term">Geostationary Orbit (GEO)</td><td>~35,786 km altitude. Satellite appears stationary relative to Earth. Traditional satellite TV and weather satellites. High latency (~600ms) but large coverage footprint. Being displaced by LEO constellations for broadband.</td></tr>
+<tr><td class="term">Reusable Launch Vehicle (RLV)</td><td>Rockets that return to Earth for reuse — SpaceX's core innovation. Falcon 9 boosters reused 20+ times. Starship aims for airplane-like rapid reuse. This cost revolution (from $54,000/kg to $2,700/kg to projected $100/kg) makes satellite constellations and orbital data centers economically viable.</td></tr>
+<tr><td class="term">Satellite Constellation</td><td>Large coordinated networks of satellites providing global coverage. Starlink: 7,000+ satellites targeting 42,000. OneWeb: 600+. Amazon Kuiper: planned 3,200+. Enables global broadband but creates orbital debris risk and requires massive capital ($10B+).</td></tr>
+<tr><td class="term">Ground Station Infrastructure</td><td>Earth-based facilities communicating with satellites. The 'last mile' of satellite connectivity — increasingly a bottleneck as constellations scale. Sigil has a private investment in a ground station infrastructure company.</td></tr>
+<tr><td class="term">Delta-V Budget</td><td>The total velocity change available for orbital maneuvers — determines what missions are feasible with a given propellant load. The fundamental constraint on spacecraft mission design. Key to evaluating which space concepts are physically plausible vs. marketing fiction.</td></tr>
+<tr><td class="term">ISRU (In-Situ Resource Utilization)</td><td>Extracting and using resources found in space: lunar water ice for rocket propellant, asteroid metals for construction. The economic foundation for permanent space settlement. Currently pre-commercial but the long-term investment thesis for space mining plays.</td></tr>
+<tr><td class="term">Kessler Syndrome</td><td>Theoretical cascade: satellite collision → debris → more collisions → orbit unusable. Already a serious concern in LEO. Makes active debris removal a genuine commercial opportunity and responsible deployment a regulatory priority.</td></tr>
+<tr><td class="term">Golden Dome</td><td>Proposed US space-based missile defence architecture. Cost estimates $185B–$3.6T. Would require massive satellite procurement — potentially the largest government space procurement in history.</td></tr>
+<tr><td class="term">Orbital Data Center</td><td>Proposed concept: compute in orbit using 24/7 solar power and vacuum cooling. Starcloud's 60kg test satellite carries an NVIDIA H100. SpaceX filed for up to 1 million AI compute satellites. Speculative but attracting serious capital.</td></tr>
+<tr><td class="term">Microgravity Manufacturing</td><td>Production uniquely enabled by zero gravity: ultra-pure fiber optic cables, protein crystals for drug research, exotic metal alloys. Sigil has a private investment in this area. Limited commercial scale today but strong scientific rationale.</td></tr></tbody></table>
+
+  <h3>Essential books</h3>
+  <table><thead><tr><th>Title</th><th>Author</th><th>Level</th><th>Why read it</th></tr></thead><tbody><tr><td>Liftoff</td><td>Eric Berger</td><td><span class="badge badge-start">Start Here</span></td><td>The definitive account of SpaceX's early history. Understanding SpaceX's cost revolution and what Starship means for space economics. Essential for any space theme investment.</td></tr>
+<tr><td>The Space Barons</td><td>Christian Davenport</td><td><span class="badge badge-start">Start Here</span></td><td>Comprehensive overview of the new commercial space industry and its major players. Best single introduction to New Space as a commercial sector.</td></tr>
+<tr><td>How to Make a Spaceship</td><td>Julian Guthrie</td><td><span class="badge badge-intermediate">Intermediate</span></td><td>The story of the Ansari X Prize and the rise of commercial spaceflight. Historical context for why and how the industry became investable.</td></tr>
+<tr><td>Packing for Mars</td><td>Mary Roach</td><td><span class="badge badge-start">Start Here</span></td><td>The human and scientific challenges of space exploration, written accessibly. Builds genuine intuition for what the hard problems actually are — essential for calibrating space investment timelines.</td></tr></tbody></table>
+
+  <h3>Courses &amp; resources</h3>
+  <div class="block"><div class="block-title">Everyday Astronaut (Tim Dodd)</div><div class="block-meta">YouTube (free)</div><div class="block-body">Best educational content on rocket technology, orbital mechanics, and space industry analysis. Accessible with deep technical rigor. Start with all Starship coverage.</div></div>
+<div class="block"><div class="block-title">MIT 16.346: Astrodynamics</div><div class="block-meta">MIT OpenCourseWare (free)</div><div class="block-body">Orbital mechanics from first principles. Technical foundation for evaluating launch vehicle claims and mission feasibility.</div></div>
+<div class="block"><div class="block-title">Space Capital Quarterly Reports</div><div class="block-meta">spacecapital.com (free)</div><div class="block-body">Investment analysis of the space economy. Best source for space market sizing, investment trends, and competitive dynamics.</div></div>
+
+  <h3>Voices to follow</h3>
+  <table><thead><tr><th>Name</th><th>Format</th><th>Focus</th></tr></thead><tbody><tr><td>Everyday Astronaut (Tim Dodd)</td><td>YouTube (free)</td><td>Most accessible technical coverage of rocket technology and the space industry. The starting point for any space investor.</td></tr>
+<tr><td>Eric Berger (Ars Technica / Author)</td><td>Journalism / Books</td><td>Best mainstream journalist covering commercial space. Breaks Starship news first, writes the authoritative books on SpaceX.</td></tr>
+<tr><td>Casey Handmer (Terraform Industries)</td><td>Blog (free)</td><td>Practical space engineering and economics of space industrialization. Especially rigorous on what is feasible vs. science fiction at current cost structures.</td></tr>
+<tr><td>Chad Anderson (Space Capital)</td><td>Newsletter / Podcast</td><td>Tracks space investment trends and market dynamics from a dedicated space VC perspective.</td></tr></tbody></table>
+
+  <h3>Mental models</h3>
+  <div class="model"><div class="model-title">Cost Curve Extrapolation</div><div class="model-body">SpaceX reduced launch costs by 2 orders of magnitude. Extrapolate Starship's projected economics (~$100/kg) and model what becomes commercially viable at each cost threshold. At $54K/kg: only government missions. At $2.7K/kg: Starlink constellations. At $100/kg: orbital data centers, space manufacturing, lunar supply missions. The cost curve IS the investment thesis.</div></div>
+<div class="model"><div class="model-title">Dual-Use Strategic Premium</div><div class="model-body">Space assets have both commercial and strategic value. A satellite constellation is simultaneously a broadband service and a national security asset (Starlink in Ukraine demonstrated this definitively). Strategic value creates pricing power and government revenue streams that pure commercial models alone don't capture.</div></div>
+</section>
+
+<section id="theme-biotech" class="section">
+  <div class="section-head">
+    <div class="section-num">06</div>
+    <div>
+      <h2>6. Biotech &amp; Healthcare</h2>
+      <p class="tagline">AI-compressed drug discovery, precision medicine, and longevity science</p>
+    </div>
+  </div>
+  <p class="desc">Demographics create structural healthcare demand while AI is compressing the R&amp;D cycle that made biotech historically uninvestable. Sigil is backed Age1, a longevity-focused VC, to cover early-stage longevity specifically. The key: distinguish genuine AI-enabled progress from marketing labels on standard bioinformatics tools.</p>
+  <p class="counts">11 concepts · 5 books · 4 courses · 4 voices · 2 mental models</p>
+
+  <h3>Key concepts</h3>
+  <table><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody><tr><td class="term">Drug Development Pipeline</td><td>Target ID → Lead Discovery → Preclinical (animal studies) → Phase I (safety, 20-80 patients) → Phase II (efficacy, 100-300 patients) → Phase III (large-scale, 1,000+ patients) → FDA Approval. Typical: 10-15 years, $1-2B+ per approved drug, &gt;90% failure rate from Phase I.</td></tr>
+<tr><td class="term">CRISPR-Cas9</td><td>Precise gene-editing tool adapted from bacterial immune systems. Can cut and edit specific DNA sequences. First approved CRISPR therapy: Casgevy for sickle cell disease (2023). Applications: genetic diseases, cancer T-cell therapies (CAR-T), agricultural improvements.</td></tr>
+<tr><td class="term">mRNA Technology</td><td>Messenger RNA instructs cells to produce a specific protein. COVID vaccines proved the platform at scale. Applications: cancer neoantigen immunotherapy, rare genetic diseases, protein replacement therapies. Moderna and BioNTech are platform leaders.</td></tr>
+<tr><td class="term">Precision Medicine</td><td>Tailoring diagnosis and treatment to individual patients based on genetic profile, biomarkers, and lifestyle data. LLMs make personalized treatment protocols economically viable at scale — previously requiring expensive specialist time per patient.</td></tr>
+<tr><td class="term">AlphaFold</td><td>DeepMind's AI predicting protein 3D structure from amino acid sequences. Solved the 50-year 'protein folding problem.' Released all 200M+ protein structures publicly. Compressed structural biology research from years of crystallography to hours of compute.</td></tr>
+<tr><td class="term">Biomarker</td><td>Measurable indicator of biological state: gene expression levels, protein concentrations, imaging characteristics. Proprietary biomarker datasets are genuine moats in precision medicine — can't be created without years of patient data collection.</td></tr>
+<tr><td class="term">NPV of Pipeline</td><td>Sum of risk-adjusted net present values of each drug in development. Key inputs: probability of technical success (PoTS) by phase, time to market, peak annual sales, discount rate. The primary valuation framework for pre-revenue biotech companies.</td></tr>
+<tr><td class="term">Longevity Research / Hallmarks of Aging</td><td>Science targeting aging mechanisms: cellular senescence, telomere attrition, mitochondrial dysfunction, epigenetic drift. Companies: Calico (Google), Altos Labs, Unity Biotechnology. AI is materially compressing the research cycle.</td></tr>
+<tr><td class="term">Hallucination Risk in Medical AI</td><td>LLMs generating plausible but incorrect medical diagnoses or treatment recommendations. The most important safety concern separating viable medical AI from dangerous products. Companies that solve this credibly with RAG and uncertainty quantification own a large moat.</td></tr>
+<tr><td class="term">FDA Pathway for AI/ML Medical Devices</td><td>510(k) clearance vs. De Novo vs. PMA approval. FDA has issued guidance for AI/ML Software as a Medical Device (SaMD). Regulatory pathway is a key bottleneck for medical AI commercialization.</td></tr>
+<tr><td class="term">Real-World Evidence (RWE)</td><td>Clinical evidence from electronic health records, insurance claims, wearables, and registries — outside formal clinical trials. AI enables mining RWE at scale, potentially accelerating regulatory approval. Large health system data partnerships are one of the best AI moats in healthcare.</td></tr></tbody></table>
+
+  <h3>Essential books</h3>
+  <table><thead><tr><th>Title</th><th>Author</th><th>Level</th><th>Why read it</th></tr></thead><tbody><tr><td>The Gene: An Intimate History</td><td>Siddhartha Mukherjee</td><td><span class="badge badge-start">Start Here</span></td><td>The definitive narrative history of genetics and molecular biology. Builds scientific intuition necessary to evaluate gene therapy, CRISPR, and precision medicine investments without a biology degree.</td></tr>
+<tr><td>The Code Breaker</td><td>Walter Isaacson</td><td><span class="badge badge-start">Start Here</span></td><td>CRISPR's discovery, scientific landscape, and ethical implications. Understanding CRISPR is the entry point to the gene editing investment universe.</td></tr>
+<tr><td>Lifespan</td><td>David A. Sinclair</td><td><span class="badge badge-intermediate">Intermediate</span></td><td>Harvard longevity researcher's thesis on aging as a disease. The scientific and commercial case for longevity investments. Read critically — Sinclair is also a commercial promoter. Balance with skeptical scientific literature.</td></tr>
+<tr><td>The Emperor of All Maladies</td><td>Siddhartha Mukherjee</td><td><span class="badge badge-start">Start Here</span></td><td>History of cancer and its treatment. Essential context for evaluating immunotherapy, targeted therapy, and AI oncology platforms — still the largest single biotech investment category.</td></tr>
+<tr><td>Bad Blood</td><td>John Carreyrou</td><td><span class="badge badge-start">Start Here</span></td><td>The Theranos fraud. The most important case study in how biotech due diligence fails catastrophically. Teaches what questions to ask and what red flags to spot before any health tech investment.</td></tr></tbody></table>
+
+  <h3>Courses &amp; resources</h3>
+  <div class="block"><div class="block-title">Genomic Data Science Specialization (Johns Hopkins)</div><div class="block-meta">Coursera (free to audit)</div><div class="block-body">How genomic data is generated, processed, and analyzed. Technical foundation for evaluating precision medicine and genomics investment theses.</div></div>
+<div class="block"><div class="block-title">STAT News</div><div class="block-meta">statnews.com (partially free)</div><div class="block-body">Best journalism on biotechnology and health policy. Daily reading for tracking clinical trial results, FDA decisions, and biotech business developments.</div></div>
+<div class="block"><div class="block-title">The Timmerman Report (Luke Timmerman)</div><div class="block-meta">timmermanreport.com (paid)</div><div class="block-body">In-depth biotech investing analysis and company profiles. The best biotech-specific investment newsletter for serious investors.</div></div>
+<div class="block"><div class="block-title">Peter Attia MD Podcast</div><div class="block-meta">peterattiamd.com/podcast (free)</div><div class="block-body">Long-form conversations with leading scientists on longevity and preventive medicine. Builds scientific intuition for the longevity investment theme.</div></div>
+
+  <h3>Voices to follow</h3>
+  <table><thead><tr><th>Name</th><th>Format</th><th>Focus</th></tr></thead><tbody><tr><td>David Sinclair (Harvard)</td><td>Academic / Author / Podcast</td><td>Longevity biology. The most public voice in the longevity space. Understand his work and its controversies — critics argue some results have been difficult to replicate.</td></tr>
+<tr><td>Luke Timmerman (Timmerman Report)</td><td>Newsletter / Journalist</td><td>Biotech investment analysis from 20+ years covering the industry. The most credible biotech-specific investment voice.</td></tr>
+<tr><td>Andrew Lo (MIT Sloan)</td><td>Academic Research</td><td>Finance professor who wrote the most rigorous analysis of biotech investing, including the 'megafund' concept for diversifying binary clinical trial risk.</td></tr>
+<tr><td>Peter Attia (MD, Podcaster)</td><td>Podcast / Newsletter</td><td>Precision medicine and longevity from a practicing physician. Best bridge between cutting-edge research and clinical application.</td></tr></tbody></table>
+
+  <h3>Mental models</h3>
+  <div class="model"><div class="model-title">Risk-Adjusted NPV + Platform vs. Product</div><div class="model-body">Every drug has a PoTS (probability of technical success) and projected commercial value. Multiply them. Compare to market cap. A single-drug company has pure binary trial risk. A platform (mRNA, CRISPR, CAR-T) generates multiple drugs from one core technology — valued like software with a moat. Prefer platforms at reasonable valuations.</div></div>
+<div class="model"><div class="model-title">Beware the AI Hype Discount in Biotech</div><div class="model-body">Many 'AI drug discovery' companies use AI as a marketing label on standard bioinformatics tools. The real test: does their AI demonstrably improve hit rates, reduce trial phases, or provide truly proprietary data? AlphaFold has crossed this bar. Most AI-biotech startups have not. Apply the same rigor here as to any technology claim.</div></div>
+</section>
+
+<section id="theme-cybersecurity" class="section">
+  <div class="section-head">
+    <div class="section-num">07</div>
+    <div>
+      <h2>7. Adversarial AI &amp; Cybersecurity</h2>
+      <p class="tagline">The structural security arms race — AI attacks, AI defends</p>
+    </div>
+  </div>
+  <p class="desc">AI dramatically expands both the attack surface (more agents, more APIs, more entry points) and attacker sophistication (automated exploit generation, deepfake social engineering). Cybersecurity is Sigil's cleanest exception to the 'AI won't help new software startups' thesis — the threat landscape genuinely did not exist before AI. Sigil has partnered with Tachles to identify the best opportunities here.</p>
+  <p class="counts">12 concepts · 4 books · 4 courses · 4 voices · 3 mental models</p>
+
+  <h3>Key concepts</h3>
+  <table><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody><tr><td class="term">Zero Trust Architecture (ZTA)</td><td>Security model assuming no user or device is inherently trusted, even inside the network perimeter. Every access request is verified explicitly. Contrast with legacy 'castle and moat' model. Zero trust is driving major enterprise security spending — Zscaler, CrowdStrike, Okta are key beneficiaries.</td></tr>
+<tr><td class="term">Attack Surface Management (ASM)</td><td>Continuous identification, classification, and monitoring of all assets exposed to attack: domains, IPs, APIs, cloud services. As AI agents proliferate, attack surfaces expand faster than human teams can track manually. ASM tools are among the fastest-growing security categories.</td></tr>
+<tr><td class="term">Prompt Injection</td><td>Adversarial technique hijacking an AI agent's behavior by inserting malicious instructions into inputs. A malicious web page can instruct a browsing agent to exfiltrate user data. One of the hardest unsolved security problems in AI systems.</td></tr>
+<tr><td class="term">AI-Powered Attack Automation</td><td>AI systems that autonomously discover vulnerabilities, craft phishing campaigns, generate polymorphic malware, or scale social engineering at machine speed. Dramatically lowers the cost and skill floor for sophisticated attacks — expanding the threat surface faster than defender headcount can scale.</td></tr>
+<tr><td class="term">Model Poisoning / Data Poisoning</td><td>Corrupting an AI model's training data to introduce backdoors, biases, or specific misbehaviors. Particularly dangerous for models trained on open internet data. If an attacker can influence training data, they create 'sleeper' vulnerabilities.</td></tr>
+<tr><td class="term">Deepfakes / Synthetic Media</td><td>AI-generated images, video, or audio indistinguishable from authentic content. Applications: fraud, disinformation, CEO voice impersonation for wire transfer fraud. Driving demand for digital content provenance (C2PA standard) and liveness detection.</td></tr>
+<tr><td class="term">Digital Identity Verification</td><td>Proving a user is human and who they claim to be. Current methods (SMS OTP, selfie checks) are increasingly defeated by AI-generated synthetic identities. Next-gen: hardware attestation, biometric liveness detection, decentralized identity. Sigil's specific investment focus in this theme.</td></tr>
+<tr><td class="term">Nation-State APT</td><td>Advanced Persistent Threat: sophisticated, long-duration state-sponsored cyberattacks. China's APT41 (economic espionage), Russia's Sandworm (infrastructure attacks), North Korea's Lazarus (financial theft). Primary demand driver for enterprise security spending.</td></tr>
+<tr><td class="term">Supply Chain Attack</td><td>Compromising a software vendor to infect all downstream customers. SolarWinds (2020): 18,000 organizations including US Treasury. XZ Utils backdoor (2024): nearly compromised global Linux systems. Highest-leverage attack vector — one breach reaches millions.</td></tr>
+<tr><td class="term">SOC Automation</td><td>AI-driven automation of Security Operations Center functions: alert triage, log analysis, threat hunting. Most tier-1 SOC work is repetitive and AI-automatable. Reducing SOC cost while improving response speed is a key AI + cybersecurity convergence use case.</td></tr>
+<tr><td class="term">C2PA (Content Credentials Standard)</td><td>Coalition for Content Provenance and Authenticity. Standard for cryptographically signing digital content at creation — the technical solution to deepfakes. Adobe, Microsoft, BBC are members.</td></tr>
+<tr><td class="term">AI Alignment (Applied)</td><td>Ensuring AI systems pursue goals aligned with human values. Applied security: preventing harmful outputs, jailbreaks, and social engineering attacks via AI. Both short-term (jailbreaks) and long-term (power-seeking) dimensions are relevant to cybersecurity investment thesis.</td></tr></tbody></table>
+
+  <h3>Essential books</h3>
+  <table><thead><tr><th>Title</th><th>Author</th><th>Level</th><th>Why read it</th></tr></thead><tbody><tr><td>Sandworm</td><td>Andy Greenberg</td><td><span class="badge badge-start">Start Here</span></td><td>The definitive account of state-sponsored cyberwar — Russia's Sandworm attacks on Ukraine's power grid, NotPetya, and the escalation to physical-world consequences. Essential primer on modern cyber conflict.</td></tr>
+<tr><td>This Is How They Tell Me the World Ends</td><td>Nicole Perlroth</td><td><span class="badge badge-start">Start Here</span></td><td>The zero-day exploit market and its evolution into nation-state cyber arsenals. Explains how offensive cyber capabilities work and are traded — critical for understanding the threat landscape.</td></tr>
+<tr><td>Countdown to Zero Day</td><td>Kim Zetter</td><td><span class="badge badge-intermediate">Intermediate</span></td><td>Stuxnet as the first digital weapon designed to cause physical destruction (Iranian centrifuges). The template for understanding how cyberweapons work and their physical-world consequences.</td></tr>
+<tr><td>The Art of Invisibility</td><td>Kevin Mitnick</td><td><span class="badge badge-start">Start Here</span></td><td>How real attackers think and operate, from the world's most famous reformed hacker. Builds adversarial thinking — essential for evaluating whether security products address real attack vectors.</td></tr></tbody></table>
+
+  <h3>Courses &amp; resources</h3>
+  <div class="block"><div class="block-title">Google Cybersecurity Certificate</div><div class="block-meta">Coursera (Google, ~$200)</div><div class="block-body">Entry-level cybersecurity fundamentals. Best starting point for systematic vocabulary to evaluate security products and understand market structure.</div></div>
+<div class="block"><div class="block-title">Darknet Diaries</div><div class="block-meta">Podcast (Jack Rhysider, free)</div><div class="block-body">True crime-style stories of real hacks, breaches, and cyber operations. The most engaging way to build intuitive understanding of how attacks actually work.</div></div>
+<div class="block"><div class="block-title">Bruce Schneier's Blog</div><div class="block-meta">schneier.com (free)</div><div class="block-body">Daily security news and analysis from the world's most respected cryptographer. Non-sensationalist, rigorous baseline for the security threat landscape.</div></div>
+<div class="block"><div class="block-title">SANS Reading Room</div><div class="block-meta">sans.org/reading-room (free)</div><div class="block-body">Thousands of research papers on every cybersecurity topic. Deep reference material for AI security, identity, network defence, cloud security.</div></div>
+
+  <h3>Voices to follow</h3>
+  <table><thead><tr><th>Name</th><th>Format</th><th>Focus</th></tr></thead><tbody><tr><td>Bruce Schneier (schneier.com)</td><td>Blog / Books</td><td>The most respected security voice: rigorous, non-sensationalist analysis. His writings on AI and security are the clearest thinking on AI-threat convergence.</td></tr>
+<tr><td>Brian Krebs (KrebsOnSecurity)</td><td>Blog (free)</td><td>Best investigative journalist on cybercrime, data breaches, and active fraud operations. Essential for tracking live threats.</td></tr>
+<tr><td>Kevin Beaumont (doublepulsar.com)</td><td>Blog / Twitter</td><td>Practitioner analysis of current vulnerabilities and nation-state attacks. The best ground-level view of what is actually happening in security.</td></tr>
+<tr><td>Eliezer Yudkowsky (LessWrong)</td><td>Essays (free)</td><td>AI alignment and AI existential risk. The intellectual origin of the AI safety field — important for understanding the tail risk Sigil explicitly acknowledges.</td></tr></tbody></table>
+
+  <h3>Mental models</h3>
+  <div class="model"><div class="model-title">Offense-Defense Asymmetry</div><div class="model-body">In cybersecurity, attackers need to find one vulnerability; defenders must protect every single one. AI further tilts this asymmetry by automating attack generation at scale. This is why the cybersecurity market grows faster than almost any other software category in downturns — demand is structurally non-discretionary.</div></div>
+<div class="model"><div class="model-title">Attack Surface × Sophistication = Threat Level</div><div class="model-body">Threat level is the product of attack surface (every new AI agent, API, connected device adds surface — all growing fast) and attacker sophistication (AI-powered — also growing fast). Both variables compound simultaneously. This is why the cybersecurity TAM is expanding faster than any macroeconomic headwind can slow.</div></div>
+<div class="model"><div class="model-title">Regulation as Moat</div><div class="model-body">In cybersecurity and AI safety, regulatory requirements can become a moat for incumbents. FedRAMP authorisation takes 12-24 months. GDPR compliance infrastructure requires legal teams and technical investment. SOC 2 Type II audits take 6-12 months. New entrants face the same compliance burden regardless of technical quality. Companies with established regulatory compliance in healthcare (HIPAA), finance (SOX), or defence (CMMC) have a genuine structural advantage that AI alone cannot replicate — compliance is time, not just money.</div></div>
+</section>
+
+<section id="reading-list" class="section">
+  <h2>Master reading list</h2>
+  <p class="desc">34 books ordered by priority across all themes. Start with every "Start Here" book before Intermediate.</p>
+  <table>
+    <thead><tr><th>Title</th><th>Author</th><th>Level</th><th>Theme</th><th>Why</th></tr></thead>
+    <tbody><tr><td>Poor Charlie's Almanack</td><td>Charles T. Munger</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Overview</span></td><td>The meta-framework for all investment thinking. Read this first, before anything else.</td></tr>
+<tr><td>The Intelligent Investor</td><td>Benjamin Graham</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Overview</span></td><td>Foundational investment rationality: margin of safety, Mr. Market.</td></tr>
+<tr><td>Zero to One</td><td>Peter Thiel</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Overview</span></td><td>What makes a technology startup worth backing. Core framework.</td></tr>
+<tr><td>The Innovator's Dilemma</td><td>Clayton M. Christensen</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">App. Layer</span></td><td>Why incumbents lose. Essential before every SaaS/AI investment analysis.</td></tr>
+<tr><td>Thinking in Bets</td><td>Annie Duke</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Overview</span></td><td>Probabilistic decision-making under uncertainty.</td></tr>
+<tr><td>The Art of Thinking Clearly</td><td>Rolf Dobelli</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Overview</span></td><td>99 cognitive biases every investor must recognize in themselves.</td></tr>
+<tr><td>Chip War</td><td>Chris Miller</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">AI Infra</span></td><td>The most important book for understanding the AI hardware and geopolitics thesis.</td></tr>
+<tr><td>The Innovators</td><td>Walter Isaacson</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">AI Infra</span></td><td>History of computing and semiconductor innovation. Essential context.</td></tr>
+<tr><td>AI Superpowers</td><td>Kai-Fu Lee</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">App. Layer</span></td><td>US-China AI competition and geopolitical context of AI deployment.</td></tr>
+<tr><td>The Kill Chain</td><td>Christian Brose</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Defence</span></td><td>The intellectual foundation for the defence tech investment thesis.</td></tr>
+<tr><td>The Drone Age</td><td>Michael J. Boyle</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Defence</span></td><td>How drone proliferation has reshaped modern warfare economics.</td></tr>
+<tr><td>Ghost Fleet</td><td>P.W. Singer &amp; August Cole</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Defence</span></td><td>Accessible scenario planning for US-China conflict via techno-thriller.</td></tr>
+<tr><td>Liftoff</td><td>Eric Berger</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Space</span></td><td>How SpaceX's cost revolution happened and what Starship means for space economics.</td></tr>
+<tr><td>The Space Barons</td><td>Christian Davenport</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Space</span></td><td>Overview of commercial space industry emergence and major players.</td></tr>
+<tr><td>Packing for Mars</td><td>Mary Roach</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Space</span></td><td>Accessible guide to the actual hard problems of space exploration.</td></tr>
+<tr><td>The Second Machine Age</td><td>Brynjolfsson &amp; McAfee</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Robotics</span></td><td>Rigorous economic analysis of automation's labor market impact.</td></tr>
+<tr><td>Rise of the Robots</td><td>Martin Ford</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Robotics</span></td><td>Which jobs are most at risk — identifies industries to watch.</td></tr>
+<tr><td>The Gene: An Intimate History</td><td>Siddhartha Mukherjee</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Biotech</span></td><td>Genetic science foundation for precision medicine investing.</td></tr>
+<tr><td>The Code Breaker</td><td>Walter Isaacson</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Biotech</span></td><td>CRISPR's discovery and implications. The gene editing entry point.</td></tr>
+<tr><td>The Emperor of All Maladies</td><td>Siddhartha Mukherjee</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Biotech</span></td><td>History of cancer treatment — foundation for oncology investing.</td></tr>
+<tr><td>Bad Blood</td><td>John Carreyrou</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Biotech</span></td><td>Due diligence failure case study. Required reading before any biotech bet.</td></tr>
+<tr><td>Sandworm</td><td>Andy Greenberg</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Cybersec</span></td><td>The reality of state-sponsored cyberwar and physical consequences.</td></tr>
+<tr><td>This Is How They Tell Me the World Ends</td><td>Nicole Perlroth</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Cybersec</span></td><td>The zero-day market and how offensive cyber became a strategic asset.</td></tr>
+<tr><td>The Art of Invisibility</td><td>Kevin Mitnick</td><td><span class="badge badge-start">Start Here</span></td><td><span class="badge badge-theme">Cybersec</span></td><td>How real attackers think. Builds adversarial thinking for security due diligence.</td></tr>
+<tr><td>More Than You Know</td><td>Michael J. Mauboussin</td><td><span class="badge badge-intermediate">Intermediate</span></td><td><span class="badge badge-theme">Overview</span></td><td>Investment decisions through complexity theory and base rates.</td></tr>
+<tr><td>Capital Returns</td><td>Edward Chancellor (ed.)</td><td><span class="badge badge-intermediate">Intermediate</span></td><td><span class="badge badge-theme">Overview</span></td><td>Capital cycle theory applied to industries. Understanding boom-bust cycles.</td></tr>
+<tr><td>The New Map</td><td>Daniel Yergin</td><td><span class="badge badge-intermediate">Intermediate</span></td><td><span class="badge badge-theme">AI Infra</span></td><td>Energy geopolitics — critical for the AI data center power thesis.</td></tr>
+<tr><td>Material World</td><td>Ed Conway</td><td><span class="badge badge-intermediate">Intermediate</span></td><td><span class="badge badge-theme">AI Infra</span></td><td>Raw materials underpinning technology. The 3rd-order bottleneck thesis.</td></tr>
+<tr><td>Platform Revolution</td><td>Parker, Van Alstyne &amp; Choudary</td><td><span class="badge badge-intermediate">Intermediate</span></td><td><span class="badge badge-theme">App. Layer</span></td><td>The mechanics of platform businesses and network effects.</td></tr>
+<tr><td>The Cold Start Problem</td><td>Andrew Chen</td><td><span class="badge badge-intermediate">Intermediate</span></td><td><span class="badge badge-theme">App. Layer</span></td><td>How network effects start and become defensible moats.</td></tr>
+<tr><td>Lifespan</td><td>David A. Sinclair</td><td><span class="badge badge-intermediate">Intermediate</span></td><td><span class="badge badge-theme">Biotech</span></td><td>The longevity thesis. Read critically alongside skeptical literature.</td></tr>
+<tr><td>Countdown to Zero Day</td><td>Kim Zetter</td><td><span class="badge badge-intermediate">Intermediate</span></td><td><span class="badge badge-theme">Cybersec</span></td><td>Stuxnet — cyberweapons with physical consequences.</td></tr>
+<tr><td>The Strategy of Denial</td><td>Elbridge Colby</td><td><span class="badge badge-advanced">Advanced</span></td><td><span class="badge badge-theme">Defence</span></td><td>US defence strategy against China. The geopolitical bear case.</td></tr>
+<tr><td>Human Compatible</td><td>Stuart Russell</td><td><span class="badge badge-advanced">Advanced</span></td><td><span class="badge badge-theme">Robotics/AI</span></td><td>AI control and alignment from the foremost academic expert.</td></tr></tbody>
+  </table>
+</section>
+
+<section id="glossary" class="section">
+  <h2>Glossary</h2>
+  <p class="desc">56 terms alphabetically. Same terms used for flashcards in Practice mode.</p>
+  <table>
+    <thead><tr><th>Term</th><th>Theme</th><th>Definition</th></tr></thead>
+    <tbody><tr><td class="term">Advanced Persistent Threat (APT)</td><td><span class="badge badge-theme">Cybersec</span></td><td>Sophisticated, long-duration state-sponsored cyberattack campaign targeting high-value organizations.</td></tr>
+<tr><td class="term">Agentic Workflow</td><td><span class="badge badge-theme">App. Layer</span></td><td>Multi-step AI agent task sequences that autonomously complete complex jobs without continuous human direction.</td></tr>
+<tr><td class="term">AlphaFold</td><td><span class="badge badge-theme">Biotech</span></td><td>DeepMind's AI system that solved protein structure prediction, compressing structural biology research from years to hours.</td></tr>
+<tr><td class="term">ARR (Annual Recurring Revenue)</td><td><span class="badge badge-theme">App. Layer</span></td><td>Total subscription revenue normalized to an annual rate. Primary SaaS business performance metric.</td></tr>
+<tr><td class="term">ASIC / TPU</td><td><span class="badge badge-theme">AI Infra</span></td><td>Application-Specific Integrated Circuit: a chip designed for exactly one task, more efficient but less flexible than GPUs.</td></tr>
+<tr><td class="term">ASML / EUV Lithography</td><td><span class="badge badge-theme">AI Infra</span></td><td>ASML's monopoly on EUV machines that print the world's most advanced chips. Single most critical piece of semiconductor manufacturing equipment.</td></tr>
+<tr><td class="term">Attack Surface Management</td><td><span class="badge badge-theme">Cybersec</span></td><td>Continuous monitoring of all exposed assets that could be exploited by attackers. Fast-growing security category as AI agents expand attack surfaces.</td></tr>
+<tr><td class="term">Bottleneck Theory</td><td><span class="badge badge-theme">Overview</span></td><td>Every system has one binding constraint limiting throughput. Identifying the current bottleneck tells you where value is concentrating in the market.</td></tr>
+<tr><td class="term">C2PA (Content Credentials)</td><td><span class="badge badge-theme">Cybersec</span></td><td>Coalition for Content Provenance and Authenticity. Cryptographic signing of digital content at creation — the technical solution to deepfakes.</td></tr>
+<tr><td class="term">C4ISR</td><td><span class="badge badge-theme">Defence</span></td><td>Command, Control, Communications, Computers, Intelligence, Surveillance and Reconnaissance — the military's digital nervous system.</td></tr>
+<tr><td class="term">Capital Cycle Theory</td><td><span class="badge badge-theme">Overview</span></td><td>High returns attract capital → overcapacity → returns fall → capital exits → returns recover. Explains semiconductor boom-bust cycles.</td></tr>
+<tr><td class="term">CRISPR-Cas9</td><td><span class="badge badge-theme">Biotech</span></td><td>Precise gene-editing tool enabling targeted DNA modification. First approved therapy (sickle cell disease, Casgevy) in 2023.</td></tr>
+<tr><td class="term">Dead Internet Theory</td><td><span class="badge badge-theme">App. Layer</span></td><td>The observation that most internet content is now AI-generated or bot-amplified. Real platform valuation implications.</td></tr>
+<tr><td class="term">Delta-V</td><td><span class="badge badge-theme">Space</span></td><td>The velocity change budget for orbital maneuvers — the fundamental constraint on spacecraft mission design.</td></tr>
+<tr><td class="term">Directed Energy Weapon (DEW)</td><td><span class="badge badge-theme">Defence</span></td><td>Weapon using focused energy (laser, microwave) instead of projectiles. Low cost per shot, speed-of-light delivery.</td></tr>
+<tr><td class="term">Drug Development Pipeline</td><td><span class="badge badge-theme">Biotech</span></td><td>Phase I (safety) → Phase II (efficacy) → Phase III (large-scale) → FDA approval. 10-15 years, $1-2B+ per approved drug, &gt;90% failure rate.</td></tr>
+<tr><td class="term">Dual-use Technology</td><td><span class="badge badge-theme">Defence</span></td><td>Technology with both civilian and military applications: drones, satellite imagery, AI, advanced manufacturing.</td></tr>
+<tr><td class="term">EUV Lithography</td><td><span class="badge badge-theme">AI Infra</span></td><td>Manufacturing process using extreme ultraviolet light to print chips at sub-7nm nodes. Only ASML makes the machines.</td></tr>
+<tr><td class="term">Fabless</td><td><span class="badge badge-theme">AI Infra</span></td><td>Chip companies that design chips but outsource manufacturing (NVIDIA, Qualcomm, AMD). Enables faster innovation without fab capital costs.</td></tr>
+<tr><td class="term">Fine-tuning</td><td><span class="badge badge-theme">App. Layer</span></td><td>Additional training of a pre-trained foundation model on domain-specific data to optimize for a specific task.</td></tr>
+<tr><td class="term">Foundation Model</td><td><span class="badge badge-theme">App. Layer</span></td><td>A large AI model trained on broad data adapted to many tasks. GPT-4, Claude, Gemini are foundation models.</td></tr>
+<tr><td class="term">Gartner Hype Cycle</td><td><span class="badge badge-theme">Overview</span></td><td>5-stage tech adoption model: Innovation Trigger → Peak of Inflated Expectations → Trough of Disillusionment → Slope of Enlightenment → Plateau of Productivity.</td></tr>
+<tr><td class="term">Golden Dome</td><td><span class="badge badge-theme">Space</span></td><td>Proposed US space-based missile defence system. Cost estimates $185B–$3.6T, creating massive government procurement demand.</td></tr>
+<tr><td class="term">GPU</td><td><span class="badge badge-theme">AI Infra</span></td><td>Graphics Processing Unit. The primary AI training compute unit. NVIDIA controls ~80%+ of the AI GPU market.</td></tr>
+<tr><td class="term">Grey Zone Warfare</td><td><span class="badge badge-theme">Defence</span></td><td>Hostile activities below conventional war: cyberattacks, disinformation, economic coercion, proxy conflicts. Primary mode of great power conflict.</td></tr>
+<tr><td class="term">HBM (High Bandwidth Memory)</td><td><span class="badge badge-theme">AI Infra</span></td><td>Memory stacked on processor dies providing 10x+ bandwidth of conventional DRAM. Critical for AI workloads.</td></tr>
+<tr><td class="term">Hyperscaler</td><td><span class="badge badge-theme">AI Infra</span></td><td>Mega-scale cloud/AI operators: AWS, Azure, Google Cloud, Meta. Spending $200B+ annually on AI capex.</td></tr>
+<tr><td class="term">Innovator's Dilemma</td><td><span class="badge badge-theme">Overview</span></td><td>Christensen: incumbents rationally ignore disruptive tech because existing customers don't need it — until disruption overtakes them.</td></tr>
+<tr><td class="term">ISRU</td><td><span class="badge badge-theme">Space</span></td><td>In-Situ Resource Utilization: mining and using resources found in space — lunar water ice for propellant, asteroid metals.</td></tr>
+<tr><td class="term">K-Shaped Economy</td><td><span class="badge badge-theme">Overview</span></td><td>Economic bifurcation: upper-income groups grow rapidly; lower-income groups stagnate. AI expected to widen this divide.</td></tr>
+<tr><td class="term">Kessler Syndrome</td><td><span class="badge badge-theme">Space</span></td><td>Cascade of orbital debris from satellite collisions that could make certain orbital altitudes unusable.</td></tr>
+<tr><td class="term">LLM (Large Language Model)</td><td><span class="badge badge-theme">App. Layer</span></td><td>Neural network trained on vast text data using transformer architecture. Core technology of the AI revolution.</td></tr>
+<tr><td class="term">Loitering Munition</td><td><span class="badge badge-theme">Defence</span></td><td>Autonomous drone that loiters until it identifies a target, then strikes. 150:1 cost asymmetry vs. tanks reshaped warfare economics.</td></tr>
+<tr><td class="term">Memory Wall</td><td><span class="badge badge-theme">AI Infra</span></td><td>Growing gap between processor speed and memory bandwidth. Processors idle waiting for data. HBM partially addresses this.</td></tr>
+<tr><td class="term">Moat (Economic Moat)</td><td><span class="badge badge-theme">Overview</span></td><td>Durable competitive advantage. Five types: network effects, switching costs, cost advantages, intangible assets, efficient scale.</td></tr>
+<tr><td class="term">Model Poisoning</td><td><span class="badge badge-theme">Cybersec</span></td><td>Corrupting an AI model's training data to introduce backdoors or misbehaviors.</td></tr>
+<tr><td class="term">mRNA Technology</td><td><span class="badge badge-theme">Biotech</span></td><td>Messenger RNA instructs cells to produce specific proteins. COVID vaccines proved the platform. Applications: cancer therapy, rare diseases.</td></tr>
+<tr><td class="term">NATO 2% GDP Target</td><td><span class="badge badge-theme">Defence</span></td><td>NATO members' commitment to spend 2%+ of GDP on defence. Many European countries now exceeding this.</td></tr>
+<tr><td class="term">Neocloud</td><td><span class="badge badge-theme">AI Infra</span></td><td>Specialized AI-first data center operators renting GPU compute (CoreWeave, Lambda Labs). Bitcoin miners converting to Neoclouds is a Sigil-highlighted arbitrage.</td></tr>
+<tr><td class="term">NRR (Net Revenue Retention)</td><td><span class="badge badge-theme">App. Layer</span></td><td>Revenue from existing customers including expansion minus churn. &gt;120% indicates customers expand spend — strong product-market fit.</td></tr>
+<tr><td class="term">OODA Loop</td><td><span class="badge badge-theme">Defence</span></td><td>Observe, Orient, Decide, Act. Boyd's military decision-making framework. AI compresses Orient and Decide phases — decisive in modern conflict.</td></tr>
+<tr><td class="term">OSINT</td><td><span class="badge badge-theme">Defence</span></td><td>Open Source Intelligence from public sources: satellite imagery, social media, commercial databases. AI amplifies OSINT capabilities dramatically.</td></tr>
+<tr><td class="term">Photonics / Silicon Photonics</td><td><span class="badge badge-theme">AI Infra</span></td><td>Using light instead of electrical signals for data center interconnects. Massive bandwidth, lower power than copper. Entering productive phase per Sigil's memo.</td></tr>
+<tr><td class="term">Precision Medicine</td><td><span class="badge badge-theme">Biotech</span></td><td>Tailoring diagnosis and treatment to individual patients based on genetic profile and biomarkers. AI makes this economically scalable.</td></tr>
+<tr><td class="term">Prompt Injection</td><td><span class="badge badge-theme">Cybersec</span></td><td>Adversarial technique hijacking AI agent behavior by inserting malicious instructions into inputs.</td></tr>
+<tr><td class="term">RAG (Retrieval Augmented Generation)</td><td><span class="badge badge-theme">App. Layer</span></td><td>Connecting LLMs to external databases for context before generating answers. Reduces hallucinations, enables private data use.</td></tr>
+<tr><td class="term">Rare Earth Elements</td><td><span class="badge badge-theme">AI Infra</span></td><td>17 metals critical for EV motors, missiles, electronics. China controls ~85% of global processing. A key geopolitical chokepoint.</td></tr>
+<tr><td class="term">Reusable Launch Vehicle (RLV)</td><td><span class="badge badge-theme">Space</span></td><td>Rockets landing and relaunching. SpaceX's Falcon 9/Starship reduced launch costs by 2 orders of magnitude.</td></tr>
+<tr><td class="term">Satellite Constellation</td><td><span class="badge badge-theme">Space</span></td><td>Large coordinated satellite networks (Starlink 7,000+) providing global coverage. Economically viable only at current SpaceX launch costs.</td></tr>
+<tr><td class="term">Secular vs. Cyclical Trend</td><td><span class="badge badge-theme">Overview</span></td><td>Secular: long-duration structural change driven by fundamentals. Cyclical: short-duration waves driven by credit/inventory cycles.</td></tr>
+<tr><td class="term">SLAM</td><td><span class="badge badge-theme">Robotics</span></td><td>Simultaneous Localization and Mapping: robot algorithm building environment maps while tracking its own position.</td></tr>
+<tr><td class="term">SLM (Small Language Model)</td><td><span class="badge badge-theme">AI Infra</span></td><td>Compact AI models running on edge devices (phones, cars, robots). Key for latency-sensitive and privacy-sensitive applications.</td></tr>
+<tr><td class="term">Supply Chain Attack</td><td><span class="badge badge-theme">Cybersec</span></td><td>Compromising a software vendor to infect all downstream customers. SolarWinds (2020) affected 18,000+ organizations including US government.</td></tr>
+<tr><td class="term">Token Budget</td><td><span class="badge badge-theme">App. Layer</span></td><td>The computational cost of AI inference becoming a meaningful operating expense. Drives efficiency pressure and open-source model adoption.</td></tr>
+<tr><td class="term">TSMC</td><td><span class="badge badge-theme">AI Infra</span></td><td>Taiwan Semiconductor Manufacturing Company. World's most advanced chip foundry. Manufactures chips for NVIDIA, Apple, AMD. Geopolitical single point of failure.</td></tr>
+<tr><td class="term">Zero Trust Architecture</td><td><span class="badge badge-theme">Cybersec</span></td><td>Security model verifying every access request explicitly, regardless of source. The architectural shift replacing legacy perimeter security.</td></tr></tbody>
+  </table>
+</section>
+
+<div id="part-practice" class="part">
+  <h2>Part 2 — Practice content</h2>
+  <p class="part-desc">Quiz questions and scenario drills from Practice mode. Correct answers are marked in green.</p>
+</div>
+
+<section id="quiz" class="section">
+  <h2>Quiz bank</h2>
+  
+<div class="quiz-item">
+  <div class="quiz-meta">Q1 · <span class="badge badge-theme">Overview</span></div>
+  <div class="quiz-q">Which of the following is NOT one of the 5 types of economic moat?</div>
+  <ol class="choices"><li>Network effects</li><li>Switching costs</li><li class="correct">First-mover advantage</li><li>Efficient scale</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> The 5 moat types are: network effects, switching costs, cost advantages, intangible assets (brands/patents/licenses), and efficient scale. &quot;First-mover advantage&quot; is not a recognized moat type — it often fades without one of the underlying structural advantages.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q2 · <span class="badge badge-theme">Overview</span></div>
+  <div class="quiz-q">In the Gartner Hype Cycle, what stage comes directly after the Peak of Inflated Expectations?</div>
+  <ol class="choices"><li>Plateau of Productivity</li><li>Slope of Enlightenment</li><li class="correct">Trough of Disillusionment</li><li>Innovation Trigger</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Order: Innovation Trigger → Peak of Inflated Expectations → Trough of Disillusionment → Slope of Enlightenment → Plateau of Productivity. The Trough is where most retail investors panic-sell and where disciplined investors should be accumulating.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q3 · <span class="badge badge-theme">Overview</span></div>
+  <div class="quiz-q">Sigil's 7-theme framework is explicitly built on which type of thinking?</div>
+  <ol class="choices"><li>First-order effects only</li><li class="correct">Second and third-order effects</li><li>Contrarian macro indicators</li><li>Narrative economics from Shiller</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Sigil explicitly builds their framework on second and third-order thinking. 1st order = AI GPU demand spikes; 2nd order = energy demand surges; 3rd order = nuclear power renaissance, copper mining boom. The guide calls this the meta-layer before any theme.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q4 · <span class="badge badge-theme">Overview</span></div>
+  <div class="quiz-q">Capital Cycle Theory explains why &quot;cyclical PTSD&quot; in semiconductor fabs benefits investors because:</div>
+  <ol class="choices"><li>It reduces competition from new entrants</li><li class="correct">It causes fabs to add capacity conservatively, extending the up-cycle</li><li>It signals government subsidies are incoming</li><li>It causes GPU prices to spike immediately</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> When fabs are traumatized from prior busts, they add capacity conservatively — this supply constraint extends the current up-cycle longer than expected, benefiting those who recognize this dynamic. High returns attract capital → overcapacity → returns fall → capital exits. Recognition of this cycle is the edge.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q5 · <span class="badge badge-theme">Overview</span></div>
+  <div class="quiz-q">What distinguishes a &quot;secular&quot; trend from a &quot;cyclical&quot; trend in tech investing?</div>
+  <ol class="choices"><li>Secular trends are driven by government policy; cyclical by private investment</li><li class="correct">Secular are long-duration structural changes; cyclical are short-duration credit/inventory waves</li><li>Secular trends affect all sectors; cyclical are sector-specific</li><li>Secular trends always outperform cyclical over any 3-year period</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Secular: long-duration structural change driven by fundamentals (AI adoption, demographics). Cyclical: short-duration waves driven by credit/inventory cycles (semiconductor boom/bust). Getting this wrong is the most common tech investment mistake — treating a secular trend as cyclical means selling at exactly the wrong time.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q6 · <span class="badge badge-theme">AI Infra</span></div>
+  <div class="quiz-q">What makes TSMC the most geopolitically sensitive company in the world?</div>
+  <ol class="choices"><li class="correct">It manufactures ~90% of sub-5nm chips and is located in Taiwan</li><li>It controls all rare earth processing globally</li><li>It has a monopoly on GPU chip design</li><li>It manufactures all ASML EUV machines</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> TSMC controls ~90% of sub-5nm chip production and is located in Taiwan — the geopolitical single point of failure for the global technology supply chain. This is why US-China Taiwan Strait tensions represent the primary bear case for Sigil's entire portfolio.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q7 · <span class="badge badge-theme">AI Infra</span></div>
+  <div class="quiz-q">HBM (High Bandwidth Memory) demand is described as &quot;a direct proxy&quot; for what?</div>
+  <ol class="choices"><li>TSMC capacity utilization</li><li class="correct">GPU demand</li><li>Hyperscaler annual capex</li><li>Neocloud formation rate</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> HBM is stacked directly on processor dies (especially GPUs) to provide 10x+ bandwidth. Every high-performance AI GPU requires HBM. Therefore HBM demand tracks GPU demand almost perfectly — making SK Hynix, Samsung, and Micron effective GPU demand proxies.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q8 · <span class="badge badge-theme">AI Infra</span></div>
+  <div class="quiz-q">ASML holds what type of competitive position in the semiconductor industry?</div>
+  <ol class="choices"><li>Leading market share among several EUV competitors</li><li class="correct">A de facto global monopoly on EUV lithography machines</li><li>Cost leadership in older-generation lithography</li><li>Dominant position in chip advanced packaging</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> ASML makes the only machines capable of printing chips at the most advanced nodes using Extreme Ultraviolet light. No other company makes competitive EUV machines. Netherlands export controls on ASML equipment are a primary US-China semiconductor battleground precisely because of this monopoly.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q9 · <span class="badge badge-theme">AI Infra</span></div>
+  <div class="quiz-q">According to the Bottleneck Theory timeline, where was value concentrating in the AI stack specifically in 2025?</div>
+  <ol class="choices"><li>GPU supply (2023-24 bottleneck continuing)</li><li class="correct">HBM and advanced packaging</li><li>Software infrastructure and orchestration</li><li>Energy and power delivery (that's 2026+)</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> The guide's bottleneck timeline: 2022 = software (no good models). 2023-24 = GPU supply. 2025 = HBM and advanced packaging. 2026+ = energy and power delivery. Identifying the CURRENT bottleneck tells you where value is concentrating TODAY — this is the most actionable application of bottleneck theory.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q10 · <span class="badge badge-theme">AI Infra</span></div>
+  <div class="quiz-q">The &quot;Picks and Shovels&quot; mental model suggests prioritizing investment in:</div>
+  <ol class="choices"><li>The AI applications with highest revenue growth</li><li class="correct">The infrastructure enablers controlling the current bottleneck</li><li>The first companies to achieve AGI</li><li>Consumer-facing AI products with network effects</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> &quot;During a gold rush, sell picks and shovels — not gold.&quot; Infrastructure enablers (ASML, TSMC, NVIDIA) often have more durable economics than AI application companies they serve. The constraint captures the margin: whoever controls the bottleneck extracts the value. This is why Sigil prioritizes infrastructure over applications.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q11 · <span class="badge badge-theme">App Layer</span></div>
+  <div class="quiz-q">Which type of software moat is explicitly described as &quot;DYING&quot; in the guide?</div>
+  <ol class="choices"><li>Proprietary data moats</li><li>Regulatory lock-in moats</li><li class="correct">UI/UX friction moats</li><li>Network effects moats</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> The guide explicitly marks UI/UX friction moats as &quot;DYING.&quot; AI agents can navigate interfaces, fill forms, and complete workflows without human interaction — collapsing the friction that justified paying for many SaaS tools. Proprietary data and regulatory lock-in are the most AI-resilient moats.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q12 · <span class="badge badge-theme">App Layer</span></div>
+  <div class="quiz-q">What is RAG (Retrieval Augmented Generation) primarily designed to solve?</div>
+  <ol class="choices"><li>Reduce GPU inference costs for LLMs</li><li class="correct">Reduce hallucinations and enable private data use</li><li>Speed up initial model training time</li><li>Enable multi-agent coordination and planning</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> RAG connects an LLM to an external database or search index before generating an answer. This reduces hallucinations (the model has real facts to reference) and enables use with private/proprietary data without constant retraining. It is the dominant enterprise AI architecture 2024-2026 precisely because it solves both problems simultaneously.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q13 · <span class="badge badge-theme">App Layer</span></div>
+  <div class="quiz-q">An NRR (Net Revenue Retention) of &gt;120% specifically indicates:</div>
+  <ol class="choices"><li>The product is growing faster than all category competitors</li><li class="correct">Customers expand spend over time — indicating strong product-market fit</li><li>Churn is below the industry average</li><li>Customer acquisition cost is declining year-over-year</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> NRR measures revenue from existing customers including expansion minus churn. &gt;120% means customers are spending progressively more with you over time — expansions exceed churn. This is one of the strongest signals of true product-market fit and indicates the product is deeply embedded in customer workflows.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q14 · <span class="badge badge-theme">App Layer</span></div>
+  <div class="quiz-q">According to Aggregation Theory applied to AI, what might AI agents do to existing aggregators like Google?</div>
+  <ol class="choices"><li>Make them more dominant by automating content discovery</li><li class="correct">Disintermediate them by navigating directly to content</li><li>Reduce their compute costs significantly</li><li>Create new distribution advantages through personalization</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Aggregation Theory says platforms aggregating consumer demand extract value from suppliers. AI agents may disrupt even these aggregators by navigating directly to content — bypassing Google Search, Amazon, etc. This is one of the most disruptive implications: the aggregators themselves face disaggregation from a higher layer.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q15 · <span class="badge badge-theme">Robotics</span></div>
+  <div class="quiz-q">Why does Sigil prefer specialized robots over humanoid robots for near-term investment?</div>
+  <ol class="choices"><li>Humanoids are more expensive to manufacture</li><li class="correct">Humanoid form factors are only optimal where environments are specifically built for humans</li><li>Specialized robots have better AI integration capabilities</li><li>Humanoids require rare earth materials that are supply-constrained</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> &quot;Form Factor Follows Function&quot;: humanoid robots only make engineering sense where environments are specifically built for human form factors. For agriculture, warehousing, and mining, purpose-built specialized robots are more practical, cheaper, and closer to commercial viability. The near-term investable frontier is specialized, not general-purpose humanoids.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q16 · <span class="badge badge-theme">Robotics</span></div>
+  <div class="quiz-q">What does SLAM stand for and why is it critical for robotics?</div>
+  <ol class="choices"><li>Structured Logic and Motion — enables complex task sequences</li><li class="correct">Simultaneous Localization and Mapping — enables autonomous navigation</li><li>Sequential Learning and Mapping — enables adaptive environment models</li><li>Supervised LiDAR and Mapping — enables environment sensing</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> SLAM = Simultaneous Localization and Mapping. It is the algorithm allowing a robot to build a map of an unknown environment while simultaneously tracking its own location. Without SLAM, robots cannot navigate autonomously in unstructured environments. Deep learning (neural SLAM) has dramatically improved robustness in dynamic environments.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q17 · <span class="badge badge-theme">Robotics</span></div>
+  <div class="quiz-q">The Automation/Jevons Paradox suggests that partial automation may actually:</div>
+  <ol class="choices"><li>Eliminate most human jobs within 5 years</li><li class="correct">Increase total demand for human labor by creating new job categories</li><li>Reduce wages across all sectors equally</li><li>Only affect manufacturing employment, not service sectors</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> The Automation/Jevons Paradox: partial automation can increase total demand for human labor by creating new job categories — supervising, maintaining, and programming automated systems. Historical manufacturing automation data supports this pattern. It complicates simplistic &quot;robots take all jobs&quot; narratives that dominate mainstream AI discourse.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q18 · <span class="badge badge-theme">Defence</span></div>
+  <div class="quiz-q">What cost-exchange ratio did Ukraine demonstrate with loitering munitions vs. tanks?</div>
+  <ol class="choices"><li>10:1 attacker advantage</li><li>50:1 attacker advantage</li><li class="correct">150:1 attacker advantage</li><li>500:1 attacker advantage</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> A $20K loitering munition destroying a $3M tank = 150:1 attacker cost advantage. This asymmetry permanently restructured warfare economics and drives the entire NATO force structure rethink toward drone swarms and C-UAV systems. It is the core empirical foundation for Sigil's defence tech investment thesis.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q19 · <span class="badge badge-theme">Defence</span></div>
+  <div class="quiz-q">The Innovator's Dilemma applied to defence explains why large primes cannot adapt because:</div>
+  <ol class="choices"><li>New weapons are always technically superior to old ones</li><li class="correct">Large primes' existing customers (DoD bureaucracy) demand slow/complex/expensive programs — making fast/cheap solutions irrational for them</li><li>NATO budget increases automatically benefit legacy primes over startups</li><li>Autonomous systems require more regulation than traditional weapons</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Large primes (Lockheed, Raytheon, BAE) are rationally optimized for slow, complex, expensive programs — their existing customers (DoD bureaucracy) demand this. This prevents them from building fast/cheap/software-first solutions. The gap is filled by defence tech startups (Palantir, Anduril, Shield AI) — a classic Innovator's Dilemma setup.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q20 · <span class="badge badge-theme">Defence</span></div>
+  <div class="quiz-q">Boyd's OODA Loop framework says the side that wins modern conflict is the one that:</div>
+  <ol class="choices"><li>Has the most accurate weapons systems</li><li class="correct">Completes the Observe-Orient-Decide-Act loop faster than the adversary</li><li>Has the highest annual defence budget</li><li>Controls the most strategic territory initially</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> OODA Loop = Observe, Orient, Decide, Act. Boyd's insight: the side completing this loop faster wins. AI compresses the Orient and Decide phases dramatically. This is why AI in C4ISR is strategically decisive — it's not just about better decisions, but fundamentally faster ones.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q21 · <span class="badge badge-theme">Space</span></div>
+  <div class="quiz-q">What single innovation made satellite constellations like Starlink commercially viable?</div>
+  <ol class="choices"><li>Miniaturized satellite electronics reducing per-unit cost</li><li>GPS-based orbital coordination between satellites</li><li class="correct">Reusable launch vehicles reducing cost from ~$54,000/kg to ~$2,700/kg</li><li>Advanced solar panel efficiency reducing power costs</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> SpaceX's reusable launch vehicles reduced orbital launch costs by roughly 20x. Without this cost revolution, deploying 7,000+ satellite constellations would be economically impossible. Starship targets ~$100/kg, which unlocks even larger constellation economics. This is the single enabling innovation for the entire commercial space economy.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q22 · <span class="badge badge-theme">Space</span></div>
+  <div class="quiz-q">Kessler Syndrome is a risk that:</div>
+  <ol class="choices"><li>Causes satellite debt defaults due to market overcapacity</li><li class="correct">Creates a cascade of orbital debris that makes certain orbital altitudes unusable</li><li>Triggers a geopolitical crisis involving contested space assets</li><li>Causes progressive degradation of satellite signal quality</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Kessler Syndrome is the cascade: a satellite collision produces debris → debris causes more collisions → entire orbital altitudes become unusable. This is a serious concern in LEO and makes active debris removal a genuine commercial opportunity and responsible satellite deployment a regulatory priority.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q23 · <span class="badge badge-theme">Space</span></div>
+  <div class="quiz-q">Why is Delta-V Budget understanding critical for evaluating space investments?</div>
+  <ol class="choices"><li>It determines the regulatory approval timeline for a satellite launch</li><li class="correct">It is the fundamental physical constraint determining what missions are feasible</li><li>It calculates the orbital insurance cost for constellation operators</li><li>It models the revenue per satellite in a given orbital shell</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Delta-V (Δv) = total velocity change available for orbital maneuvers with a given propellant load. It is physics — it determines what missions are physically feasible regardless of revenue projections. Many space pitches fail basic delta-V analysis. The guide says this understanding is &quot;key to evaluating which space concepts are physically plausible vs. marketing fiction.&quot;</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q24 · <span class="badge badge-theme">Biotech</span></div>
+  <div class="quiz-q">What did AlphaFold achieve that the guide calls a breakthrough?</div>
+  <ol class="choices"><li>Designing the first CRISPR gene therapy</li><li class="correct">Predicting protein 3D structure from amino acid sequences — compressing years of research to hours</li><li>Discovering the first AI-designed drug to reach Phase III trials</li><li>Creating the first mRNA vaccine for a non-infectious disease</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> AlphaFold solved the 50-year &quot;protein folding problem&quot; — predicting 3D structure from amino acid sequences. DeepMind released all 200M+ protein structures publicly. This compressed structural biology research from years of crystallography to hours of compute, fundamentally accelerating drug discovery.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q25 · <span class="badge badge-theme">Biotech</span></div>
+  <div class="quiz-q">Why does Sigil prefer biotech platform companies over single-asset companies?</div>
+  <ol class="choices"><li>Platforms have lower regulatory risk due to precedent</li><li class="correct">Platforms generate multiple drugs from one core technology — valued like software with a moat</li><li>Platforms have lower manufacturing costs at scale</li><li>Platforms bypass the FDA approval process via compassionate use</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Risk-Adjusted NPV + Platform vs. Product: a single-drug company has pure binary trial risk. A platform company (mRNA, CRISPR, CAR-T) generates multiple drugs from one core technology — multiple shots on goal. This is valued like software with a moat rather than a binary bet. Prefer platforms at reasonable valuations over single-asset binary bets.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q26 · <span class="badge badge-theme">Biotech</span></div>
+  <div class="quiz-q">What is the guide's test for distinguishing a genuine &quot;AI drug discovery&quot; company from one using AI as a marketing label?</div>
+  <ol class="choices"><li>Whether the company has published peer-reviewed AI papers</li><li class="correct">Whether their AI demonstrably improves hit rates, reduces trial phases, or provides truly proprietary data</li><li>Whether they use NVIDIA GPUs in their discovery pipeline</li><li>Whether they have a partnership with a major pharmaceutical company</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> The guide's test: &quot;does their AI demonstrably improve hit rates, reduce trial phases, or provide truly proprietary data?&quot; AlphaFold crossed this bar. Most AI-biotech startups have not. Apply the same rigorous skepticism here as to any technology claim — AI as a label is not AI as a competitive advantage.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q27 · <span class="badge badge-theme">Cybersec</span></div>
+  <div class="quiz-q">Zero Trust Architecture (ZTA) replaced what older security paradigm?</div>
+  <ol class="choices"><li>Multi-factor authentication (MFA) as the primary control</li><li>Endpoint detection and response (EDR) perimeter monitoring</li><li class="correct">&quot;Castle and moat&quot; perimeter security — trust everything inside the firewall</li><li>Public key infrastructure (PKI) certificate management</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> ZTA assumes no user or device is inherently trusted, even inside the network perimeter — every access request is verified explicitly. This replaces the legacy &quot;castle and moat&quot; model where anything inside the firewall was trusted. The perimeter model failed catastrophically with cloud, remote work, and supply chain attacks like SolarWinds. Zscaler, CrowdStrike, and Okta are primary beneficiaries.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q28 · <span class="badge badge-theme">Cybersec</span></div>
+  <div class="quiz-q">What is Prompt Injection and why is it described as &quot;one of the hardest unsolved security problems&quot;?</div>
+  <ol class="choices"><li>Overloading AI systems with too many simultaneous requests</li><li class="correct">Inserting malicious instructions into AI agent inputs to hijack behavior — hard because agents must process untrusted inputs to function</li><li>Training AI on malicious data to corrupt future outputs</li><li>Using AI to generate more convincing phishing emails at scale</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Prompt Injection inserts malicious instructions into inputs that an AI agent processes. Example: a malicious web page instructs a browsing agent to exfiltrate user data. It's structurally hard to solve because agents MUST process untrusted inputs to be useful — you cannot simply block all untrusted content. This is why it is a structural security challenge, not a patchable vulnerability.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q29 · <span class="badge badge-theme">Cybersec</span></div>
+  <div class="quiz-q">The &quot;Offense-Defense Asymmetry&quot; mental model explains why cybersecurity spending is non-discretionary because:</div>
+  <ol class="choices"><li>Regulations mandate minimum security budgets across all industries</li><li class="correct">Attackers need one vulnerability; defenders must protect every single one — AI further widens this gap</li><li>Security tools reduce insurance premiums by 40%+</li><li>Government contracts require specific security certifications for renewal</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> In cybersecurity, attackers need ONE vulnerability; defenders must protect EVERY one. AI further tilts this asymmetry by automating attack generation at scale. This structural asymmetry is why cybersecurity demand is non-discretionary — it never goes to zero — and why the market grows faster than almost any other software category even in economic downturns.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q30 · <span class="badge badge-theme">Cybersec</span></div>
+  <div class="quiz-q">Which standard represents the &quot;technical solution to deepfakes&quot; according to the guide?</div>
+  <ol class="choices"><li>CrowdStrike Falcon's behavioral AI platform</li><li>Palantir AIP for synthetic media detection</li><li class="correct">C2PA (Content Credentials) — cryptographic signing of digital content at creation</li><li>Zero Trust Architecture enforced at the application layer</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> C2PA (Coalition for Content Provenance and Authenticity) is a standard for cryptographically signing digital content at the point of creation. This allows consumers to verify whether content was AI-generated or human-captured. Adobe, Microsoft, and BBC are members. It is the technical architecture for solving the deepfake problem at scale — provenance rather than detection.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q31 · <span class="badge badge-theme">Overview</span></div>
+  <div class="quiz-q">Howard Marks' concept of 'second-level thinking' means:</div>
+  <ol class="choices"><li>Checking your investment thesis twice before committing</li><li class="correct">Thinking about what the consensus thinks, then asking what they're missing or wrong about</li><li>Using two independent analysts to validate each investment</li><li>Applying both quantitative and qualitative analysis to every decision</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Second-level thinking: 'Everyone thinks X, therefore the price reflects X. But what if X is wrong or incomplete? What does that mean for the price?' This is the core skill Sigil describes as 'forming a granular, path-dependent vision' that differs from consensus. Most analysts think first-level. Sigil is trying to think second-level systematically.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q32 · <span class="badge badge-theme">Overview</span></div>
+  <div class="quiz-q">Path dependence in tech investing means early platform choices matter because:</div>
+  <ol class="choices"><li>Early movers always have the best technology</li><li>Regulatory approvals take longer for later entrants</li><li class="correct">Winner-take-most dynamics lock in advantages that persist for decades even if better alternatives emerge</li><li>Early investors have lower cost basis and can weather downturns better</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Classic examples: QWERTY keyboard, VHS vs Betamax, x86 CPU architecture. The first platform to achieve critical mass often persists even when technically inferior alternatives exist. For AI, this means the model architecture, training approach, and ecosystem tools being locked in now will likely persist. Invest in the platform paths are being locked into — not the best technology in isolation.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q33 · <span class="badge badge-theme">Overview</span></div>
+  <div class="quiz-q">Sigil describes its DNA as 'disruptive tech investors, not crypto investors.' What does this mean for Supernova?</div>
+  <ol class="choices"><li>They will use blockchain technology in their AI investments</li><li>They will apply the same trading strategies that worked in crypto to AI stocks</li><li class="correct">Crypto was one expression of their thesis; AI + deeptech is the next — the investing framework transfers even if the sector changes</li><li>They are exiting all crypto positions to fund Supernova</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> This is one of the most important sentences in the memo. Sigil is not 'pivoting away from crypto' — they're applying a consistent investment philosophy (disruptive technology, inefficient markets, asymmetric bets) to a new wave. The analytical toolkit transfers: hype cycle navigation, physical bottleneck identification, capital cycle awareness. This reframing prevents the 'they're out of their depth' critique.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q34 · <span class="badge badge-theme">Overview</span></div>
+  <div class="quiz-q">Sigil says 'active investing is in our blood — it provides a necessary feedback loop to the market.' What theoretical justification supports this?</div>
+  <ol class="choices"><li>Active managers always outperform passive over 20-year horizons</li><li>Passive investing is illegal in private markets</li><li class="correct">Without active investors doing research, prices would not reflect fundamental value — active investing is a public good that makes markets efficient</li><li>Active managers benefit from lower tax treatment on carried interest</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> The market efficiency argument cuts both ways. IF markets were perfectly efficient, active management would have zero expected alpha. BUT markets become efficient because active managers do research and trade on it. In genuinely inefficient markets (early crypto, pre-consensus AI themes, private deeptech), active research can generate persistent alpha. Sigil's bet is that disruptive tech markets are inefficient enough for their edge to matter.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q35 · <span class="badge badge-theme">Overview</span></div>
+  <div class="quiz-q">The K-shaped economy thesis suggests AI creates what specific political risk for tech investors?</div>
+  <ol class="choices"><li>Central banks will raise interest rates to control AI-driven inflation</li><li>AI companies will be nationalised in developed markets</li><li class="correct">Mass employment displacement triggers populist political movements that introduce prohibitive AI regulation or taxation</li><li>Trade unions will successfully block AI adoption in key industries</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> K-shaped: upper-income groups (capital owners, knowledge workers) benefit from AI; middle and lower-income workers face displacement. This bifurcation has historically produced populist political responses — UBI proposals, robot taxes, anti-tech platforms. Sigil's Theme 7 (Adversarial AI) is partly a hedge against this: cybersecurity and identity tools remain valuable even under a hostile regulatory environment.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q36 · <span class="badge badge-theme">Overview</span></div>
+  <div class="quiz-q">What is the 'physical layer thesis' — Sigil's core macro insight about where AI investment value concentrates?</div>
+  <ol class="choices"><li>AI software companies will outperform AI hardware companies over a 5-year horizon</li><li>Physical retail locations will benefit from AI-powered customer service</li><li class="correct">When intelligence is commoditised, the bottleneck and value concentration shifts to physical assets: compute, energy, materials, and distribution</li><li>Physical proximity to AI data centers creates real estate investment opportunities</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> This is THE central thesis of Supernova, stated explicitly in the memo: 'When intelligence itself is commoditised, the bottleneck moves to the physical layer.' This explains why Nvidia (physical GPUs) &gt; OpenAI (software intelligence), why copper miners matter, why energy plays are part of the portfolio. Asset-light digital businesses ruled the last 20 years; the next decade favours hard capital assets. Every one of the 7 themes flows from this insight.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q37 · <span class="badge badge-theme">Overview</span></div>
+  <div class="quiz-q">Sigil explicitly says they 'start by acknowledging limitations' and calls Supernova 'Day 0.' Why is this an investment strength rather than a weakness?</div>
+  <ol class="choices"><li>Regulators require fund managers to disclose lack of experience</li><li>It reduces legal liability if the fund underperforms</li><li class="correct">Epistemic humility prevents the overconfidence bias that causes investors to size positions too large and ignore disconfirming evidence</li><li>It builds trust with LPs who are sophisticated enough to see through false confidence</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Charlie Munger: 'Knowing what you don't know is more useful than being brilliant.' Overconfident investors hold concentrated positions in their areas of claimed expertise and dismiss bear cases too readily. Sigil's explicit 'Day 0' framing forces them to maintain learner's posture, update beliefs with new evidence, and stay diversified while the thesis develops. It's also strategically smart: setting low expectations makes outperformance more likely to be celebrated.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q38 · <span class="badge badge-theme">AI Infra</span></div>
+  <div class="quiz-q">Why are Bitcoin miners specifically well-positioned to become Neoclouds?</div>
+  <ol class="choices"><li>Bitcoin mining uses identical GPU chips to AI training</li><li>Bitcoin miners have existing relationships with Nvidia</li><li class="correct">They already have datacentre-ready facilities, power infrastructure, and cheap energy contracts — exactly what AI compute needs</li><li>Bitcoin mining generates enough cash flow to fund GPU purchases outright</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Sigil specifically highlights this in their memo. Bitcoin mining requires: (1) access to cheap power at scale — often below-market long-term contracts; (2) datacentre-grade facilities with cooling and power distribution; (3) 24/7 operational expertise. These are the exact requirements for AI compute infrastructure. Converting from Bitcoin ASICs to Nvidia GPU clusters is operationally straightforward for miners. It's a physical asset arbitrage: the facility is already built and the energy contract is locked in.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q39 · <span class="badge badge-theme">AI Infra</span></div>
+  <div class="quiz-q">The 'memory wall' in AI inference refers specifically to:</div>
+  <ol class="choices"><li>GPU memory capacity being insufficient to load large models</li><li class="correct">Memory bandwidth being the binding constraint on inference speed — GPUs wait for data, not the other way around</li><li>Insufficient RAM in edge inference devices for SLM deployment</li><li>DRAM pricing rising faster than GPU pricing</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> In AI inference, the GPU sits mostly idle waiting for data to arrive from memory. This is different from training, where compute is the bottleneck. Modern LLMs have billions of parameters that must be read from memory for every token generated. At 3,350 GB/s (HBM3e), the H200 is memory-bandwidth-bound for inference workloads. This is why HBM density and bandwidth matter more than raw GPU FLOPS for inference — and why the memory wall thesis is secular, not cyclical.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q40 · <span class="badge badge-theme">AI Infra</span></div>
+  <div class="quiz-q">CoWoS (Chip on Wafer on Substrate) is relevant to the AI investment thesis because:</div>
+  <ol class="choices"><li>It reduces GPU die size enabling more chips per wafer</li><li class="correct">It is TSMC's advanced packaging technology that physically connects GPU dies to HBM stacks — a separate capacity bottleneck from chip fabrication</li><li>It is a competitor to ASML's EUV lithography for older chip nodes</li><li>It enables GPU chips to run at lower power, reducing datacentre energy costs</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> CoWoS is TSMC's 2.5D advanced packaging — it physically places the GPU compute die and HBM memory stacks side-by-side on a silicon interposer, enabling the ultra-wide memory bus. CoWoS capacity is a separate bottleneck from chip fab capacity: even if TSMC has fab capacity, shortage of CoWoS capacity limits how many HBM-equipped GPUs can be assembled. In 2024-25, CoWoS was the binding constraint on H100 supply more than GPU fab capacity itself.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q41 · <span class="badge badge-theme">AI Infra</span></div>
+  <div class="quiz-q">Sovereign AI buildout refers to:</div>
+  <ol class="choices"><li>OpenAI and Anthropic building AI systems for government classification</li><li>US export controls limiting AI chip sales to foreign governments</li><li class="correct">Nations independently building their own AI compute infrastructure to avoid dependence on US hyperscalers</li><li>AI regulation frameworks passed by national governments</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Sovereign AI: France (AI Act), UAE (G42), Saudi Arabia (Project Transcendence), India, Japan — all building or funding domestic AI compute infrastructure. Strategic imperative: AI is critical national infrastructure like energy or defence. Not wanting data or compute to reside on US hyperscaler clouds drives tens of billions in additional datacentre capex on top of commercial hyperscaler spending. This is one of Sigil's key 'demand on top of demand' arguments for the datacenter supercycle running to 2027+.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q42 · <span class="badge badge-theme">AI Infra</span></div>
+  <div class="quiz-q">Edge inference (SLMs on-device) and centralised cloud inference are:</div>
+  <ol class="choices"><li>Competing architectures where edge will eventually replace cloud</li><li>Identical in terms of hardware requirements</li><li class="correct">Complementary — different use cases requiring different optimisation; edge for latency-sensitive/privacy applications, cloud for complex general reasoning</li><li>Only differentiated by cost, not capability</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Sigil memo explicitly: a self-driving car needs low-latency sensory models, not a model that can write code. Edge inference wins for: real-time control (robotics, autonomous vehicles), privacy-sensitive data (on-device health monitoring), offline applications. Cloud wins for: complex reasoning, multi-modal tasks, infrequent but high-complexity queries. SLMs (small language models) are the key enabling technology for edge — specialist models cheaper and faster than generalist LLMs. Both markets grow; they don't cannibalise each other.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q43 · <span class="badge badge-theme">App Layer</span></div>
+  <div class="quiz-q">Agentic payments — where AI agents transact autonomously — is described as a specific opportunity for Sigil because:</div>
+  <ol class="choices"><li>It bypasses traditional banking regulations</li><li>AI agents generate higher transaction volumes than humans</li><li class="correct">Sigil's crypto-native expertise in programmable money and digital asset infrastructure translates directly to this emerging category</li><li>Payment processors charge lower fees for AI-initiated transactions</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> One of the most specific and insightful sentences in the Sigil memo. Agentic payments = AI agents sending and receiving value autonomously on behalf of users or other agents. This requires programmable money (crypto-native concept), identity verification for agents, and transaction infrastructure that works without human authorisation at each step. Sigil's deep crypto background (smart contracts, digital wallets, programmable transactions) gives them genuine edge in evaluating this space. It's the intersection of Theme 2 (Application) and their existing expertise.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q44 · <span class="badge badge-theme">App Layer</span></div>
+  <div class="quiz-q">The guide states that 'the most interesting startups of the next decade will be in hardware.' This is most directly connected to which thesis element?</div>
+  <ol class="choices"><li>Software margins are lower than hardware margins at scale</li><li>Hardware startups are easier to defend from large tech company competition</li><li class="correct">The physical layer thesis — when intelligence is commoditised, the bottleneck and value shifts to physical manufacturing, materials, and atoms</li><li>Government R&amp;D funding prioritises hardware over software startups</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Pure software startups struggle because: (1) LLMs commoditise software intelligence, (2) incumbents with data/distribution can layer AI onto existing products faster than a startup can build distribution. Hardware startups are different — they're building physical things that take years to develop and manufacture, creating genuine defensibility. Examples: specialised AI chips, advanced robot actuators, new energy storage systems, quantum hardware. The physical moat is harder to replicate than a software moat in the AI era.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q45 · <span class="badge badge-theme">App Layer</span></div>
+  <div class="quiz-q">Constellation Software (CSU.TO) is in the Supernova watchlist because it represents which investment pattern?</div>
+  <ol class="choices"><li>AI-native software being built from scratch to disrupt legacy verticals</li><li>A hyperscaler benefiting from AI compute demand</li><li class="correct">An incumbent with deep vertical data moats and switching costs that AI tailwinds, rather than threatens</li><li>A SaaS company whose UI moat is being commoditised by AI agents</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> CSU acquires niche vertical market software companies — funeral home software, golf course management, municipal government tools. These customers have nowhere else to go (switching costs extreme) and CSU holds decades of proprietary operational data. AI is a tailwind: CSU can deploy AI features to its captive customer base without acquisition CAC. This is the 'data and distribution moat gets wider' pattern — the inverse of the UI/friction moat that's dying. No AI startup can displace them because the moat isn't the product, it's the relationships and data accumulated over decades.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q46 · <span class="badge badge-theme">Defence</span></div>
+  <div class="quiz-q">The 'Golden Dome' missile defence proposal is relevant to the Space theme because:</div>
+  <ol class="choices"><li>It will require SpaceX to halt Starlink expansion to make room for military satellites</li><li>It provides a government revenue guarantee for all space companies</li><li class="correct">It would place missile intercept assets in orbit, making space infrastructure simultaneously commercial and militarily critical — and potentially the largest government space procurement in history</li><li>It is a deterrent strategy that reduces the likelihood of the Taiwan Strait conflict bear case</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Golden Dome ($185B–$3.6T estimated cost) would use space-based interceptors, sensors, and potentially kinetic kill vehicles. This directly links Theme 4 (Warfare) and Theme 5 (Space): satellite infrastructure becomes national security infrastructure. Orbital assets at 7.8 km/s carry the destructive power of conventional missiles without explosives. Sigil explicitly flags this convergence: 'orbital defence is becoming a real category.' For investors, it means space companies with dual-use (commercial + defence) capability command a strategic premium.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q47 · <span class="badge badge-theme">Defence</span></div>
+  <div class="quiz-q">Why does Sigil specifically mention Chinese control of tungsten and rare earths in the warfare theme?</div>
+  <ol class="choices"><li>China uses rare earth export controls to manipulate global chip prices</li><li class="correct">These materials are critical for precision weapons, defence electronics, and motors — and Western underinvestment in mining creates a strategic vulnerability</li><li>Tungsten is the primary material for drone manufacturing</li><li>The EU has imposed sanctions on Chinese rare earth exports</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Tungsten: used in armour-piercing ammunition, missile warheads, military electronics. Rare earths: used in precision guidance magnets, fighter jet electronics, submarine motors. China controls ~85% of rare earth processing globally and has demonstrated willingness to use export controls strategically (2010 Japan conflict, 2019 US trade war). Sigil's point: defence spending is rising but Western supply chains are critically exposed to Chinese chokepoints. Reshoring rare earth mining/processing is both a national security imperative and an investment opportunity — the 'dirty businesses' neglected for 30 years are now strategic assets.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q48 · <span class="badge badge-theme">Defence</span></div>
+  <div class="quiz-q">The Rheinmetall (RHM.DE) investment thesis differs from the Kratos (KTOS) thesis primarily in that:</div>
+  <ol class="choices"><li>Rheinmetall is a startup while Kratos is an established prime</li><li class="correct">Rheinmetall captures the European NATO ramp-up in traditional heavy defence (artillery, armour, ammunition); Kratos is a pure play on the new attritable autonomous systems paradigm</li><li>Rheinmetall has a stronger AI integration roadmap than Kratos</li><li>Kratos benefits from US defence budgets while Rheinmetall is limited to European spending</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Two different but complementary bets within the warfare theme: RHM.DE = legacy but growing European prime. Beneficiary of EU member states finally meeting and exceeding NATO 2% GDP targets, re-arming after decades of underinvestment, restocking Ukraine. Artillery shells, Leopard tank components, Lynx IFV. High certainty, lower asymmetry. KTOS = disruptive attritable drone play. Much higher asymmetry: if the US Air Force scales the Valkyrie/XQ-58 programme, KTOS is a pure-play on the new warfare paradigm at a small-cap entry point. Higher risk, potentially much higher reward. Holding both covers the 'legacy rearm' and 'new paradigm' outcomes.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q49 · <span class="badge badge-theme">Biotech</span></div>
+  <div class="quiz-q">Why does Sigil avoid the 'crowded AI drug discovery space' despite it being exactly where AI meets biotech?</div>
+  <ol class="choices"><li>Drug discovery companies have too much regulatory risk to be investable</li><li class="correct">Too many well-funded competitors are using AI for drug discovery, making differentiation difficult and valuations stretched — while diagnostics and precision medicine are less competed</li><li>AI cannot yet reliably identify drug candidates without human guidance</li><li>Drug discovery requires rare earth materials that are supply-constrained</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> This is a key Sigil-specific insight. AI drug discovery (Recursion, Exscientia, BioNTech AI, Insilico Medicine) has attracted enormous VC capital — meaning: (1) valuations are elevated, (2) many will fail, (3) differentiation is hard when everyone has similar AI access. In contrast, AI-powered diagnostics (Exact Sciences, Guardant Health) and precision medicine have clearer near-term revenue paths, less competition, and more defensible proprietary data moats from patient datasets. Sigil takes a small speculative position in drug discovery (RXRX) but focuses core capital on the less competed diagnostic plays.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q50 · <span class="badge badge-theme">Biotech</span></div>
+  <div class="quiz-q">The 'demographics create inelastic healthcare demand' thesis means:</div>
+  <ol class="choices"><li>Healthcare stocks are immune to economic recessions</li><li>Younger populations in emerging markets will drive healthcare growth</li><li class="correct">Aging populations in developed countries will spend growing amounts on healthcare regardless of economic conditions — unlike consumer discretionary spending</li><li>Healthcare is the only sector where AI will not reduce employment</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Inelastic demand = demand does not decrease proportionally when price rises or income falls. Healthcare is uniquely inelastic because: (1) aging is irreversible and accelerating in developed countries, (2) people are not price-sensitive about extending healthy life, (3) insurance insulates patients from direct costs. Western demographics: more adults/elderly than young people for the first time in history. This creates a structural multi-decade tailwind regardless of economic cycles — exactly the 'secular vs. cyclical' distinction Sigil emphasises.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q51 · <span class="badge badge-theme">Biotech</span></div>
+  <div class="quiz-q">Real-World Evidence (RWE) is described as 'one of the best AI moats in healthcare' because:</div>
+  <ol class="choices"><li>RWE datasets are publicly available from government health agencies</li><li>FDA accepts RWE as a substitute for Phase III clinical trials</li><li class="correct">Large health system data partnerships produce proprietary patient outcome datasets that cannot be replicated by competitors without years of clinical relationships</li><li>RWE reduces drug development costs by 80% compared to traditional trials</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> RWE = clinical evidence from real-world patient data: EHRs, insurance claims, wearables, disease registries — outside formal randomised controlled trials. AI enables mining this at scale to find treatment patterns, adverse events, and patient subgroups. The moat: a health system that gives you access to 5M patient records over 10 years creates proprietary training data that a new entrant cannot acquire quickly. Epic (EHR platform), health insurers, and integrated delivery networks sit on enormous RWE moats. The data partnership is the defensible asset — not the AI model, which can be replicated.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q52 · <span class="badge badge-theme">Cybersec</span></div>
+  <div class="quiz-q">The 'Dead Internet Theory' is referenced in Sigil's memo as:</div>
+  <ol class="choices"><li>A hypothesis that the internet will become inaccessible due to regulation</li><li class="correct">The observation that most online content is now bot/AI-generated rather than human-created — transitioning from meme to realistic assumption</li><li>A prediction that AI will make search engines obsolete</li><li>A cybersecurity framework for identifying automated threat actors</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Dead Internet Theory: the idea that the majority of internet traffic and content is generated by bots, not humans. Originally a conspiracy theory; AI makes it a realistic near-term scenario. Implications: (1) online advertising targeting becomes less valuable as bot traffic overwhelms human traffic, (2) trust collapses for unverified online identities, (3) human identity verification becomes critical infrastructure. This directly supports Sigil's focus on digital identity solutions as an investment category within Theme 7.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q53 · <span class="badge badge-theme">Cybersec</span></div>
+  <div class="quiz-q">Why is CrowdStrike's Falcon platform specifically described as 'AI-native' rather than just 'AI-enhanced'?</div>
+  <ol class="choices"><li>CrowdStrike uses only NVIDIA GPUs for threat processing</li><li>Falcon was the first endpoint security product to use machine learning</li><li class="correct">Falcon was built from the ground up for cloud-native, data-driven threat detection — not a legacy AV product with AI bolted on — enabling a continuous learning data flywheel</li><li>CrowdStrike only employs AI researchers, not traditional security engineers</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> AI-native vs AI-enhanced is a critical distinction for evaluating any 'AI company.' AI-native: architecture designed from scratch for ML-driven decisions; every endpoint feeds a global threat graph; detection improves with scale. AI-enhanced: legacy product with ML layer added post-hoc; limited by original architecture constraints. CrowdStrike's Falcon collects telemetry from millions of endpoints into a single threat intelligence graph — the network effect means each new customer makes the platform smarter for all. This data flywheel is impossible for legacy AV vendors (Symantec, McAfee) to replicate without rebuilding from scratch.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q54 · <span class="badge badge-theme">Cybersec</span></div>
+  <div class="quiz-q">The argument that 'cybersecurity is the cleanest exception' to Sigil's rule about AI not favouring new software startups rests on:</div>
+  <ol class="choices"><li>Cybersecurity companies have higher gross margins than other SaaS verticals</li><li>Large tech companies are prohibited from acquiring cybersecurity companies</li><li class="correct">AI-driven threats are genuinely novel — defences that don't exist yet must be built by someone, and big tech is acquiring the best startups because they can't build fast enough internally</li><li>Cybersecurity revenue is recurring and thus easier to value for investors</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> For most SaaS categories, incumbents (Salesforce, ServiceNow, Microsoft) can add AI features and defend their distribution moats. Cybersecurity is different because: (1) the threat landscape is changing faster than incumbents can adapt — AI-generated attacks, adversarial agents, deepfake identity fraud are genuinely new; (2) the talent required (AI security researchers) is extremely scarce and concentrated in startups; (3) M&amp;A is the natural exit — Microsoft ($19B Nuance), Google ($5.4B Mandiant), Palo Alto (continuous tuck-ins). The clear acquisition path gives early-stage cybersecurity one of the best risk-adjusted return profiles in tech startups right now.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q55 · <span class="badge badge-theme">Cybersec</span></div>
+  <div class="quiz-q">Human identity verification is described as a growing investment category. What is the core problem it solves?</div>
+  <ol class="choices"><li>Replacing password-based authentication with biometric systems</li><li>Verifying that AI-generated identity documents are legitimate</li><li class="correct">Proving that a digital actor is human rather than an AI agent or bot — increasingly difficult as AI can pass traditional identity checks</li><li>Ensuring employees don't share login credentials with AI systems</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Traditional KYC (Know Your Customer) uses: face match against government ID, liveness detection, document authenticity. AI can now: generate photorealistic synthetic faces (GANs), create convincing synthetic voices, generate realistic ID documents, pass liveness tests with deepfake video. This means existing identity verification systems are increasingly vulnerable. The solution requires new approaches: cryptographic attestation at the point of creation (C2PA), hardware-based identity anchoring (TPM chips), and behavioural biometrics that are hard to fake at scale. Companies solving this problem (iProov, Au10tix, others) are in early but important category.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q56 · <span class="badge badge-theme">Cybersec</span></div>
+  <div class="quiz-q">The p(doom) scenario — ASI misalignment causing civilisational harm — is mentioned in Sigil's bear case. Their investment response is:</div>
+  <ol class="choices"><li>Maintaining 50% cash allocation as insurance against existential risk</li><li>Investing in AI safety companies working on alignment research</li><li class="correct">Acknowledging it as a low-probability, high-severity scenario that cannot be hedged — Theme 7 hedges the more probable adversarial AI scenarios, not existential risk</li><li>Avoiding all AI investments to reduce exposure to the technology</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Sigil is intellectually honest about p(doom): they lack expertise to assign probability but note smart people take it seriously. Their position: (1) it cannot be hedged — if ASI is misaligned, no investment protects you; (2) on the other side is 'AI utopia where money becomes obsolete' — which also makes investing irrelevant. Between these tails, the actionable territory is the middle ground of adversarial AI by bad human actors (scammers, nation states, criminals) — which Theme 7 does hedge. This is a rigorous probabilistic framework: hedge what can be hedged, acknowledge what cannot.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q57 · <span class="badge badge-theme">Cybersec</span></div>
+  <div class="quiz-q">SentinelOne (S) is marked 'watch' rather than 'core' in the Sigil watchlist. What does this typically signal?</div>
+  <ol class="choices"><li>The company is expected to be delisted in the next 12 months</li><li class="correct">Monitor closely but not a full position yet — typically waiting for a catalyst, valuation improvement, or further business model validation</li><li>The company poses regulatory risk that makes it unsuitable for the fund</li><li>It is a potential short position rather than a long</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> In Sigil's watchlist taxonomy: core = high conviction, full allocation; speculative = asymmetric bet with higher risk; watch = on radar, thesis not yet fully validated or valuation not yet compelling. For SentinelOne specifically: strong technology differentiation (autonomous AI threat response), but path to profitability was still proving out as of the portfolio construction. It is also a potential M&amp;A target — a acquisition offer could make it a sudden core position. 'Watch' is a holding pattern, not a rejection.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q58 · <span class="badge badge-theme">Overview</span></div>
+  <div class="quiz-q">Sigil says the portfolio is 'deliberately more diversified' during the early phase but 'may move to more concentrated positions over time.' What principle drives this evolution?</div>
+  <ol class="choices"><li>Regulations require diversification for funds under $500M AUM</li><li class="correct">Conviction increases as the thesis plays out and winners become clearer — concentration follows conviction, not the other way around</li><li>Tax efficiency improves with more concentrated positions</li><li>LPs demand concentration once the fund has a 3-year track record</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> This is a sophisticated portfolio construction insight. Early-stage thesis: many scenarios are plausible, winners unclear → diversify broadly to avoid being 'directionally correct with wrong horse.' As signals emerge (which datacentre plays are outperforming, which robotics verticals are scaling, which defence startups win procurement) → concentrate into the winners. This mirrors how Sigil operated in crypto: broad exposure early, then concentrated into BTC/ETH/DeFi as the thesis clarified. The lesson: diversification is not a permanent philosophy — it's a tool for managing uncertainty, reduced as uncertainty resolves.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q59 · <span class="badge badge-theme">Overview</span></div>
+  <div class="quiz-q">A journalist asks: 'Why would Sigil raise outside money if they don't need to?' The correct answer from the memo is:</div>
+  <ol class="choices"><li>Regulatory requirements mandate outside investors for hedge fund registration</li><li class="correct">More AUM gives access to more competitive private deals, and a network of investors wants exposure — but they're being selective, not fundraising aggressively</li><li>Outside capital reduces the personal financial risk for the founding partners</li><li>Management fees on outside capital fund the operational costs of research</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> Exact answer from the memo: 'a bit more size helps us into more competitive private deals, and we have a network of investors who want exposure. So we're opening it up, selectively.' This matters because: (1) it signals discipline — they could raise 10x more if they wanted; (2) it clarifies the incentive — alignment with LPs, not fee extraction; (3) it explains the portfolio structure — private deal access requires fund-level AUM, so outside capital serves the investment strategy rather than just being fundraised for its own sake. Interviewers at Sigil may test whether you understand this distinction.</div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-meta">Q60 · <span class="badge badge-theme">Overview</span></div>
+  <div class="quiz-q">The bear case 'C — The hardware cycle turns fast' is described as 'not a thesis invalidation per se, but a critical timing question.' What is the practical implication for portfolio management?</div>
+  <ol class="choices"><li>Sell all hardware positions immediately if any early signals appear</li><li>Ignore short-term price movements in hardware names since the thesis is multi-year</li><li class="correct">Rotate hardware exposure into cycle-resistant positions (software moats, defence, biotech) if early warning signals emerge — without abandoning the secular thesis</li><li>Hedge all hardware positions with put options as a default strategy</li></ol>
+  <div class="quiz-explain"><strong>Explanation:</strong> This is portfolio management nuance. The secular AI buildout thesis may be correct AND hardware names can still be poor investments if you're holding at the cycle peak. Sigil's response: maintain the thesis, but be alert to rotation signals — order book softening at foundries, capex guidance cuts from equipment suppliers, software efficiency breakthroughs reducing hardware demand. If signals emerge, don't exit the AI thesis — rotate within it to cycle-resistant expressions (cybersecurity spend is non-discretionary, defence budgets are locked in, biotech R&amp;D continues). This is the 'Gartner Trough' navigation skill: maintain conviction through volatility, but be willing to change the vehicle.</div>
+</div>
+</section>
+
+<section id="scenarios" class="section">
+  <h2>Scenario drills</h2>
+  
+<div class="scenario">
+  <h4>The Semiconductor Bottleneck Shift</h4>
+  <p><strong>Context:</strong> You are analyzing AI infrastructure investments in mid-2025. NVIDIA GPUs remain highly in demand, but supply constraints are easing. You notice SK Hynix and Samsung stock prices are surging while NVIDIA's growth rate is decelerating slightly.</p>
+  <p><strong>Question:</strong> What investment insight does Bottleneck Theory suggest? Which mental model best frames your next move?</p>
+  <p><strong>Themes:</strong> <span class="badge badge-theme">AI Infra</span> <span class="badge badge-theme">Overview</span></p>
+  <div class="analysis"><strong>Analysis:</strong> Bottleneck Theory says the constraint moved: 2023-24 bottleneck = GPU supply (buy NVIDIA). 2025 bottleneck = HBM and advanced packaging (buy SK Hynix, Samsung, TSMC CoWoS capacity). The &quot;Picks and Shovels&quot; model reinforces this — whoever controls the current binding constraint captures the margin. When GPU supply eases, rotate to the next constraint upstream. This is a classic application of identifying which rung of the ladder value is currently concentrated on.</div>
+</div>
+
+<div class="scenario">
+  <h4>SaaS Company Due Diligence</h4>
+  <p><strong>Context:</strong> A fund pitch presents a workflow software company with 115% NRR, $50M ARR, and strong customer satisfaction scores. Their core product automates a specific HR onboarding workflow through a clean, well-designed UI. The claimed moat: &quot;best UX in the category.&quot;</p>
+  <p><strong>Question:</strong> Using the Moat Classification Test, how would you evaluate this investment? What is the most important question to ask?</p>
+  <p><strong>Themes:</strong> <span class="badge badge-theme">App Layer</span> <span class="badge badge-theme">Overview</span></p>
+  <div class="analysis"><strong>Analysis:</strong> &quot;Best UX&quot; = UI/UX friction moat — explicitly classified as DYING. AI agents can navigate any UI, collapsing friction-based differentiation. 115% NRR is strong but may reflect switching costs (good) rather than true proprietary data lock-in (better). Critical question: does the company hold proprietary HR data that cannot be replicated, or is it just a well-designed workflow wrapper? If the latter, an AI agent replacing the workflow entirely is a serious bear case. Apply inversion: what would kill this company? Answer: a general-purpose AI agent that fills onboarding forms.</div>
+</div>
+
+<div class="scenario">
+  <h4>Defence Startup vs. Prime Contractor</h4>
+  <p><strong>Context:</strong> Anduril raises a new round at $14B valuation. Meanwhile, Lockheed Martin trades at 18x earnings — profitable, cash-generative, with decades of defence relationships. An LP asks: &quot;Why back the startup at that valuation when the prime is cheap and proven?&quot;</p>
+  <p><strong>Question:</strong> Using the Innovator's Dilemma in Procurement and OODA Loop frameworks, construct the investment bull case for Anduril.</p>
+  <p><strong>Themes:</strong> <span class="badge badge-theme">Defence</span> <span class="badge badge-theme">Overview</span></p>
+  <div class="analysis"><strong>Analysis:</strong> Innovator's Dilemma in Defence: Lockheed rationally optimizes for its existing customers (DoD bureaucracy demanding slow/complex/expensive programs). Anduril builds fast, cheap, software-first solutions that Lockheed cannot build without destroying its own business model. OODA Loop: the next conflict will be won by whoever compresses Orient/Decide fastest. Software-first autonomous systems do this; legacy platforms do not. The question is not &quot;which is cheaper today?&quot; but &quot;which captures the value of future warfare procurement?&quot; Path dependence says: invest in the platform paths are being locked into — and DoD's software-first CJADC2 architecture points toward Anduril.</div>
+</div>
+
+<div class="scenario">
+  <h4>Space Startup Reality Check</h4>
+  <p><strong>Context:</strong> A founder pitches a microgravity manufacturing company — making ultra-pure fiber optic cables in orbit using a peer-reviewed novel process. Revenue projection: $500M by 2028. Launch costs via SpaceX: $2,700/kg.</p>
+  <p><strong>Question:</strong> Which framework should you apply FIRST before evaluating commercial potential? What is the single most important technical question?</p>
+  <p><strong>Themes:</strong> <span class="badge badge-theme">Space</span> <span class="badge badge-theme">Overview</span></p>
+  <div class="analysis"><strong>Analysis:</strong> Delta-V Budget analysis must come first — before any revenue projection. Can you get sufficient mass to the right orbit and back economically at $2,700/kg? What is the manufactured cable mass per unit? What is the return cost? &quot;The Map is Not the Territory&quot;: a beautiful revenue model is useless if the physics do not work. The guide explicitly warns: delta-V understanding is &quot;key to evaluating which space concepts are physically plausible vs. marketing fiction.&quot; Only after confirming physical viability does commercial analysis become relevant. Many space pitches fail on basic rocket equation math.</div>
+</div>
+
+<div class="scenario">
+  <h4>Biotech AI Claims Evaluation</h4>
+  <p><strong>Context:</strong> A startup claims its &quot;AI drug discovery platform&quot; reduced lead compound discovery time by 80%. It has raised $300M Series B. It uses a proprietary transformer model trained on its own clinical trial database of 50,000 patients.</p>
+  <p><strong>Question:</strong> Apply the &quot;Beware the AI Hype Discount in Biotech&quot; mental model. What specifically makes this claim more credible than typical AI-biotech marketing?</p>
+  <p><strong>Themes:</strong> <span class="badge badge-theme">Biotech</span> <span class="badge badge-theme">App Layer</span></p>
+  <div class="analysis"><strong>Analysis:</strong> This claim has more credibility than typical AI-biotech marketing for two specific reasons: (1) Proprietary data moat — a 50,000-patient clinical trial database is genuinely difficult to replicate. This is the most defensible AI moat the guide identifies. (2) Specific, verifiable claim — &quot;80% reduction in discovery time&quot; is testable against their published pipeline timelines. The guide's test: &quot;does their AI demonstrably improve hit rates, reduce trial phases, or provide truly proprietary data?&quot; This company appears to satisfy criterion (3). Still validate: Is the 50K patient dataset truly proprietary (not licensed from a third party)? Has the 80% reduction been independently verified or is it a self-reported internal benchmark?</div>
+</div>
+
+<div class="scenario">
+  <h4>The Hyperscaler Capex U-Turn</h4>
+  <p><strong>Context:</strong> It's Q3 2026. Microsoft, Google, and Amazon have all guided to 10-15% cuts in their AI infrastructure capex for 2027, citing lower-than-expected inference revenue and improved model efficiency. Nvidia stock drops 18% in one day. SK Hynix drops 22%.</p>
+  <p><strong>Question:</strong> Using Capital Cycle Theory and the Secular vs. Cyclical distinction, construct the bull case for why this is a buying opportunity. What signals would flip your view to genuinely bearish?</p>
+  <p><strong>Themes:</strong> <span class="badge badge-theme">AI Infra</span> <span class="badge badge-theme">Overview</span></p>
+  <div class="analysis"><strong>Analysis:</strong> Capital Cycle Theory: high returns attracted excess capital → capex guidance now normalising. This is cyclical within a secular trend — not thesis invalidation. The secular driver (intelligence commoditisation → physical layer bottleneck) hasn't changed; the quarterly guidance has. Bull case: (1) Hyperscaler capex cuts are temporary — competition means no one can sustainably fall behind in AI infrastructure; (2) 'Cyclical PTSD' will now prevent overcapacity build, extending next upturn; (3) SK Hynix HBM3e technology lead doesn't change with one quarter's guidance. Genuine bear signals: (1) open-source model efficiency improves to the point where frontier model training is no longer economically justified for most hyperscalers — structural demand destruction, not cyclical; (2) all three hyperscalers guide down simultaneously for 3+ consecutive quarters; (3) Nvidia announces margin compression from competitive GPU alternatives at scale (AMD MI400, custom TPUs). The key analytical skill: distinguishing 'stock is down' (noise) from 'thesis is broken' (signal).</div>
+</div>
+
+<div class="scenario">
+  <h4>The European Defence Procurement Test</h4>
+  <p><strong>Context:</strong> The EU announces a €500B joint defence procurement fund. Early reporting suggests the contracts will go primarily to established European primes (Rheinmetall, BAE, KNDS) rather than defence tech startups, citing 'production capacity and reliability requirements.'</p>
+  <p><strong>Question:</strong> Does this confirm or challenge the defence tech investment thesis? How would you advise the Sigil CIO to respond?</p>
+  <p><strong>Themes:</strong> <span class="badge badge-theme">Defence</span> <span class="badge badge-theme">Overview</span></p>
+  <div class="analysis"><strong>Analysis:</strong> Surface reading: confirms RHM.DE thesis (direct beneficiary), challenges the defence startup thesis (Anduril-style companies locked out of large procurement). Deeper reading: this is exactly the Innovator's Dilemma in Procurement playing out as predicted. Large procurement to primes ≠ thesis broken. The startups (Anduril Europe, drone manufacturers) serve different categories: attritable systems, ISR, AI decision support — not main battle tanks and artillery. The €500B is mostly for traditional platforms. The drone and autonomous systems budget is a separate, smaller but faster-growing category. Portfolio response: maintain RHM.DE as core beneficiary of the large contract wave; maintain KTOS/AVAV for the autonomous systems budget which is not captured by traditional procurement. The coexistence of legacy rearm and new paradigm is by design in the Sigil portfolio.</div>
+</div>
+
+<div class="scenario">
+  <h4>The Open-Source Model Threat</h4>
+  <p><strong>Context:</strong> Meta releases Llama 5, matching GPT-5 on most benchmarks, available for free download and local deployment. Within 60 days, 40% of enterprise AI pilots switch to running Llama locally. Anthropic and OpenAI both issue profit warnings.</p>
+  <p><strong>Question:</strong> Map the second and third order effects of this event across all 7 Supernova themes. Which themes are helped, which are hurt?</p>
+  <p><strong>Themes:</strong> <span class="badge badge-theme">App Layer</span> <span class="badge badge-theme">Overview</span> <span class="badge badge-theme">Cybersec</span></p>
+  <div class="analysis"><strong>Analysis:</strong> Theme 1 (Datacenters): initially bearish (less centralised compute needed if running locally), but second-order bullish — local inference needs CPUs, edge AI chips, local memory; overall compute demand may increase with more use cases becoming economically viable. Theme 2 (Application): mixed — pure-play LLM API companies (OpenAI-dependent SaaS) hurt; companies with proprietary data moats unaffected (their advantage isn't the model, it's the data). Theme 3 (Robotics): bullish — cheaper capable models accelerate robot deployment economics. Theme 4 (Warfare): neutral to slight positive — open-source models accelerate adversary AI capabilities, increasing demand for AI-native defence tools. Theme 5 (Space): neutral. Theme 6 (Biotech): potentially bullish — cheaper models lower R&amp;D cost barriers for smaller biotech companies. Theme 7 (Adversarial): strongly bullish — open-source models are massively easier to fine-tune for malicious purposes; adversarial AI threats accelerate; cybersecurity spend increases. Bottom line: the physical layer thesis survives because compute demand goes up even with cheaper models; adversarial AI theme accelerates; application layer moats are reshuffled toward data vs. model access.</div>
+</div>
+
+<div class="scenario">
+  <h4>The Robotics Hype Trap</h4>
+  <p><strong>Context:</strong> Tesla announces Optimus Gen 3 can perform 80% of warehouse tasks. Tesla stock rises 35%. Humanoid robot IPOs flood the market. Every robot startup claims to be 'the Nvidia of robotics.' Cognex (CGNX) falls 12% because analysts claim 'computer vision will be commoditised by AI.'</p>
+  <p><strong>Question:</strong> Apply the 'Form Factor Follows Function' and 'Picks and Shovels' mental models. Is the CGNX selloff a buying opportunity or a genuine threat?</p>
+  <p><strong>Themes:</strong> <span class="badge badge-theme">Robotics</span> <span class="badge badge-theme">AI Infra</span></p>
+  <div class="analysis"><strong>Analysis:</strong> The Optimus announcement is a hype event — 80% of warehouse tasks in demo conditions ≠ production-ready at Cognex's customer base. Cognex investment thesis: not 'humanoid robot wave' but 'all robots need machine vision regardless of form factor.' Analysis of the analyst argument: is computer vision commoditised by AI? Partially yes for simple 2D barcode/label reading tasks. But Cognex's revenue mix is heavily weighted toward high-precision industrial inspection: semiconductor wafer defect detection, pharmaceutical packaging verification, automotive weld quality — tasks requiring calibrated accuracy at high throughput that off-the-shelf vision AI cannot yet match. The 'Picks and Shovels' reframe: if humanoid robots scale, they need more machine vision, not less. Cognex benefits from the wave even if they don't make the robots. Monitor: is CGNX losing design wins to cheaper computer vision competitors in their core precision inspection verticals? That is the real signal, not Tesla demos.</div>
+</div>
+
+<div class="scenario">
+  <h4>The Biotech Hallucination Crisis</h4>
+  <p><strong>Context:</strong> A major hospital system reports that three patients received incorrect AI-generated diagnoses from a precision medicine platform. The FDA issues emergency guidance pausing approval of all AI/ML medical devices. Exact Sciences (EXAS) falls 28%.</p>
+  <p><strong>Question:</strong> Distinguish between a temporary regulatory pause and permanent thesis damage. What is the investment decision framework here?</p>
+  <p><strong>Themes:</strong> <span class="badge badge-theme">Biotech</span> <span class="badge badge-theme">App Layer</span></p>
+  <div class="analysis"><strong>Analysis:</strong> Hallucination Risk in Medical AI was already identified in the Learning Hub as the 'most important safety concern separating viable medical AI from dangerous products.' This event is a materialisation of a known, pre-priced risk — not a black swan. Investment framework: (1) Is EXAS's specific product implicated? EXAS uses genomic biomarkers (Cologuard), not generative LLM diagnostics — the FDA pause on AI/ML devices may not apply to its specific 510(k) cleared products. (2) Is the regulation permanent or temporary? FDA pauses are typically temporary pending clearer guidance frameworks, not permanent bans. (3) Is the moat damaged? EXAS's moat is clinical validation data and lab network, not the AI model — a regulatory pause does not erase the clinical evidence base. Likely decision: maintain EXAS position (different product category from implicated AI), watch RXRX (drug discovery) more carefully as a higher-exposure name. Bull case for long-term thesis: this event accelerates demand for explainable AI and validated clinical data moats — exactly what EXAS has and what new entrants lack. Crises in regulated industries often consolidate value to the incumbent with the validation track record.</div>
+</div>
+</section>
+
+<div class="footer">
+  Generated from Learning Hub data · Sigil Supernova · For internal curriculum review
+</div>
+
+</div>
+</body>
+</html>

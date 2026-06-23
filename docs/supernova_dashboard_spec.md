@@ -22,8 +22,10 @@ Two frontend routes:
 
 Static curriculum and practice. No API dependency.
 
-- **Reference** — themes, books, courses, voices, mental models, reading list, glossary.
-- **Practice** — quiz (30 Q), flashcards (from glossary), scenarios (5 cases).
+- **Reference** — themes (⚡ essential concepts), books, courses, voices, mental models; dedicated Mental Models tab; reading list; glossary.
+- **Practice** — quiz (60 Q, difficulty badges), flashcards (from glossary), scenarios (10 cases, interview priority badges), interview prep (10 Q).
+
+Regenerate offline HTML after data edits: `node scripts/generate-learning-hub-export.mjs`, `node scripts/generate-learning-academy-html.mjs`.
 
 ## Tech stack
 
@@ -193,6 +195,9 @@ frontend/src/api.js
 frontend/src/pages/MasteryGuide.jsx
 frontend/src/data/masteryGuideData.js
 frontend/src/data/academyData.js
+frontend/src/data/quizQuestionsExtended.js
+frontend/src/data/scenariosExtended.js
+frontend/src/data/interviewQuestions.js
 frontend/src/components/Header.jsx
 frontend/src/components/WhatIsThis.jsx
 frontend/src/components/WeeklyBrief.jsx
@@ -203,6 +208,8 @@ frontend/src/components/ResearchQueue.jsx
 frontend/src/components/learning/QuizSection.jsx
 frontend/src/components/learning/FlashcardSection.jsx
 frontend/src/components/learning/ScenarioSection.jsx
+frontend/src/components/learning/InterviewPrepSection.jsx
+frontend/src/components/learning/EssentialBadge.jsx
 frontend/src/components/learning/ThemeBadge.jsx
 ```
 

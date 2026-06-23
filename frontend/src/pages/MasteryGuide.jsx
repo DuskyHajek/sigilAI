@@ -9,20 +9,33 @@ import {
   HelpCircle,
   Layers,
   Library,
+  MessageSquareQuote,
   Search,
   Sparkles,
 } from "lucide-react";
-import { THEMES, NAV_TABS, READING_LIST, GLOSSARY } from "../data/masteryGuideData";
-import { QUIZ_QUESTIONS, SCENARIOS } from "../data/academyData";
+import {
+  THEMES,
+  NAV_TABS,
+  READING_LIST,
+  GLOSSARY,
+  MENTAL_MODELS,
+  ESSENTIAL_CONCEPT_COUNT,
+} from "../data/masteryGuideData";
+import { QUIZ_QUESTIONS, SCENARIOS, INTERVIEW_QUESTIONS } from "../data/academyData";
 import QuizSection from "../components/learning/QuizSection";
 import FlashcardSection from "../components/learning/FlashcardSection";
 import ScenarioSection from "../components/learning/ScenarioSection";
+import InterviewPrepSection from "../components/learning/InterviewPrepSection";
+import EssentialBadge from "../components/learning/EssentialBadge";
+import ThemeBadge from "../components/learning/ThemeBadge";
 import { ModeCard, SectionHeader, TipBox } from "../components/learning/LearningUI";
+import { filterBtn } from "../components/learning/learningStyles";
 
 const PRACTICE_TABS = [
   { id: "quiz", label: "Quiz", icon: HelpCircle },
   { id: "flashcards", label: "Flashcards", icon: Layers },
   { id: "scenarios", label: "Scenarios", icon: Sparkles },
+  { id: "interview", label: "Interview Prep", icon: MessageSquareQuote },
 ];
 
 const tabBtn = (active) =>
@@ -83,17 +96,55 @@ function SubSection({ title, count, hint, children, defaultOpen = false }) {
 // ─── Theme section ────────────────────────────────────────────────────────────
 
 function ThemeSection({ data }) {
+  const [essentialsOnly, setEssentialsOnly] = useState(false);
+
+  const concepts = essentialsOnly
+    ? data.concepts.filter((c) => c.essential)
+    : data.concepts;
+  const mentalModels = essentialsOnly
+    ? data.mentalModels.filter((m) => m.essential)
+    : data.mentalModels;
+  const essentialCount =
+    data.concepts.filter((c) => c.essential).length +
+    data.mentalModels.filter((m) => m.essential).length;
+
   return (
     <div className="space-y-0">
+      {essentialCount > 0 && (
+        <div className="flex flex-wrap items-center gap-2 pb-4 mb-1 border-b border-slate-800/40">
+          <button
+            type="button"
+            onClick={() => setEssentialsOnly((v) => !v)}
+            className={filterBtn(essentialsOnly)}
+          >
+            {essentialsOnly ? "Show all concepts" : "⚡ Essentials only"}
+          </button>
+          <span className="text-[10px] font-mono text-slate-600">
+            {essentialCount} essential in this theme
+          </span>
+        </div>
+      )}
+
       {/* Concepts */}
-      <SubSection title="Key Concepts" count={data.concepts.length} hint="Core vocabulary for this theme" defaultOpen>
+      <SubSection
+        title="Key Concepts"
+        count={concepts.length}
+        hint="Core vocabulary for this theme"
+        defaultOpen
+      >
         <div className="space-y-2">
-          {data.concepts.map((c, i) => (
+          {concepts.map((c, i) => (
             <div key={i} className="glass-panel rounded-xl p-4">
-              <p className="text-sm font-semibold text-white mb-1">{c.term}</p>
+              <div className="flex flex-wrap items-center gap-2 mb-1">
+                <p className="text-sm font-semibold text-white">{c.term}</p>
+                {c.essential && <EssentialBadge />}
+              </div>
               <p className="text-xs text-slate-400 leading-relaxed">{c.definition}</p>
             </div>
           ))}
+          {concepts.length === 0 && (
+            <p className="text-xs text-slate-500 py-2">No essential concepts in this theme.</p>
+          )}
         </div>
       </SubSection>
 
@@ -156,16 +207,107 @@ function ThemeSection({ data }) {
       </SubSection>
 
       {/* Mental Models */}
-      <SubSection title="Mental Models" count={data.mentalModels.length} hint="Frameworks Sigil applies when investing">
+      <SubSection
+        title="Mental Models"
+        count={mentalModels.length}
+        hint="Frameworks Sigil applies when investing"
+      >
         <div className="space-y-3">
-          {data.mentalModels.map((m, i) => (
+          {mentalModels.map((m, i) => (
             <div key={i} className="border-l-2 border-sigil-gold/40 pl-4 py-1">
-              <p className="text-sm font-semibold text-sigil-gold mb-1">{m.name}</p>
+              <div className="flex flex-wrap items-center gap-2 mb-1">
+                <p className="text-sm font-semibold text-sigil-gold">{m.name}</p>
+                {m.essential && <EssentialBadge />}
+              </div>
               <p className="text-xs text-slate-400 leading-relaxed">{m.description}</p>
             </div>
           ))}
+          {mentalModels.length === 0 && (
+            <p className="text-xs text-slate-500 py-2">No essential mental models in this theme.</p>
+          )}
         </div>
       </SubSection>
+    </div>
+  );
+}
+
+// ─── Mental models (standalone tab) ───────────────────────────────────────────
+
+function MentalModelsSection() {
+  const [filterTheme, setFilterTheme] = useState("all");
+  const [essentialsOnly, setEssentialsOnly] = useState(false);
+
+  const themeFilters = useMemo(
+    () => [
+      { id: "all", label: "All themes" },
+      ...THEMES.map((t) => ({ id: t.id, label: t.label.replace(/^\d+\.\s*/, "") })),
+    ],
+    []
+  );
+
+  const filtered = useMemo(
+    () =>
+      MENTAL_MODELS.filter((m) => {
+        if (filterTheme !== "all" && m.themeId !== filterTheme) return false;
+        if (essentialsOnly && !m.essential) return false;
+        return true;
+      }),
+    [filterTheme, essentialsOnly]
+  );
+
+  return (
+    <div className="space-y-5">
+      <TipBox icon={Brain}>
+        All {MENTAL_MODELS.length} mental models in one place — filter by theme or show
+        essentials only. Each also lives inside its theme section for context.
+      </TipBox>
+
+      <div className="flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => setEssentialsOnly((v) => !v)}
+          className={filterBtn(essentialsOnly)}
+        >
+          {essentialsOnly ? "Show all models" : "⚡ Essentials only"}
+        </button>
+      </div>
+
+      <div>
+        <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">
+          Theme
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {themeFilters.map(({ id, label }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setFilterTheme(id)}
+              className={filterBtn(filterTheme === id)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <p className="text-[10px] font-mono text-slate-600">{filtered.length} models</p>
+
+      <div className="space-y-3">
+        {filtered.map((m, i) => (
+          <div key={`${m.themeId}-${m.name}`} className="glass-panel rounded-xl p-4">
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              <span className="text-[10px] font-mono text-slate-600">{i + 1}</span>
+              <p className="text-sm font-semibold text-sigil-gold">{m.name}</p>
+              {m.essential && <EssentialBadge />}
+              {m.themeSlug && <ThemeBadge slug={m.themeSlug} />}
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">{m.description}</p>
+          </div>
+        ))}
+        {filtered.length === 0 && (
+          <p className="text-sm text-slate-500 text-center py-8">No models match the current filters.</p>
+        )}
+      </div>
     </div>
   );
 }
@@ -354,16 +496,21 @@ export default function MasteryGuide() {
     setPracticeTab("flashcards");
   };
 
+  const conceptCount = useMemo(
+    () => THEMES.reduce((n, t) => n + t.concepts.length, 0),
+    []
+  );
+
   const heroStats =
     mode === "reference"
       ? [
-          { value: "135+", label: "Concepts" },
-          { value: "34", label: "Books" },
-          { value: "55+", label: "Glossary" },
+          { value: String(conceptCount), label: "Concepts" },
+          { value: String(ESSENTIAL_CONCEPT_COUNT), label: "Essential" },
+          { value: String(MENTAL_MODELS.length), label: "Models" },
         ]
       : [
           { value: String(QUIZ_QUESTIONS.length), label: "Questions" },
-          { value: String(GLOSSARY.length), label: "Flashcards" },
+          { value: String(INTERVIEW_QUESTIONS.length), label: "Interview Qs" },
           { value: String(SCENARIOS.length), label: "Scenarios" },
         ];
 
@@ -378,8 +525,8 @@ export default function MasteryGuide() {
             <h2 className="text-2xl font-bold text-white mb-1">Learning Hub</h2>
             <p className="text-sm text-slate-400">
               {mode === "reference"
-                ? "Books, concepts, glossary & mental models for all 7 themes"
-                : "Quizzes, flashcards & scenario drills to test your mastery"}
+                ? "Books, concepts, mental models & glossary for all 7 themes"
+                : "Quizzes, flashcards, scenarios & interview prep to test your mastery"}
             </p>
             <p className="text-[11px] font-mono text-slate-600 mt-2 flex items-center gap-1.5">
               <GraduationCap size={12} className="text-sigil-gold/60" />
@@ -413,7 +560,7 @@ export default function MasteryGuide() {
           active={mode === "practice"}
           icon={Brain}
           label="Practice"
-          description="Active study — quiz yourself, flip flashcards, walk through scenarios"
+          description="Active study — quiz yourself, flip flashcards, walk through scenarios & interview prep"
           onClick={() => switchMode("practice")}
         />
       </div>
@@ -474,6 +621,30 @@ export default function MasteryGuide() {
               icon={Sparkles}
             />
             <ScenarioSection />
+          </>
+        )}
+
+        {mode === "practice" && practiceTab === "interview" && (
+          <>
+            <SectionHeader
+              eyebrow="Interview Ready"
+              title={`Interview Prep — ${INTERVIEW_QUESTIONS.length} Questions`}
+              description="Motivation, thesis depth, dashboard fluency, and curveballs — practice out loud before your session."
+              icon={MessageSquareQuote}
+            />
+            <InterviewPrepSection />
+          </>
+        )}
+
+        {mode === "reference" && activeTab === "mental-models" && (
+          <>
+            <SectionHeader
+              eyebrow="Frameworks"
+              title={`Mental Models — ${MENTAL_MODELS.length} Frameworks`}
+              description="Sigil's decision-making toolkit across all themes. Filter by theme or essentials."
+              icon={Brain}
+            />
+            <MentalModelsSection />
           </>
         )}
 

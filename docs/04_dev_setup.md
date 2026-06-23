@@ -55,7 +55,7 @@ This starts:
 
 Open `http://localhost:5173`. The dashboard should load from cache or demo data. Click **Sync live data** to run the live pipeline when keys are configured.
 
-Learning Hub: `http://localhost:5173/mastery-guide` (Reference curriculum + Practice quiz/flashcards/scenarios).
+Learning Hub: `http://localhost:5173/mastery-guide` (Reference: concepts, mental models, reading list, glossary · Practice: quiz, flashcards, scenarios, interview prep).
 
 ## Current project structure
 
@@ -89,7 +89,10 @@ supernova-dashboard/
 │       ├── api.js
 │       ├── data/
 │       │   ├── masteryGuideData.js
-│       │   └── academyData.js
+│       │   ├── academyData.js
+│       │   ├── quizQuestionsExtended.js
+│       │   ├── scenariosExtended.js
+│       │   └── interviewQuestions.js
 │       ├── pages/
 │       │   └── MasteryGuide.jsx
 │       ├── components/
@@ -103,7 +106,9 @@ supernova-dashboard/
 │       │   └── learning/
 │       │       ├── QuizSection.jsx
 │       │       ├── FlashcardSection.jsx
-│       │       └── ScenarioSection.jsx
+│       │       ├── ScenarioSection.jsx
+│       │       ├── InterviewPrepSection.jsx
+│       │       └── EssentialBadge.jsx
 │       └── styles/
 │           └── theme-cards.css
 ├── docs/

@@ -44,20 +44,25 @@ A static study companion for the 7 Supernova themes. No backend or sync dependen
 
 **Reference mode**
 
-- Per-theme tabs: key concepts, essential books, courses, voices to follow, mental models.
+- Per-theme tabs: key concepts (⚡ Essential badges + filter), essential books, courses, voices, mental models.
+- **Mental Models** tab: all 26 frameworks, filterable by theme.
 - Master reading list (34 books, filterable by level and theme).
-- Glossary (55+ terms, searchable).
+- Glossary (56 terms, searchable).
 
 **Practice mode**
 
-- Quiz: 30 questions with quick, full, and per-theme modes.
+- Quiz: 60 questions with quick (10), full (60), and per-theme modes; difficulty badges.
 - Flashcards: glossary terms with flip-to-reveal definitions.
-- Scenarios: 5 investment case drills with expandable analysis.
+- Scenarios: 10 investment case drills; high interview-relevance cases marked.
+- Interview Prep: 10 questions with hints and sample answers.
 
 Data sources:
 
-- `frontend/src/data/masteryGuideData.js` — reference content.
-- `frontend/src/data/academyData.js` — quiz and scenario content.
+- `frontend/src/data/masteryGuideData.js` — reference content, essential flags, mental models export.
+- `frontend/src/data/academyData.js` — quiz and scenario content (merges extended modules).
+- `frontend/src/data/interviewQuestions.js`, `quizQuestionsExtended.js`, `scenariosExtended.js`.
+
+Offline review exports: `docs/sigil-supernova-learning-hub-export.html`, `docs/sigil-supernova-learning-academy.html`. See `docs/LEARNING_HUB_UPGRADE_SPEC.md` for the upgrade changelog.
 
 ## APIs and data sources
 

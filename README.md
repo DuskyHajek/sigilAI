@@ -19,15 +19,16 @@ Four working intelligence sections:
 
 Static curriculum and practice for all 7 investment themes. No API calls or sync required.
 
-**Reference mode** — books, key concepts, courses, voices, mental models, master reading list, and glossary.
+**Reference mode** — per-theme concepts (with ⚡ Essential badges and filter), books, courses, voices, mental models; standalone **Mental Models** tab (26 frameworks); master reading list (34 books); glossary (56 terms).
 
 **Practice mode** — interactive study tools:
 
-- **Quiz** — 30 questions (quick, full, or by theme) with instant feedback.
+- **Quiz** — 60 questions (quick 10, full 60, or by theme) with difficulty badges and instant feedback.
 - **Flashcards** — glossary terms with flip-to-reveal definitions, filterable by theme.
-- **Scenarios** — 5 investment case drills with reveal analysis.
+- **Scenarios** — 10 investment case drills with expandable analysis; ⭐ Interview priority on high-relevance cases.
+- **Interview Prep** — 10 questions with hints and sample answers (motivation, thesis, dashboard, curveball).
 
-Content lives in `frontend/src/data/masteryGuideData.js` and `frontend/src/data/academyData.js`.
+Content lives in `frontend/src/data/masteryGuideData.js`, `academyData.js`, and split modules `quizQuestionsExtended.js`, `scenariosExtended.js`, `interviewQuestions.js`. Offline HTML exports in `docs/`; regenerate via `scripts/generate-learning-*.mjs`.
 
 The product goal is not to be a Bloomberg clone. The value is the thesis-specific judgment layer on top of news and prices.
 
@@ -97,8 +98,11 @@ supernova-dashboard/
     │   ├── App.jsx
     │   ├── api.js
     │   ├── data/
-    │   │   ├── masteryGuideData.js   # Reference curriculum (themes, books, glossary)
-    │   │   └── academyData.js        # Quiz questions and scenario drills
+    │   │   ├── masteryGuideData.js   # Reference curriculum (themes, books, glossary, mental models)
+    │   │   ├── academyData.js        # Quiz, scenarios, interview prep (merged exports)
+    │   │   ├── quizQuestionsExtended.js
+    │   │   ├── scenariosExtended.js
+    │   │   └── interviewQuestions.js
     │   ├── pages/
     │   │   └── MasteryGuide.jsx      # Learning Hub (Reference + Practice)
     │   └── components/
@@ -111,8 +115,17 @@ supernova-dashboard/
     │       └── learning/
     │           ├── QuizSection.jsx
     │           ├── FlashcardSection.jsx
-    │           └── ScenarioSection.jsx
+    │           ├── ScenarioSection.jsx
+    │           ├── InterviewPrepSection.jsx
+    │           └── EssentialBadge.jsx
     └── vite.config.js
+```
+
+Regenerate offline Learning Hub HTML after data changes:
+
+```bash
+node scripts/generate-learning-hub-export.mjs
+node scripts/generate-learning-academy-html.mjs
 ```
 
 ## API Surface

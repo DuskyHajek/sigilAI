@@ -3,6 +3,7 @@ import { Clock, HelpCircle, Layers, Target, Zap } from "lucide-react";
 import {
   QUIZ_QUESTIONS,
   QUIZ_THEME_FILTERS,
+  DIFFICULTY_LABELS,
   shuffle,
 } from "../../data/academyData";
 import ThemeBadge from "./ThemeBadge";
@@ -20,7 +21,7 @@ const QUIZ_MODES = [
   {
     mode: "full",
     title: "Full",
-    subtitle: "30 questions",
+    subtitle: "60 questions",
     desc: "Every theme covered — best before a review session.",
     icon: Layers,
   },
@@ -31,7 +32,7 @@ function quizHeader({ phase, quizMode, themeLabel, questionCount, index, score }
     return {
       title: "Quiz",
       description:
-        "Choose quick (10 questions), full (30), or drill one theme. Instant feedback after each answer.",
+        "Choose quick (10 questions), full (60), or drill one theme. Instant feedback after each answer.",
     };
   }
   if (phase === "results") {
@@ -44,7 +45,7 @@ function quizHeader({ phase, quizMode, themeLabel, questionCount, index, score }
     quizMode === "quick"
       ? "Quick quiz · 10 questions"
       : quizMode === "full"
-        ? "Full quiz · 30 questions"
+        ? "Full quiz · 60 questions"
         : themeLabel
           ? `${themeLabel} · ${questionCount} questions`
           : `${questionCount}-question quiz`;
@@ -52,6 +53,22 @@ function quizHeader({ phase, quizMode, themeLabel, questionCount, index, score }
     title: modeTitle,
     description: `Question ${index + 1} of ${questionCount}. Choose an answer to see the explanation.`,
   };
+}
+
+function DifficultyBadge({ difficulty }) {
+  const styles = {
+    beginner: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
+    intermediate: "bg-sky-500/10 text-sky-400 border border-sky-500/20",
+    advanced: "bg-amber-500/10 text-amber-400 border border-amber-500/20",
+  };
+  const label = DIFFICULTY_LABELS[difficulty] ?? difficulty;
+  return (
+    <span
+      className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full whitespace-nowrap ${styles[difficulty] ?? "bg-slate-800/60 text-slate-500 border border-slate-700/40"}`}
+    >
+      {label}
+    </span>
+  );
 }
 
 export default function QuizSection({ onReviewFlashcards }) {
@@ -72,7 +89,7 @@ export default function QuizSection({ onReviewFlashcards }) {
     }
     pool = shuffle(pool);
     const count =
-      mode === "quick" ? 10 : mode === "theme" ? Math.min(pool.length, 8) : 30;
+      mode === "quick" ? 10 : mode === "theme" ? Math.min(pool.length, 8) : pool.length;
     setQuizMode(mode);
     setThemeLabel(
       mode === "theme"
@@ -250,7 +267,10 @@ export default function QuizSection({ onReviewFlashcards }) {
           <Clock size={12} />
           Question {index + 1} of {questions.length}
         </span>
-        <ThemeBadge slug={q.theme} />
+        <div className="flex flex-wrap items-center gap-1.5">
+          {q.difficulty && <DifficultyBadge difficulty={q.difficulty} />}
+          <ThemeBadge slug={q.theme} />
+        </div>
       </div>
       <div className="h-2 bg-slate-800/80 rounded-full mb-5 overflow-hidden">
         <div

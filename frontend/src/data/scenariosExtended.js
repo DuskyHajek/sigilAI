@@ -1,0 +1,43 @@
+/** Scenario drills 6–10 (Learning Hub upgrade). */
+export const SCENARIOS_EXTENDED = [
+  {
+    title: "The Hyperscaler Capex U-Turn",
+    ctx: "It's Q3 2026. Microsoft, Google, and Amazon have all guided to 10-15% cuts in their AI infrastructure capex for 2027, citing lower-than-expected inference revenue and improved model efficiency. Nvidia stock drops 18% in one day. SK Hynix drops 22%.",
+    q: "Using Capital Cycle Theory and the Secular vs. Cyclical distinction, construct the bull case for why this is a buying opportunity. What signals would flip your view to genuinely bearish?",
+    themes: ["infra", "overview"],
+    interviewRelevance: "high",
+    analysis: "Capital Cycle Theory: high returns attracted excess capital → capex guidance now normalising. This is cyclical within a secular trend — not thesis invalidation. The secular driver (intelligence commoditisation → physical layer bottleneck) hasn't changed; the quarterly guidance has. Bull case: (1) Hyperscaler capex cuts are temporary — competition means no one can sustainably fall behind in AI infrastructure; (2) 'Cyclical PTSD' will now prevent overcapacity build, extending next upturn; (3) SK Hynix HBM3e technology lead doesn't change with one quarter's guidance. Genuine bear signals: (1) open-source model efficiency improves to the point where frontier model training is no longer economically justified for most hyperscalers — structural demand destruction, not cyclical; (2) all three hyperscalers guide down simultaneously for 3+ consecutive quarters; (3) Nvidia announces margin compression from competitive GPU alternatives at scale (AMD MI400, custom TPUs). The key analytical skill: distinguishing 'stock is down' (noise) from 'thesis is broken' (signal).",
+  },
+  {
+    title: "The European Defence Procurement Test",
+    ctx: "The EU announces a €500B joint defence procurement fund. Early reporting suggests the contracts will go primarily to established European primes (Rheinmetall, BAE, KNDS) rather than defence tech startups, citing 'production capacity and reliability requirements.'",
+    q: "Does this confirm or challenge the defence tech investment thesis? How would you advise the Sigil CIO to respond?",
+    themes: ["defence", "overview"],
+    interviewRelevance: "high",
+    analysis: "Surface reading: confirms RHM.DE thesis (direct beneficiary), challenges the defence startup thesis (Anduril-style companies locked out of large procurement). Deeper reading: this is exactly the Innovator's Dilemma in Procurement playing out as predicted. Large procurement to primes ≠ thesis broken. The startups (Anduril Europe, drone manufacturers) serve different categories: attritable systems, ISR, AI decision support — not main battle tanks and artillery. The €500B is mostly for traditional platforms. The drone and autonomous systems budget is a separate, smaller but faster-growing category. Portfolio response: maintain RHM.DE as core beneficiary of the large contract wave; maintain KTOS/AVAV for the autonomous systems budget which is not captured by traditional procurement. The coexistence of legacy rearm and new paradigm is by design in the Sigil portfolio.",
+  },
+  {
+    title: "The Open-Source Model Threat",
+    ctx: "Meta releases Llama 5, matching GPT-5 on most benchmarks, available for free download and local deployment. Within 60 days, 40% of enterprise AI pilots switch to running Llama locally. Anthropic and OpenAI both issue profit warnings.",
+    q: "Map the second and third order effects of this event across all 7 Supernova themes. Which themes are helped, which are hurt?",
+    themes: ["app", "overview", "cyber"],
+    interviewRelevance: "high",
+    analysis: "Theme 1 (Datacenters): initially bearish (less centralised compute needed if running locally), but second-order bullish — local inference needs CPUs, edge AI chips, local memory; overall compute demand may increase with more use cases becoming economically viable. Theme 2 (Application): mixed — pure-play LLM API companies (OpenAI-dependent SaaS) hurt; companies with proprietary data moats unaffected (their advantage isn't the model, it's the data). Theme 3 (Robotics): bullish — cheaper capable models accelerate robot deployment economics. Theme 4 (Warfare): neutral to slight positive — open-source models accelerate adversary AI capabilities, increasing demand for AI-native defence tools. Theme 5 (Space): neutral. Theme 6 (Biotech): potentially bullish — cheaper models lower R&D cost barriers for smaller biotech companies. Theme 7 (Adversarial): strongly bullish — open-source models are massively easier to fine-tune for malicious purposes; adversarial AI threats accelerate; cybersecurity spend increases. Bottom line: the physical layer thesis survives because compute demand goes up even with cheaper models; adversarial AI theme accelerates; application layer moats are reshuffled toward data vs. model access.",
+  },
+  {
+    title: "The Robotics Hype Trap",
+    ctx: "Tesla announces Optimus Gen 3 can perform 80% of warehouse tasks. Tesla stock rises 35%. Humanoid robot IPOs flood the market. Every robot startup claims to be 'the Nvidia of robotics.' Cognex (CGNX) falls 12% because analysts claim 'computer vision will be commoditised by AI.'",
+    q: "Apply the 'Form Factor Follows Function' and 'Picks and Shovels' mental models. Is the CGNX selloff a buying opportunity or a genuine threat?",
+    themes: ["robot", "infra"],
+    interviewRelevance: "high",
+    analysis: "The Optimus announcement is a hype event — 80% of warehouse tasks in demo conditions ≠ production-ready at Cognex's customer base. Cognex investment thesis: not 'humanoid robot wave' but 'all robots need machine vision regardless of form factor.' Analysis of the analyst argument: is computer vision commoditised by AI? Partially yes for simple 2D barcode/label reading tasks. But Cognex's revenue mix is heavily weighted toward high-precision industrial inspection: semiconductor wafer defect detection, pharmaceutical packaging verification, automotive weld quality — tasks requiring calibrated accuracy at high throughput that off-the-shelf vision AI cannot yet match. The 'Picks and Shovels' reframe: if humanoid robots scale, they need more machine vision, not less. Cognex benefits from the wave even if they don't make the robots. Monitor: is CGNX losing design wins to cheaper computer vision competitors in their core precision inspection verticals? That is the real signal, not Tesla demos.",
+  },
+  {
+    title: "The Biotech Hallucination Crisis",
+    ctx: "A major hospital system reports that three patients received incorrect AI-generated diagnoses from a precision medicine platform. The FDA issues emergency guidance pausing approval of all AI/ML medical devices. Exact Sciences (EXAS) falls 28%.",
+    q: "Distinguish between a temporary regulatory pause and permanent thesis damage. What is the investment decision framework here?",
+    themes: ["bio", "app"],
+    interviewRelevance: "high",
+    analysis: "Hallucination Risk in Medical AI was already identified in the Learning Hub as the 'most important safety concern separating viable medical AI from dangerous products.' This event is a materialisation of a known, pre-priced risk — not a black swan. Investment framework: (1) Is EXAS's specific product implicated? EXAS uses genomic biomarkers (Cologuard), not generative LLM diagnostics — the FDA pause on AI/ML devices may not apply to its specific 510(k) cleared products. (2) Is the regulation permanent or temporary? FDA pauses are typically temporary pending clearer guidance frameworks, not permanent bans. (3) Is the moat damaged? EXAS's moat is clinical validation data and lab network, not the AI model — a regulatory pause does not erase the clinical evidence base. Likely decision: maintain EXAS position (different product category from implicated AI), watch RXRX (drug discovery) more carefully as a higher-exposure name. Bull case for long-term thesis: this event accelerates demand for explainable AI and validated clinical data moats — exactly what EXAS has and what new entrants lack. Crises in regulated industries often consolidate value to the incumbent with the validation track record.",
+  },
+];

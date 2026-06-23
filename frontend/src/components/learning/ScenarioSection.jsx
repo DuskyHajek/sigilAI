@@ -1,7 +1,16 @@
-import { Lightbulb } from "lucide-react";
+import { Lightbulb, Star } from "lucide-react";
 import { SCENARIOS } from "../../data/academyData";
 import ThemeBadge from "./ThemeBadge";
 import { TipBox } from "./LearningUI";
+
+function InterviewPriorityBadge() {
+  return (
+    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/20 whitespace-nowrap inline-flex items-center gap-1">
+      <Star size={10} />
+      Interview priority
+    </span>
+  );
+}
 
 export default function ScenarioSection() {
   return (
@@ -22,7 +31,10 @@ export default function ScenarioSection() {
                 {i + 1}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold text-white mb-2">{s.title}</p>
+                <div className="flex flex-wrap items-center gap-2 mb-2">
+                  <p className="text-sm font-semibold text-white">{s.title}</p>
+                  {s.interviewRelevance === "high" && <InterviewPriorityBadge />}
+                </div>
                 <div className="rounded-lg bg-slate-900/50 border border-slate-800/50 px-3 py-2.5 mb-3">
                   <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-1">
                     Context
