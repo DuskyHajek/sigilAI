@@ -333,34 +333,32 @@
 
 .thesis-radar-row--expanded {
   flex: 1 1 auto;
-  min-height: 0;
+  min-height: 11rem;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
-.thesis-radar-row--collapsed {
-  cursor: pointer;
-}
-
-.thesis-radar-row--collapsed:hover {
-  filter: brightness(1.06);
+.thesis-radar-row__expand-hint--open {
+  color: rgba(229, 193, 88, 0.85);
 }
 
 .thesis-radar-row__trigger {
   width: 100%;
   text-align: left;
-  padding: 6px 8px 0;
+  padding: 6px 8px 4px;
   flex-shrink: 0;
   display: block;
+  cursor: pointer;
 }
 
 .thesis-radar-row__trigger--expanded {
-  padding-bottom: 0;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.45);
 }
 
 .thesis-radar-row__preview-wrap {
-  padding: 0 8px 7px 42px;
+  padding: 0 8px 6px 42px;
+  flex-shrink: 0;
 }
 
 .thesis-radar-row__preview {
@@ -457,13 +455,17 @@
 
 .thesis-radar-row__detail {
   flex: 1 1 auto;
-  min-height: 0;
+  min-height: 8rem;
   overflow-y: auto;
   border-top: 1px solid rgba(15, 23, 42, 0.6);
   margin: 0 8px 8px;
   padding-top: 8px;
   scrollbar-width: thin;
   scrollbar-color: rgba(229, 193, 88, 0.35) transparent;
+}
+
+.thesis-radar-row--collapsed .thesis-radar-row__trigger:hover {
+  filter: brightness(1.06);
 }
 
 .thesis-radar-row__detail::-webkit-scrollbar {

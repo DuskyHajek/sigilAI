@@ -83,8 +83,19 @@ const ThesisRadar = ({
 
   if (!themeData) return null;
 
-  const toggleTheme = (themeId) =>
-    setExpandedTheme((current) => (current === themeId ? null : themeId));
+  const toggleTheme = (themeId) => {
+    setExpandedTheme((current) => {
+      const next = current === themeId ? null : themeId;
+      if (next) {
+        window.requestAnimationFrame(() => {
+          document
+            .getElementById(`thesis-row-${themeId}`)
+            ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+      }
+      return next;
+    });
+  };
 
   return (
     <div className="glass-panel border-gold-glow p-5 rounded-2xl h-full flex flex-col min-h-0 lg:max-h-[680px]">
@@ -101,7 +112,7 @@ const ThesisRadar = ({
             ? stressViewMode === "stress"
               ? "Each pillar shows a scenario read — click for the full transmission chain."
               : "Today's signal preview on every row — click any pillar for headlines and evidence."
-            : "Today's top signal preview on every row — click any pillar for headlines and evidence."}
+            : "Preview on every row — click More for headlines, evidence, and thesis scope."}
         </p>
       </div>
 
@@ -204,33 +215,35 @@ const ThesisRadar = ({
                     </div>
                   </div>
 
-                  <div className="thesis-radar-row__expand-hint shrink-0 flex flex-col items-center gap-0.5">
+                  <div
+                    className={`thesis-radar-row__expand-hint shrink-0 flex flex-col items-center gap-0.5 ${
+                      isExpanded ? "thesis-radar-row__expand-hint--open" : ""
+                    }`}
+                  >
                     <ChevronDown
                       size={14}
-                      className={`text-slate-500 transition-transform ${
-                        isExpanded ? "rotate-180 text-sigil-gold/80" : ""
+                      className={`transition-transform ${
+                        isExpanded
+                          ? "rotate-180 text-sigil-gold/80"
+                          : "text-slate-500"
                       }`}
                     />
-                    {!isExpanded && (
-                      <span className="text-[7px] font-mono uppercase tracking-wide text-slate-600">
-                        More
-                      </span>
-                    )}
+                    <span className="text-[7px] font-mono uppercase tracking-wide text-slate-500">
+                      {isExpanded ? "Less" : "More"}
+                    </span>
                   </div>
                 </div>
-
-                {!isExpanded && (
-                  <div className="thesis-radar-row__preview-wrap">
-                    {previewText ? (
-                      <p className="thesis-radar-row__preview">{previewText}</p>
-                    ) : (
-                      <p className="thesis-radar-row__preview thesis-radar-row__preview--empty">
-                        No headlines this sync · expand for thesis scope
-                      </p>
-                    )}
-                  </div>
-                )}
               </button>
+
+              <div className="thesis-radar-row__preview-wrap">
+                {previewText ? (
+                  <p className="thesis-radar-row__preview">{previewText}</p>
+                ) : (
+                  <p className="thesis-radar-row__preview thesis-radar-row__preview--empty">
+                    No headlines this sync · expand for thesis scope
+                  </p>
+                )}
+              </div>
 
               {isExpanded && (
                 <div className="thesis-radar-row__detail">
