@@ -51,6 +51,14 @@ function App() {
       setSyncState("syncing");
       setError(null);
       setSyncNotice(null);
+      // Fresh sync should show live radar — clear any active stress overlay.
+      setStressState({
+        status: "idle",
+        scenarioId: null,
+        result: null,
+        viewMode: "live",
+        error: null,
+      });
       const dashboardData = await triggerSync();
       const health = await fetchHealth().catch(() => null);
 
@@ -61,6 +69,12 @@ function App() {
       }
 
       setData(dashboardData);
+
+      const totalHeadlines = Object.values(dashboardData.themePulse || {}).reduce(
+        (sum, pulse) =>
+          sum + (pulse?.headline_count ?? pulse?.evidence?.length ?? 0),
+        0
+      );
 
       if (dashboardData.cacheOnly && dashboardData.syncOk === false) {
         const detail = dashboardData.syncError
@@ -79,6 +93,14 @@ function App() {
         setSyncNotice(
           dashboardData.message ||
             "Showing cached dashboard data because it is still fresh."
+        );
+      } else if (
+        dashboardData.syncOk &&
+        !dashboardData.isMock &&
+        totalHeadlines === 0
+      ) {
+        setSyncNotice(
+          "Sync completed but no headline evidence was classified — NewsAPI or Claude classification may have failed. Retry Sync once."
         );
       }
 

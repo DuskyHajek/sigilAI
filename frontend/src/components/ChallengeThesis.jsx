@@ -145,8 +145,10 @@ const ChallengeThesis = ({ adversarialAssessment, isMock }) => {
 
         {source === "headlines" && hasRisks && (
           <p className="mt-3 text-[10px] font-mono text-slate-600 leading-relaxed">
-            Claude did not complete — showing only high-significance bearish
-            headlines (significance ≥ 3), deduplicated to one risk per story.
+            Claude adversarial pass did not complete (often a Vercel timeout or
+            API rate limit during Sync) — showing high-significance bearish
+            headlines (significance ≥ 3) instead. Unrelated to Thesis Stress
+            Tester, which runs separately on demand.
           </p>
         )}
       </div>

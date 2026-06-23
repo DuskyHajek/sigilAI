@@ -76,7 +76,8 @@ const ThesisRadar = ({
   );
 
   const stressActive = !!stressResult;
-  const showLive = !stressActive || stressViewMode === "live" || stressViewMode === "split";
+  const showLiveRow = true;
+  const showLiveDetail = !stressActive || stressViewMode !== "stress";
   const showStress =
     stressActive && (stressViewMode === "stress" || stressViewMode === "split");
 
@@ -97,11 +98,9 @@ const ThesisRadar = ({
         </h2>
         <p className="text-[11px] text-slate-400 mt-0.5 leading-snug">
           {stressActive
-            ? showStress && showLive
-              ? "Today’s drift alongside scenario impact — expand a row for both reads."
-              : showStress
-                ? "Scenario impact on all seven pillars — expand for transmission chain."
-                : "Today’s live drift — scenario overlay hidden."
+            ? stressViewMode === "stress"
+              ? "Scenario impact on each pillar — expand for transmission chain. Today’s drift stays visible in each row."
+              : "Today’s drift plus scenario overlay — expand a row for both reads."
             : "All seven pillars — expand one row for headlines and evidence."}
         </p>
       </div>
@@ -154,7 +153,7 @@ const ThesisRadar = ({
                       {shortName}
                     </p>
                     <div className="thesis-radar-row__meta">
-                      {showLive && (
+                      {showLiveRow && (
                         <Badge
                           label={driftDisplay.label}
                           display={driftDisplay}
@@ -169,7 +168,7 @@ const ThesisRadar = ({
                           title={`Scenario · ${stressDisplay.hint}`}
                         />
                       )}
-                      {showLive && (
+                      {showLiveRow && (
                         <span className="text-[9px] font-mono text-slate-500 shrink-0 whitespace-nowrap">
                           {headlineCount === 0 ? "0" : headlineCount}
                         </span>
@@ -236,7 +235,7 @@ const ThesisRadar = ({
                     </div>
                   )}
 
-                  {showLive && (
+                  {showLiveDetail && (
                     <>
                       {topHeadline ? (
                         <div className="rounded-lg border border-slate-900 bg-slate-950/50 p-2 mb-2">
@@ -299,7 +298,7 @@ const ThesisRadar = ({
                     {theme.short_description}
                   </p>
 
-                  {pulse.source === "estimated" && !isMock && headlineCount > 0 && showLive && (
+                  {pulse.source === "estimated" && !isMock && headlineCount > 0 && showLiveDetail && (
                     <p className="mt-2 text-[9px] font-mono text-slate-600">
                       Drift derived from headline sentiment when Claude theme
                       scoring is skipped.
