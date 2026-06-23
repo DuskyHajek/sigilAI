@@ -58,10 +58,18 @@ const ThesisRadar = ({
 }) => {
   const [expandedTheme, setExpandedTheme] = useState(null);
 
+  const toggleTheme = (themeId) => {
+    setExpandedTheme((current) => (current === themeId ? null : themeId));
+  };
+
   useEffect(() => {
-    if (highlightThemeId) {
-      setExpandedTheme(highlightThemeId);
-    }
+    if (!highlightThemeId) return;
+    setExpandedTheme(highlightThemeId);
+    window.requestAnimationFrame(() => {
+      document
+        .getElementById(`thesis-row-${highlightThemeId}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
   }, [highlightThemeId]);
 
   const driftByTheme = useMemo(
@@ -82,28 +90,17 @@ const ThesisRadar = ({
 
   if (!themeData) return null;
 
-  const toggleTheme = (themeId) => {
-    setExpandedTheme((current) => {
-      const next = current === themeId ? null : themeId;
-      if (next) {
-        window.requestAnimationFrame(() => {
-          document
-            .getElementById(`thesis-row-${themeId}`)
-            ?.scrollIntoView({ behavior: "smooth", block: "start" });
-        });
-      }
-      return next;
-    });
-  };
-
   return (
-    <div className="glass-panel border border-slate-800 p-5 rounded-2xl h-full flex flex-col min-h-[480px] max-h-[min(720px,75vh)]">
+    <div className="glass-panel p-4 sm:p-5 rounded-2xl h-full flex flex-col min-h-[320px] sm:min-h-[420px] max-h-[min(720px,70vh)] sm:max-h-[min(720px,75vh)]">
       <div className="mb-3 shrink-0">
-        <h2 className="text-base font-semibold text-slate-100 flex items-center gap-2">
+        <p className="text-[10px] font-mono uppercase tracking-widest text-sigil-gold mb-0.5">
+          Pillars
+        </p>
+        <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
           <Activity size={17} className="text-sigil-gold shrink-0" />
           Thesis Radar
         </h2>
-        <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
+        <p className="text-xs text-[#a0a0a0] mt-1 leading-snug">
           {stressActive
             ? stressViewMode === "stress"
               ? "Each pillar shows a scenario read — click for the full transmission chain."

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
 export const DASHBOARD_SECTIONS = [
-  { id: "zone-today", label: "Today" },
-  { id: "zone-stress-test", label: "Stress test" },
-  { id: "zone-radar", label: "Radar" },
+  { id: "zone-today", label: "Brief" },
+  { id: "zone-stress-test", label: "Scenarios" },
+  { id: "zone-radar", label: "Themes" },
   { id: "zone-watchlist", label: "Watchlist" },
-  { id: "zone-next-steps", label: "Queue" },
+  { id: "zone-next-steps", label: "Tasks" },
 ];
 
 const SectionNavButtons = ({ activeId, onSelect, compact = false }) => (

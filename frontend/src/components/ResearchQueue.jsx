@@ -32,9 +32,9 @@ const ResearchQueue = ({ researchQueue, isMock }) => {
   return (
     <section className="glass-panel rounded-2xl p-5 md:p-6">
       <SectionHeader
-        eyebrow="Next steps"
-        title="Research Queue"
-        description={`A short list of what looks worth checking after this sync — built from headlines, theme scores, and watchlist notes.${isMock ? " Demo data shown." : ""}`}
+        eyebrow="Follow-ups"
+        title="Research Tasks"
+        description={`Suggested checks after this sync — from headlines, theme scores, and watchlist notes.${isMock ? " Demo data shown." : ""}`}
         icon={SearchCheck}
         size="lg"
       />

@@ -69,7 +69,7 @@ const EditorialSpotlight = ({
 
   return (
     <section
-      className={`editorial-spotlight glass-panel rounded-2xl border-2 ${styles.border} ${styles.bg} px-4 py-4 md:px-5 md:py-5 shadow-[0_0_24px_rgba(0,255,136,0.06)]`}
+      className={`editorial-spotlight glass-panel rounded-2xl border ${styles.border} ${styles.bg} px-4 py-4 md:px-5 md:py-4 shadow-[0_0_20px_rgba(0,255,136,0.04)]`}
       aria-label="Editorial spotlight"
     >
       <div className="flex items-start gap-3">

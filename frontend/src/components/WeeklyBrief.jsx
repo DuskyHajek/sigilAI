@@ -20,22 +20,21 @@ const WeeklyBrief = ({ weeklyBriefText, isMock, generatedAt }) => {
           : "text-sigil-gold/90 border-sigil-gold/25 bg-sigil-gold/5"
       }`}
     >
-      {isMock ? "Demo narrative" : "Claude · Supernova prompt"}
+      {isMock ? "Demo" : "Live"}
     </span>
   );
 
   return (
-    <div className="glass-panel p-4 sm:p-6 md:p-7 rounded-2xl">
+    <div className="glass-panel p-4 sm:p-5 md:p-6 rounded-2xl">
       <SectionHeader
-        eyebrow="Daily read"
+        eyebrow="Summary"
         title="Analyst Brief"
-        description={`Generated at ${formatGeneratedAt(generatedAt)}`}
+        description={`AI narrative · synced ${formatGeneratedAt(generatedAt)}`}
         icon={FileText}
-        size="lg"
         action={badge}
       />
 
-      <p className="text-base sm:text-[17px] md:text-xl text-white leading-relaxed whitespace-pre-wrap border-l-2 border-sigil-gold/40 pl-3 sm:pl-4 py-0.5 font-sans -mt-2">
+      <p className="text-sm sm:text-[15px] text-[#d4d4d4] leading-[1.65] whitespace-pre-wrap pl-3 sm:pl-4 py-0.5 font-sans -mt-2 border-l-2 border-white/10">
         {weeklyBriefText || "Click Sync to generate the latest brief."}
       </p>
     </div>

@@ -235,6 +235,23 @@ body {
   gap: 1rem;
 }
 
+/* Tighter rhythm for briefing stack (spotlight → signals → brief) */
+.dashboard-zone__stack-tight {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .dashboard-zone__content {
+    gap: 1.25rem;
+  }
+
+  .dashboard-zone__stack-tight {
+    gap: 1rem;
+  }
+}
+
 .dashboard-section-nav-mobile {
   scrollbar-width: none;
   -ms-overflow-style: none;

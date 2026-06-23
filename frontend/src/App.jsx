@@ -218,9 +218,10 @@ function App() {
                 <>
                   <DashboardZone
                     id="zone-today"
-                    label="Today"
+                    label="Daily briefing"
                     className="mt-6"
                   >
+                    <div className="dashboard-zone__stack-tight">
                     <EditorialSpotlight
                       watchlist={data?.watchlist}
                       adversarialAssessment={data?.adversarialAssessment}
@@ -229,21 +230,22 @@ function App() {
                       onClusterClick={handleClusterClick}
                     />
 
+                    <WeeklyBrief
+                      weeklyBriefText={data?.weeklyBrief}
+                      isMock={data?.isMock}
+                      generatedAt={data?.lastUpdated}
+                    />
+
                     <SignalStrip
                       thesisDriftReport={
                         stressActive ? null : data?.thesisDriftReport
                       }
                       onClusterClick={handleClusterClick}
                     />
-
-                    <WeeklyBrief
-                      weeklyBriefText={data?.weeklyBrief}
-                      isMock={data?.isMock}
-                      generatedAt={data?.lastUpdated}
-                    />
+                    </div>
                   </DashboardZone>
 
-                  <DashboardZone id="zone-stress-test" label="Stress test">
+                  <DashboardZone id="zone-stress-test" label="Counter-thesis & scenarios">
                     <StressTestZone
                       adversarialAssessment={data?.adversarialAssessment}
                       isMock={data?.isMock}
@@ -253,7 +255,7 @@ function App() {
                     />
                   </DashboardZone>
 
-                  <DashboardZone id="zone-explore" label="Thesis & watchlist">
+                  <DashboardZone id="zone-explore" label="Pillars & watchlist">
                     {stressActive && (
                       <ScenarioBanner
                         stressState={stressState}
@@ -283,7 +285,7 @@ function App() {
                     </div>
                   </DashboardZone>
 
-                  <DashboardZone id="zone-next-steps" label="Next steps">
+                  <DashboardZone id="zone-next-steps" label="Research tasks">
                     <ResearchQueue
                       researchQueue={data?.researchQueue}
                       isMock={data?.isMock}
