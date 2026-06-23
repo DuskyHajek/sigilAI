@@ -10,7 +10,7 @@ const SOURCE_LABELS = {
   unavailable: "Unavailable this sync",
 };
 
-const ChallengeTheCio = ({ adversarialAssessment, isMock }) => {
+const ChallengeThesis = ({ adversarialAssessment, isMock }) => {
   const risks = adversarialAssessment?.asymmetricRisks ?? [];
   const blindspotAlert = adversarialAssessment?.blindspotAlert ?? "";
   const source = adversarialAssessment?.source;
@@ -35,7 +35,7 @@ const ChallengeTheCio = ({ adversarialAssessment, isMock }) => {
           <div className="flex items-center gap-2">
             <ShieldAlert size={16} className="text-rose-400" />
             <h3 className="text-sm font-semibold text-slate-200 uppercase tracking-widest">
-              Challenge the CIO
+              Challenge the Thesis
             </h3>
           </div>
           <span
@@ -52,10 +52,9 @@ const ChallengeTheCio = ({ adversarialAssessment, isMock }) => {
         </div>
 
         <p className="mt-1 text-xs text-slate-500 leading-relaxed">
-          Deliberately searches for blind spots, bear cases, and &ldquo;what if we
-          are wrong?&rdquo; scenarios — separate from the brief&apos;s single
-          counter-signal line. Silence beats noise: no card is shown when
-          today&apos;s feed has no material counter-signal.
+          Stress-tests each pillar&apos;s investment logic — bear cases, blind
+          spots, and &ldquo;what if we are wrong?&rdquo; Separate from the
+          brief&apos;s single counter-signal line.
         </p>
 
         {!hasRisks ? (
@@ -70,7 +69,7 @@ const ChallengeTheCio = ({ adversarialAssessment, isMock }) => {
           >
             {source === "claude" && blindspotAlert && (
               <p className="text-[10px] font-mono uppercase tracking-wide text-rose-400/90 mb-2">
-                Claude adversarial read
+                Adversarial read
               </p>
             )}
             <p className="text-sm text-slate-400 leading-relaxed">
@@ -155,4 +154,4 @@ const ChallengeTheCio = ({ adversarialAssessment, isMock }) => {
   );
 };
 
-export default ChallengeTheCio;
+export default ChallengeThesis;

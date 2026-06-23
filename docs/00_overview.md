@@ -8,21 +8,34 @@ The demo goal is simple: show that the Sigil memo can be encoded as useful softw
 
 ## Current dashboard sections
 
+### 0. Today's signals (signal strip)
+
+When the thesis drift pass finds cross-company patterns, they appear in a strip above the brief. Each cluster names the bottleneck or shift, severity, and impacted themes. Clicking a cluster scrolls to the matching pillar in Thesis Radar.
+
+If Claude times out on deployment, the strip hides; the rest of the dashboard still loads.
+
 ### 1. Analyst Brief
 
 A short Claude-generated brief that starts the page. It summarizes the strongest signal, a secondary development, and a counter-thesis risk. The intended tone is a CIO morning note, not a chatbot recap.
 
-### 2. Theme Pulse
+### 2. Challenge the Thesis
 
-Seven Supernova themes are shown with:
+Structured adversarial pass: 2–3 bear cases per pillar with counter-indicators to watch, plus an optional blindspot alert. Pairs with the brief — bull synthesis vs. stress-tested counter-thesis.
 
-- **Activity**: how much relevant headline flow exists, scored 1-10.
-- **Thesis fit**: whether recent news supports or challenges the theme, scored -5 to +5.
-- **Reason**: a short explanation of the dominant signal.
+### 3. Thesis Radar
 
-### 3. Watchlist
+All seven Supernova pillars in one scannable view:
 
-20 curated public names across the 7 themes. Each row shows:
+- **Drift status**: Accelerating / Mixed / Diverging (from `thesisDriftReport.themeStatusUpdate`, with programmatic fallback).
+- **Headline count**: concrete number from classified articles this sync.
+- **Watchlist tickers**: up to 3 names per theme (spotlight tickers like SPCX sort first).
+- **Expand**: top headline title, narrative shift, evidence list, thesis one-liner.
+
+Replaces the old Theme Pulse sentiment badges (Supportive / Mixed / Challenged).
+
+### 4. Watchlist
+
+21 curated public names across the 7 themes. Each row shows:
 
 - ticker and company;
 - theme and investment angle;
@@ -32,11 +45,11 @@ Seven Supernova themes are shown with:
 
 The stock price is useful context, but the note is the product. It explains why a headline or sector signal matters for that specific thesis angle.
 
-### 4. Research Queue
+### 5. Research Queue
 
 After a sync, the backend generates 3-7 follow-up checks. These are practical analyst prompts: what to read, compare, verify, or search next. They are suggestions, not conclusions or investment advice.
 
-### 5. Learning Hub
+### 6. Learning Hub
 
 Route: `/mastery-guide`. Header nav: **LEARNING HUB**.
 
@@ -91,7 +104,7 @@ Local development uses `backend/data/cache.json`. On Vercel, the app can use Ver
 | Method | Route | What it does |
 |---|---|---|
 | `GET` | `/api/health` | Returns server status, LIVE/DEMO mode, cache age, key presence, cache backend, and price freshness metadata. |
-| `GET` | `/api/dashboard` | Returns the full cached dashboard payload: brief, theme pulse, watchlist, and research queue. |
+| `GET` | `/api/dashboard` | Returns the full cached dashboard payload: brief, theme pulse, drift report, adversarial assessment, watchlist, and research queue. |
 | `POST` | `/api/sync` | Runs the full manual refresh pipeline and writes the new dashboard payload to cache. |
 
 There is also a legacy `POST /api/refresh` alias for older frontend clients.

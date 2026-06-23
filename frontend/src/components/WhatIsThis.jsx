@@ -8,18 +8,18 @@ const PANELS = [
   },
   {
     icon: ShieldAlert,
-    label: "01b · Challenge the CIO",
-    text: "Adversarial pass — asymmetric risks, blind spots, and bear cases to fight confirmation bias.",
+    label: "01b · Challenge the Thesis",
+    text: "Adversarial pass — stress-test each pillar with bear cases, blind spots, and counter-indicators.",
   },
   {
     icon: Activity,
-    label: "02 · Theme Pulse",
-    text: "Headline count and plain read per theme — click for evidence. Signal clusters surface cross-company patterns first.",
+    label: "02 · Thesis Radar",
+    text: "All seven pillars in one view — drift status, headline count, tickers. Expand for evidence.",
   },
   {
     icon: Sparkles,
     label: "03 · Watchlist",
-    text: "20 relevant public names with price data and a short note tied to that company angle.",
+    text: "21 public names with price data and a short note tied to each company angle.",
   },
   {
     icon: SearchCheck,

@@ -13,10 +13,12 @@ Two frontend routes:
 
 ### Dashboard (`/`)
 
-1. **Analyst Brief** - a concise generated summary of the most important current signals.
-2. **Theme Pulse** - 7 theme cards with activity and thesis-fit scoring.
-3. **Watchlist** - 20 curated names with price data, 52-week change, and thesis notes.
-4. **Research Queue** - follow-up checks for an analyst after sync.
+0. **Today's signals** — cross-company clusters from thesis drift (when available).
+1. **Analyst Brief** — concise generated summary of the most important current signals.
+2. **Challenge the Thesis** — adversarial bear cases and blind spots per pillar.
+3. **Thesis Radar** — 7-pillar table: drift status, headline count, tickers; expand for evidence.
+4. **Watchlist** — 21 curated names with price data, change, thesis notes, and IPO spotlight (SPCX).
+5. **Research Queue** — follow-up checks for an analyst after sync.
 
 ### Learning Hub (`/mastery-guide`)
 
@@ -45,7 +47,7 @@ Regenerate offline HTML after data edits: `node scripts/generate-learning-hub-ex
 The runtime product configuration lives in `config/thesis.js`:
 
 - `THEMES`: display names, descriptions, colors, keywords, bull/bear signals.
-- `WATCHLIST`: 20 currently displayed tickers, aliases, theme mapping, investment angles, priorities.
+- `WATCHLIST`: 21 currently displayed tickers, aliases, theme mapping, investment angles, priorities, optional `spotlight` (e.g. SPCX IPO).
 - helper functions for theme and ticker lookup.
 
 Operational settings live in `config/settings.js`:
@@ -200,9 +202,11 @@ frontend/src/data/scenariosExtended.js
 frontend/src/data/interviewQuestions.js
 frontend/src/components/Header.jsx
 frontend/src/components/WhatIsThis.jsx
+frontend/src/components/SignalStrip.jsx
 frontend/src/components/WeeklyBrief.jsx
-frontend/src/components/ChallengeTheCio.jsx
-frontend/src/components/ThemePulse.jsx
+frontend/src/components/ChallengeThesis.jsx
+frontend/src/components/ThesisRadar.jsx
+frontend/src/utils/thesisRadarUtils.js
 frontend/src/components/Watchlist.jsx
 frontend/src/components/ResearchQueue.jsx
 frontend/src/components/learning/QuizSection.jsx
@@ -218,11 +222,11 @@ frontend/src/components/learning/ThemeBadge.jsx
 The dashboard should be demoed as a workflow:
 
 1. Load instantly from cache.
-2. Click **Sync live data**.
-3. Start with the analyst brief, then read **Challenge the CIO** for adversarial risks.
-4. Check which themes are active, challenged, or drifting in **Theme Pulse**.
-5. Review signal clusters when separate headlines hit the same macro bottleneck.
-6. Open a watchlist note and explain why that event matters to the thesis.
+2. Click **Sync live data** (requires `ANTHROPIC_API_KEY` + `NEWS_API_KEY` on deployment).
+3. Read **Today's signals** for cross-company clusters (when drift pass completes).
+4. Start with the analyst brief, then read **Challenge the Thesis** for adversarial risks.
+5. Scan all seven pillars in **Thesis Radar** — drift status, headline counts, tickers.
+6. Open a watchlist note (e.g. SPCX) and explain why the event matters to the thesis.
 7. Use the research queue as the next analyst checklist.
 
 ## Known constraints

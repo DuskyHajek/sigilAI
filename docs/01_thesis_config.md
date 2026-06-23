@@ -13,7 +13,7 @@ This doc explains what is in that file and how to keep it aligned with prompts a
 - `THEMES` - 7 thesis themes with display text, colors, keywords, and thesis descriptions.
 - `THEME_COLORS` - stable visual identity mapping used by theme cards.
 - `THEME_ICONS` - Tabler icon classes used by theme cards.
-- `WATCHLIST` - 20 current public names shown in the dashboard.
+- `WATCHLIST` - 21 current public names shown in the dashboard.
 - `getStockMatchTerms(item)` - company/ticker/alias terms used to match headlines.
 - `getThemeById(id)` and `getWatchlistItem(ticker)` - lookup helpers.
 
@@ -33,7 +33,7 @@ Use these exact IDs in data, prompts, and UI filters:
 
 ## Current watchlist
 
-The current dashboard displays these 20 names:
+The current dashboard displays these 21 names:
 
 | Ticker | Company | Theme | Priority |
 |---|---|---|---|
@@ -50,6 +50,7 @@ The current dashboard displays these 20 names:
 | `KTOS` | Kratos Defense | `warfare` | core |
 | `AVAV` | AeroVironment | `warfare` | core |
 | `RHM.DE` | Rheinmetall | `warfare` | core |
+| `SPCX` | SpaceX | `space` | core (spotlight: IPO) |
 | `RKLB` | Rocket Lab | `space` | core |
 | `ASTS` | AST SpaceMobile | `space` | speculative |
 | `EXAS` | Exact Sciences | `biotech` | core |
@@ -58,7 +59,7 @@ The current dashboard displays these 20 names:
 | `PANW` | Palo Alto Networks | `adversarial` | core |
 | `S` | SentinelOne | `adversarial` | watch |
 
-`priority` is included in the payload for future filtering or weighting, but the current UI shows all 20 names.
+`priority` is included in the payload for future filtering or weighting, but the current UI shows all 21 names. Optional `spotlight: "ipo"` on a watchlist entry drives the IPO badge and watchlist pin (currently SPCX).
 
 ## Theme object shape
 

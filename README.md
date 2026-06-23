@@ -8,12 +8,14 @@ The app has two main areas:
 
 ### Dashboard (`/`)
 
-Four working intelligence sections:
+Four working intelligence sections plus a signal strip:
 
-1. **Analyst Brief** - a 3-4 sentence CIO-style summary of the strongest current signals.
-2. **Theme Pulse** - activity and thesis-fit scores for the 7 Supernova themes.
-3. **Watchlist** - 20 curated public names with price data, 52-week change, and a thesis-specific AI note.
-4. **Research Queue** - 3-7 suggested follow-up checks after each sync.
+0. **Today's signals** — cross-company headline clusters from the thesis drift pass (when available).
+1. **Analyst Brief** — a 3–4 sentence summary of the strongest current signals.
+2. **Challenge the Thesis** — adversarial bear cases and blind spots per pillar.
+3. **Thesis Radar** — all 7 pillars at a glance: drift status (Accelerating / Mixed / Diverging), headline count, watchlist tickers; expand for evidence.
+4. **Watchlist** — 21 curated public names with price data, change, and a thesis-specific AI note (SPCX spotlight for SpaceX IPO).
+5. **Research Queue** — 3–7 suggested follow-up checks after each sync.
 
 ### Learning Hub (`/mastery-guide`)
 
@@ -90,13 +92,17 @@ supernova-dashboard/
 │   │   ├── news.js               # NewsAPI fetch + classification + theme pulse
 │   │   ├── prices.js             # Yahoo chart API price fetch + stock notes
 │   │   ├── prompts.js            # Claude prompts
-│   │   └── researchQueue.js      # Follow-up research suggestions
+│   │   ├── researchQueue.js      # Follow-up research suggestions
+│   │   ├── adversarial.js        # Challenge the Thesis (adversarial pass)
+│   │   ├── thesisDrift.js        # Signal clusters + drift status (7 pillars)
+│   │   └── newsAggregation.js    # Annotated news flow for drift prompt
 │   └── data/
 │       └── cache.json            # Local cache, generated at runtime
 └── frontend/
     ├── src/
     │   ├── App.jsx
     │   ├── api.js
+    │   ├── utils/thesisRadarUtils.js
     │   ├── data/
     │   │   ├── masteryGuideData.js   # Reference curriculum (themes, books, glossary, mental models)
     │   │   ├── academyData.js        # Quiz, scenarios, interview prep (merged exports)
@@ -108,8 +114,10 @@ supernova-dashboard/
     │   └── components/
     │       ├── Header.jsx
     │       ├── WhatIsThis.jsx
+    │       ├── SignalStrip.jsx       # Page-level signal clusters
     │       ├── WeeklyBrief.jsx
-    │       ├── ThemePulse.jsx
+    │       ├── ChallengeThesis.jsx   # Adversarial counter-thesis panel
+    │       ├── ThesisRadar.jsx       # 7-pillar drift + headline table
     │       ├── Watchlist.jsx
     │       ├── ResearchQueue.jsx
     │       └── learning/
@@ -134,7 +142,7 @@ The backend intentionally exposes only a small API:
 
 - `GET /api/health` - status, mode, cache age, key presence, cache backend.
 - `GET /api/dashboard` - cached full dashboard payload.
-- `POST /api/sync` - manual full refresh: news, classifications, prices, AI notes, brief, research queue, cache write.
+- `POST /api/sync` - manual full refresh: news, classifications, prices, AI notes, brief, adversarial pass, thesis drift, research queue, cache write.
 
 There is also a legacy `POST /api/refresh` alias for older clients.
 
@@ -147,14 +155,14 @@ NewsAPI headlines + Yahoo prices
         ↓
 Claude classification and thesis analysis
         ↓
-Theme pulse + watchlist notes + analyst brief + research queue
+Theme pulse + drift report + adversarial pass + watchlist notes + brief + research queue
         ↓
 Cache
         ↓
 Frontend dashboard
 ```
 
-There are no background cron jobs in the current app. Hosted sync can be constrained by Vercel function timeouts, so the backend uses lighter limits on Vercel and the frontend aborts sync after 55 seconds with a retry-friendly message.
+There are no background cron jobs in the current app. Hosted sync can be constrained by Vercel function timeouts (60s), so the backend uses lighter limits on Vercel and the frontend aborts sync after 55 seconds with a retry-friendly message. On Vercel, per-theme Claude scoring is skipped (programmatic fallback); **Thesis Radar still renders all 7 pillars** from drift status + headline evidence. Signal clusters appear when the thesis drift Claude pass completes; if it times out, the strip hides gracefully.
 
 ## Docs
 

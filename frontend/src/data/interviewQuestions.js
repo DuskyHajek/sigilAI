@@ -37,9 +37,9 @@ export const INTERVIEW_QUESTIONS = [
   {
     id: "iq5",
     category: "dashboard",
-    question: "How would you use Theme Pulse and the Research Queue after a sync to stress-test the Supernova thesis?",
-    hint: "Theme Pulse = activity + thesis fit. Research Queue = actionable follow-ups. Mention Challenge the CIO.",
-    sampleAnswer: "Theme Pulse tells me where headline flow is intense and whether news supports or challenges each theme — I'd flag divergences (high activity, negative thesis fit). Research Queue gives concrete next checks: verify a claim, compare tickers, read a primary source. I'd pair that with Challenge the CIO for adversarial risks the bullish flow might miss — confirmation bias audit in practice.",
+    question: "How would you use Thesis Radar and the Research Queue after a sync to stress-test the Supernova thesis?",
+    hint: "Thesis Radar = drift status + headline count + tickers per pillar. Research Queue = actionable follow-ups. Mention Challenge the Thesis.",
+    sampleAnswer: "Thesis Radar shows all seven pillars at once — I'd flag Diverging rows (news pulling against the thesis) even when headline count is high. Signal clusters at the top surface cross-company bottlenecks I'd miss reading tickers one by one. Research Queue gives concrete next checks: verify a claim, compare tickers, read a primary source. I'd pair that with Challenge the Thesis for adversarial risks the bullish flow might miss — confirmation bias audit in practice.",
   },
   {
     id: "iq6",

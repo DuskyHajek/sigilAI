@@ -230,7 +230,7 @@ export const THEMES = [
   },
 ];
 
-// Fixed identity mapping used by ThemePulse cards.
+// Fixed identity mapping used by theme panels (Thesis Radar).
 // These are intentionally independent of live data sentiment scores.
 export const THEME_COLORS = {
   datacenters: "teal",

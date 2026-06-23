@@ -98,9 +98,10 @@ supernova-dashboard/
 │       ├── components/
 │       │   ├── Header.jsx
 │       │   ├── WhatIsThis.jsx
+│       │   ├── SignalStrip.jsx
 │       │   ├── WeeklyBrief.jsx
-│       │   ├── ChallengeTheCio.jsx
-│       │   ├── ThemePulse.jsx
+│       │   ├── ChallengeThesis.jsx
+│       │   ├── ThesisRadar.jsx
 │       │   ├── Watchlist.jsx
 │       │   ├── ResearchQueue.jsx
 │       │   └── learning/
@@ -172,7 +173,16 @@ Without remote cache, Vercel writes to `/tmp`, which is temporary.
 
 ## Hosted sync expectations
 
-`POST /api/sync` does real external work and can approach hosted function limits. The code reduces work on Vercel and the frontend aborts after 55 seconds. If sync fails:
+`POST /api/sync` does real external work and can approach hosted function limits. The code reduces work on Vercel and the frontend aborts after 55 seconds.
+
+After a successful sync on deployment you should see:
+
+- **Thesis Radar** — all 7 pillars with drift status, headline counts, and tickers (drift falls back to programmatic mapping if Claude thesis drift times out).
+- **Today's signals** strip — only when the thesis drift Claude pass completes; hidden otherwise (not an error).
+- **Challenge the Thesis** — adversarial risks when Claude completes; bearish-headline fallback otherwise.
+- **Watchlist** — 21 names with Yahoo prices where available.
+
+If sync fails:
 
 1. Retry once.
 2. Check Vercel function logs.

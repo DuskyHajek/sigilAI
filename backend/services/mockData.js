@@ -68,12 +68,20 @@ export const getMockThemePulse = () => ({
     ],
   },
   space: {
-    activity_score: 7,
-    thesis_score: 3,
-    reason: "Launch cadence and constellation buildout",
-    headline_count: 2,
+    activity_score: 9,
+    thesis_score: 4,
+    reason: "SpaceX IPO unlocks capital for constellation expansion",
+    headline_count: 6,
     source: "estimated",
     evidence: [
+      {
+        title:
+          "SpaceX closes $85.7B IPO at $135/share on Nasdaq under ticker SPCX",
+        sentiment: "bullish",
+        significance: 5,
+        one_line:
+          "Largest public offering in history — launch monopoly and Starlink now tradeable under one ticker",
+      },
       {
         title: "Rocket Lab Neutron hot-fire test succeeds",
         sentiment: "bullish",
@@ -260,7 +268,7 @@ const MOCK_DRIFT_STATUS = {
   application: "DRIFTING",
   robotics: "STAGNANT",
   warfare: "ACCELERATING",
-  space: "STAGNANT",
+  space: "ACCELERATING",
   biotech: "ACCELERATING",
   adversarial: "ACCELERATING",
 };
@@ -275,7 +283,7 @@ const MOCK_DRIFT_NARRATIVES = {
   warfare:
     "Attrition drone contracts and NATO ramp headlines cluster across KTOS, AVAV, and RHM.DE.",
   space:
-    "Launch milestones continue but funding and constellation build timelines remain uncertain.",
+    "SpaceX SPCX IPO reframes the space sleeve — anchor now public; RKLB and ASTS remain asymmetric bets on the same launch-cost curve.",
   biotech:
     "AI diagnostics pipeline momentum is building faster than drug-discovery hype.",
   adversarial:
@@ -297,6 +305,13 @@ export const getMockThesisDriftReport = () => ({
       evidenceSummary:
         "KTOS contract wins, AVAV backlog records, and Rheinmetall capacity expansion all point to the same European rearmament bottleneck.",
       severityScore: 6,
+    },
+    {
+      clusterName: "SpaceX IPO Capital Unlock",
+      impactedThemes: ["space"],
+      evidenceSummary:
+        "SPCX listing at ~$1.77T valuation concentrates launch, Starlink, and Starship optionality in one public anchor — reshaping how the space theme sizes core vs asymmetric names.",
+      severityScore: 8,
     },
   ],
   themeStatusUpdate: THEMES.map(({ id }) => ({

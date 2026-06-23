@@ -34,6 +34,15 @@ const buildProgrammaticFallback = (themePulse) => ({
   themeStatusUpdate: buildProgrammaticThemeStatus(themePulse),
 });
 
+/** Always return one status row per theme — Claude may omit themes on partial JSON. */
+const mergeThemeStatusUpdates = (fromClaude, themePulse) => {
+  const programmatic = buildProgrammaticThemeStatus(themePulse);
+  const byId = Object.fromEntries(
+    (fromClaude || []).map((row) => [row.themeId, row])
+  );
+  return THEMES.map(({ id }) => byId[id] || programmatic.find((p) => p.themeId === id));
+};
+
 export const generateThesisDriftReport = async (
   classifiedArticles,
   watchlist,
@@ -83,7 +92,10 @@ export const generateThesisDriftReport = async (
           THEME_IDS.has(u.themeId) && u.status && u.narrativeShiftDetails
       );
 
-    return { detectedClusters, themeStatusUpdate };
+    return {
+      detectedClusters,
+      themeStatusUpdate: mergeThemeStatusUpdates(themeStatusUpdate, themePulse),
+    };
   } catch (err) {
     console.error("Thesis drift report failed:", err.message);
   }

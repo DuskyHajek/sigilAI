@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { AlertTriangle, ServerCrash } from "lucide-react";
-import ThemePulse from "./components/ThemePulse";
+import ThesisRadar from "./components/ThesisRadar";
+import SignalStrip from "./components/SignalStrip";
 import Watchlist from "./components/Watchlist";
 import WeeklyBrief from "./components/WeeklyBrief";
-import ChallengeTheCio from "./components/ChallengeTheCio";
+import ChallengeThesis from "./components/ChallengeThesis";
 import Header from "./components/Header";
 import WhatIsThis from "./components/WhatIsThis";
 import ResearchQueue from "./components/ResearchQueue";
@@ -17,6 +18,7 @@ function App() {
   const [syncState, setSyncState] = useState("idle");
   const [error, setError] = useState(null);
   const [syncNotice, setSyncNotice] = useState(null);
+  const [highlightThemeId, setHighlightThemeId] = useState(null);
 
   const loadDashboardData = async () => {
     try {
@@ -91,6 +93,19 @@ function App() {
     return () => clearTimeout(t);
   }, []);
 
+  const handleClusterClick = (cluster) => {
+    const themeId = cluster.impactedThemes?.[0];
+    if (!themeId) return;
+
+    setHighlightThemeId(themeId);
+    window.setTimeout(() => {
+      document
+        .getElementById(`thesis-row-${themeId}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 50);
+    window.setTimeout(() => setHighlightThemeId(null), 3500);
+  };
+
   return (
     <div className="min-h-screen bg-bg-dark text-slate-100 flex flex-col font-sans">
       <Header
@@ -128,23 +143,30 @@ function App() {
                 </div>
               ) : (
                 <>
+                  <SignalStrip
+                    thesisDriftReport={data?.thesisDriftReport}
+                    onClusterClick={handleClusterClick}
+                  />
+
                   <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 w-full">
                     <WeeklyBrief
                       weeklyBriefText={data?.weeklyBrief}
                       isMock={data?.isMock}
                       generatedAt={data?.lastUpdated}
                     />
-                    <ChallengeTheCio
+                    <ChallengeThesis
                       adversarialAssessment={data?.adversarialAssessment}
                       isMock={data?.isMock}
                     />
                   </div>
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
                     <div className="lg:col-span-1 h-full">
-                      <ThemePulse
+                      <ThesisRadar
                         themeData={data?.themePulse}
                         thesisDriftReport={data?.thesisDriftReport}
+                        watchlistData={data?.watchlist}
                         isMock={data?.isMock}
+                        highlightThemeId={highlightThemeId}
                       />
                     </div>
                     <div className="lg:col-span-2 h-full">

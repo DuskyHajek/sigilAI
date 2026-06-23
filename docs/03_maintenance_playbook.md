@@ -122,8 +122,8 @@ On Vercel, the backend uses lighter sync limits and the frontend aborts after 55
 
 ## Adversarial & thesis drift services
 
-- `backend/services/adversarial.js` — Challenge the CIO. Falls back to bearish-article and negative-`thesis_score` heuristics if Claude fails.
-- `backend/services/thesisDrift.js` — Signal clustering plus drift status. Falls back to `themePulse.thesis_score` mapping when Claude fails.
+- `backend/services/adversarial.js` — Challenge the Thesis panel. Falls back to bearish-article and negative-`thesis_score` heuristics if Claude fails.
+- `backend/services/thesisDrift.js` — Signal clustering plus drift status for Thesis Radar. Always returns 7 theme rows (merges Claude output with programmatic fallback from `themePulse.thesis_score`). Clusters may be empty on timeout.
 - `backend/services/newsAggregation.js` — Sorts classified articles by significance before slicing the top 20 for LLM prompts.
 
 Both new payload fields use strict empty schemas so older cache entries and partial sync failures do not crash the UI.
