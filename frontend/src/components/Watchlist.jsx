@@ -47,11 +47,33 @@ const themeBadgeStyle = (themeId) => {
   };
 };
 
-const Watchlist = ({ watchlistData }) => {
+const Watchlist = ({ watchlistData, stressResult }) => {
   const [selectedTheme, setSelectedTheme] = useState("all");
   const [query, setQuery] = useState("");
   const [expandedTicker, setExpandedTicker] = useState(null);
   const stocks = useMemo(() => watchlistData || [], [watchlistData]);
+
+  const exposureMaps = useMemo(() => {
+    const exposed = new Set(
+      (stressResult?.tickerExposure?.mostExposed ?? []).map((r) => r.ticker)
+    );
+    const resilient = new Set(
+      (stressResult?.tickerExposure?.mostResilient ?? []).map((r) => r.ticker)
+    );
+    const rationaleByTicker = Object.fromEntries([
+      ...(stressResult?.tickerExposure?.mostExposed ?? []).map((r) => [
+        r.ticker,
+        { type: "exposed", ...r },
+      ]),
+      ...(stressResult?.tickerExposure?.mostResilient ?? []).map((r) => [
+        r.ticker,
+        { type: "resilient", ...r },
+      ]),
+    ]);
+    return { exposed, resilient, rationaleByTicker };
+  }, [stressResult]);
+
+  const stressActive = !!stressResult;
 
   const themeFilters = ["all", ...THEMES.map((t) => t.id)];
 
@@ -122,9 +144,14 @@ const Watchlist = ({ watchlistData }) => {
           </h2>
         </div>
         <p className="text-xs text-slate-400 mb-4 leading-relaxed">
-          {stocks.length} public names mapped to the thesis. Search or
-          filter by theme, then expand a note when something looks worth
-          researching.
+          {stocks.length} public names mapped to the thesis. Search or filter
+          by theme, then expand a note when something looks worth researching.
+          {stressActive && (
+            <span className="block mt-1 text-sigil-gold/80">
+              Highlighted rows match the active stress scenario — rose = exposed,
+              green = resilient.
+            </span>
+          )}
         </p>
 
         <div className="flex flex-col gap-3">
@@ -201,14 +228,21 @@ const Watchlist = ({ watchlistData }) => {
             const spotlightLabel = stock.spotlight
               ? SPOTLIGHT_LABELS[stock.spotlight] || stock.spotlight
               : null;
+            const stressInfo = exposureMaps.rationaleByTicker[stock.ticker];
+            const isExposed = exposureMaps.exposed.has(stock.ticker);
+            const isResilient = exposureMaps.resilient.has(stock.ticker);
 
             return (
               <div
                 key={stock.ticker}
                 className={`glass-panel glass-panel-hover rounded-xl p-3 group ${
-                  stock.spotlight
-                    ? "border border-sigil-gold/30 bg-sigil-gold/[0.03] shadow-[0_0_24px_rgba(229,193,88,0.08)]"
-                    : "border border-slate-900"
+                  isExposed
+                    ? "watchlist-row--stress-exposed border"
+                    : isResilient
+                      ? "watchlist-row--stress-resilient border"
+                      : stock.spotlight
+                        ? "border border-sigil-gold/30 bg-sigil-gold/[0.03] shadow-[0_0_24px_rgba(229,193,88,0.08)]"
+                        : "border border-slate-900"
                 }`}
               >
                 <div className="grid grid-cols-1 xl:grid-cols-[minmax(220px,0.95fr)_minmax(0,1.35fr)_minmax(118px,auto)] gap-3 xl:items-center">
@@ -233,6 +267,16 @@ const Watchlist = ({ watchlistData }) => {
                           {spotlightLabel}
                         </span>
                       )}
+                      {isExposed && (
+                        <span className="px-2 py-0.5 rounded text-[9px] font-mono uppercase tracking-wide border border-rose-500/35 text-rose-400 bg-rose-500/10 shrink-0">
+                          Exposed
+                        </span>
+                      )}
+                      {isResilient && (
+                        <span className="px-2 py-0.5 rounded text-[9px] font-mono uppercase tracking-wide border border-emerald-500/35 text-emerald-400 bg-emerald-500/10 shrink-0">
+                          Resilient
+                        </span>
+                      )}
                     </div>
                     <div className="mt-1 flex items-center gap-1.5 min-w-0">
                       <span className="text-[10px] text-slate-500 truncate">
@@ -242,6 +286,20 @@ const Watchlist = ({ watchlistData }) => {
                   </div>
 
                   <div className="min-w-0 rounded-lg bg-slate-950/60 border border-slate-900/60 px-3 py-2">
+                    {stressInfo && (
+                      <p
+                        className={`text-[11px] leading-snug mb-2 pb-2 border-b border-slate-800/80 ${
+                          stressInfo.type === "exposed"
+                            ? "text-rose-300/90"
+                            : "text-emerald-300/90"
+                        }`}
+                      >
+                        <span className="text-[9px] font-mono uppercase tracking-wide opacity-80 mr-1">
+                          Scenario ·
+                        </span>
+                        {stressInfo.rationale}
+                      </p>
+                    )}
                     <div className="flex items-start gap-2 min-w-0">
                       <button
                         type="button"

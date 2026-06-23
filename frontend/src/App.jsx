@@ -6,6 +6,7 @@ import SignalStrip from "./components/SignalStrip";
 import Watchlist from "./components/Watchlist";
 import WeeklyBrief from "./components/WeeklyBrief";
 import ChallengeThesis from "./components/ChallengeThesis";
+import StressTestPanel from "./components/StressTestPanel";
 import Header from "./components/Header";
 import WhatIsThis from "./components/WhatIsThis";
 import ResearchQueue from "./components/ResearchQueue";
@@ -19,6 +20,15 @@ function App() {
   const [error, setError] = useState(null);
   const [syncNotice, setSyncNotice] = useState(null);
   const [highlightThemeId, setHighlightThemeId] = useState(null);
+  const [stressState, setStressState] = useState({
+    status: "idle",
+    scenarioId: null,
+    result: null,
+    viewMode: "live",
+    error: null,
+  });
+
+  const stressActive = stressState.status === "ready" && stressState.result;
 
   const loadDashboardData = async () => {
     try {
@@ -144,7 +154,9 @@ function App() {
               ) : (
                 <>
                   <SignalStrip
-                    thesisDriftReport={data?.thesisDriftReport}
+                    thesisDriftReport={
+                      stressActive ? null : data?.thesisDriftReport
+                    }
                     onClusterClick={handleClusterClick}
                   />
 
@@ -159,6 +171,13 @@ function App() {
                       isMock={data?.isMock}
                     />
                   </div>
+
+                  <StressTestPanel
+                    stressState={stressState}
+                    onStressStateChange={setStressState}
+                    isMock={data?.isMock}
+                  />
+
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
                     <div className="lg:col-span-1 h-full">
                       <ThesisRadar
@@ -167,10 +186,15 @@ function App() {
                         watchlistData={data?.watchlist}
                         isMock={data?.isMock}
                         highlightThemeId={highlightThemeId}
+                        stressResult={stressState.result}
+                        stressViewMode={stressState.viewMode}
                       />
                     </div>
                     <div className="lg:col-span-2 h-full">
-                      <Watchlist watchlistData={data?.watchlist} />
+                      <Watchlist
+                        watchlistData={data?.watchlist}
+                        stressResult={stressState.result}
+                      />
                     </div>
                   </div>
 

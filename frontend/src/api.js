@@ -14,6 +14,45 @@ export const fetchDashboard = async () => {
   return response.json();
 };
 
+export const fetchStressScenarios = async () => {
+  const response = await fetch("/api/stress-scenarios");
+  if (!response.ok) {
+    throw new Error(`Failed to load stress scenarios: ${response.statusText}`);
+  }
+  return response.json();
+};
+
+export const runStressTest = async (scenarioId) => {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 45000);
+
+  try {
+    const response = await fetch("/api/stress-test", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ scenarioId }),
+      signal: controller.signal,
+    });
+
+    const body = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(body.error || `Stress test failed (${response.status})`);
+    }
+
+    return body;
+  } catch (err) {
+    if (err.name === "AbortError") {
+      throw new Error("Stress test timed out — try again or pick another scenario.", {
+        cause: err,
+      });
+    }
+    throw err;
+  } finally {
+    clearTimeout(timeout);
+  }
+};
+
 export const triggerSync = async () => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 58000);

@@ -294,3 +294,61 @@ interface ThesisDriftReport {
 
 JSON Output:
 `;
+
+export const buildStressTestPrompt = (thesisConfig, watchlistSlim, scenario) => `
+You are a Supernova thesis strategist running a counterfactual portfolio stress test.
+
+The CIO asks: "What if this happened?" Your job is NOT to debate plausibility — assume the scenario is true and analyze how it propagates through Sigil's 7 investment pillars and 21-name watchlist.
+
+HYPOTHETICAL SCENARIO:
+<scenario>
+${scenario.prompt}
+</scenario>
+
+Label: ${scenario.label}
+Memo reference: ${scenario.memoRef}
+
+CORE THEMES (with bull/bear signals):
+<investment_theses>
+${JSON.stringify(thesisConfig)}
+</investment_theses>
+
+WATCHLIST (ticker, theme, angle, priority — use for exposure ranking):
+<watchlist>
+${JSON.stringify(watchlistSlim)}
+</watchlist>
+
+ANALYSIS RULES:
+1. Return exactly ONE impact row per theme id: datacenters, application, robotics, warfare, space, biotech, adversarial.
+2. impact must be "bullish", "neutral", or "bearish" — the net thesis read for that pillar IF the scenario occurred.
+3. impactType must be "structural" (thesis invalidation risk), "timing" (cycle/positioning), or "sentiment" (market re-rating only).
+4. rationale: ONE sharp sentence — second-order reasoning required, not generic macro commentary.
+5. transmission: ONE sentence on the causal chain (scenario → mechanism → pillar).
+6. Cross-theme effects are allowed (e.g. Taiwan hurts datacenters but may boost warfare/defence).
+7. For tickerExposure: rank ONLY tickers from the watchlist. mostExposed = 3 names with highest negative exposure; mostResilient = 3 with lowest exposure or potential beneficiaries. exposure is "high", "medium", or "low". rationale must cite the specific angle field.
+8. summaryLine: one sentence portfolio-level read for a busy CIO.
+9. portfolioRead: 2 sentences — what strengthens vs what breaks; distinguish timing from invalidation where relevant.
+10. counterIndicators: 2–3 specific signals that would prove this stress read wrong.
+11. If scenario is an unhedgeable tail (p(doom)), say so honestly — do not force bearish on every pillar.
+
+Return strictly valid JSON matching:
+{
+  "summaryLine": string,
+  "portfolioRead": string,
+  "themeImpacts": Array<{
+    "themeId": string,
+    "impact": "bullish" | "neutral" | "bearish",
+    "impactType": "structural" | "timing" | "sentiment",
+    "confidence": "high" | "medium" | "low",
+    "rationale": string,
+    "transmission": string
+  }>,
+  "tickerExposure": {
+    "mostExposed": Array<{ "ticker": string, "exposure": "high" | "medium" | "low", "rationale": string }>,
+    "mostResilient": Array<{ "ticker": string, "exposure": "high" | "medium" | "low", "rationale": string }>
+  },
+  "counterIndicators": string[]
+}
+
+JSON Output:
+`;

@@ -1,0 +1,90 @@
+.stress-panel {
+  --stress-accent: rgba(229, 193, 88, 0.35);
+}
+
+.stress-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.stress-step__num {
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 999px;
+  border: 1px solid rgba(229, 193, 88, 0.35);
+  background: rgba(229, 193, 88, 0.08);
+  color: rgba(229, 193, 88, 0.95);
+  font-size: 0.65rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.stress-chip {
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.stress-chip:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.stress-result-card {
+  border: 1px solid rgba(229, 193, 88, 0.18);
+  background: linear-gradient(
+    135deg,
+    rgba(229, 193, 88, 0.04) 0%,
+    rgba(15, 23, 42, 0.2) 100%
+  );
+}
+
+.stress-output-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .stress-output-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stress-output-tile {
+  border: 1px solid rgba(51, 65, 85, 0.7);
+  background: rgba(2, 6, 23, 0.45);
+  border-radius: 0.65rem;
+  padding: 0.65rem 0.75rem;
+}
+
+.stress-ticker-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .stress-ticker-strip {
+    grid-template-columns: 1fr;
+  }
+}
+
+.thesis-radar-row--stress-active {
+  box-shadow: inset 0 0 0 1px rgba(229, 193, 88, 0.12);
+}
+
+.watchlist-row--stress-exposed {
+  border-color: rgba(244, 63, 94, 0.35) !important;
+  box-shadow: 0 0 0 1px rgba(244, 63, 94, 0.12);
+}
+
+.watchlist-row--stress-resilient {
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.12);
+}

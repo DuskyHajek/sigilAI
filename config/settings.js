@@ -8,6 +8,7 @@ export const SETTINGS = {
   adversarial_max_articles: 10,
   adversarial_min_significance: 3,
   thesis_drift_max_tokens: 800,
+  stress_test_max_tokens: 900,
 
   significance_threshold: 2,
   max_articles_per_theme: 10,

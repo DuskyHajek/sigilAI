@@ -8,7 +8,13 @@ import {
   getThemeTickers,
   getTopHeadline,
 } from "../utils/thesisRadarUtils.js";
+import {
+  buildThemeImpactMap,
+  getImpactDisplay,
+  IMPACT_TYPE_LABELS,
+} from "../utils/stressDisplay.js";
 import "../styles/theme-cards.css";
+import "../styles/stress-test.css";
 
 const SHORT_THEME_NAMES = {
   datacenters: "Datacenters",
@@ -26,12 +32,30 @@ const sentimentColor = (sentiment) => {
   return "#94a3b8";
 };
 
+const Badge = ({ label, display, title, dimmed = false }) => (
+  <span
+    className={`text-[8px] font-mono uppercase tracking-wide px-1 py-px rounded border shrink-0 ${
+      dimmed ? "opacity-45" : ""
+    }`}
+    style={{
+      color: display.color,
+      backgroundColor: display.bg,
+      borderColor: display.border,
+    }}
+    title={title}
+  >
+    {label}
+  </span>
+);
+
 const ThesisRadar = ({
   themeData,
   thesisDriftReport,
   watchlistData,
   isMock,
   highlightThemeId,
+  stressResult,
+  stressViewMode = "live",
 }) => {
   const [expandedTheme, setExpandedTheme] = useState(null);
 
@@ -45,6 +69,16 @@ const ThesisRadar = ({
     () => buildThemeDriftMap(themeData, thesisDriftReport),
     [themeData, thesisDriftReport]
   );
+
+  const stressByTheme = useMemo(
+    () => buildThemeImpactMap(stressResult),
+    [stressResult]
+  );
+
+  const stressActive = !!stressResult;
+  const showLive = !stressActive || stressViewMode === "live" || stressViewMode === "split";
+  const showStress =
+    stressActive && (stressViewMode === "stress" || stressViewMode === "split");
 
   if (!themeData) return null;
 
@@ -62,7 +96,13 @@ const ThesisRadar = ({
           Thesis Radar
         </h2>
         <p className="text-[11px] text-slate-400 mt-0.5 leading-snug">
-          All seven pillars — expand one row for headlines and evidence.
+          {stressActive
+            ? showStress && showLive
+              ? "Today’s drift alongside scenario impact — expand a row for both reads."
+              : showStress
+                ? "Scenario impact on all seven pillars — expand for transmission chain."
+                : "Today’s live drift — scenario overlay hidden."
+            : "All seven pillars — expand one row for headlines and evidence."}
         </p>
       </div>
 
@@ -75,6 +115,8 @@ const ThesisRadar = ({
           const pulse = themeData[theme.id] || {};
           const drift = driftByTheme[theme.id];
           const driftDisplay = getDriftDisplay(drift?.status);
+          const stress = stressByTheme[theme.id];
+          const stressDisplay = getImpactDisplay(stress?.impact);
           const headlineCount = getHeadlineCount(pulse);
           const topHeadline = getTopHeadline(pulse);
           const tickers = getThemeTickers(watchlistData, theme.id);
@@ -91,7 +133,9 @@ const ThesisRadar = ({
               id={`thesis-row-${theme.id}`}
               className={`theme-card theme-card--${color} thesis-radar-row border transition-colors ${
                 isExpanded ? "thesis-radar-row--expanded" : ""
-              } ${isHighlighted ? "border-sigil-gold/40 ring-1 ring-sigil-gold/20" : ""}`}
+              } ${isHighlighted ? "border-sigil-gold/40 ring-1 ring-sigil-gold/20" : ""} ${
+                showStress && stress ? "thesis-radar-row--stress-active" : ""
+              }`}
             >
               <button
                 type="button"
@@ -110,20 +154,26 @@ const ThesisRadar = ({
                       {shortName}
                     </p>
                     <div className="thesis-radar-row__meta">
-                      <span
-                        className="text-[8px] font-mono uppercase tracking-wide px-1 py-px rounded border shrink-0"
-                        style={{
-                          color: driftDisplay.color,
-                          backgroundColor: driftDisplay.bg,
-                          borderColor: driftDisplay.border,
-                        }}
-                        title={driftDisplay.hint}
-                      >
-                        {driftDisplay.label}
-                      </span>
-                      <span className="text-[9px] font-mono text-slate-500 shrink-0 whitespace-nowrap">
-                        {headlineCount === 0 ? "0" : headlineCount}
-                      </span>
+                      {showLive && (
+                        <Badge
+                          label={driftDisplay.label}
+                          display={driftDisplay}
+                          title={`Today · ${driftDisplay.hint}`}
+                          dimmed={showStress && stressViewMode === "split"}
+                        />
+                      )}
+                      {showStress && stress && (
+                        <Badge
+                          label={stressDisplay.label}
+                          display={stressDisplay}
+                          title={`Scenario · ${stressDisplay.hint}`}
+                        />
+                      )}
+                      {showLive && (
+                        <span className="text-[9px] font-mono text-slate-500 shrink-0 whitespace-nowrap">
+                          {headlineCount === 0 ? "0" : headlineCount}
+                        </span>
+                      )}
                     </div>
                     <div className="thesis-radar-row__tickers">
                       {tickers.map((stock) => (
@@ -152,58 +202,96 @@ const ThesisRadar = ({
 
               {isExpanded && (
                 <div className="thesis-radar-row__detail">
-                  {topHeadline ? (
-                    <div className="rounded-lg border border-slate-900 bg-slate-950/50 p-2 mb-2">
-                      <p className="text-[9px] font-mono uppercase tracking-wide text-sigil-gold/80 mb-1">
-                        Top headline
-                      </p>
-                      <p className="text-[12px] text-slate-100 leading-snug">
-                        {topHeadline}
-                      </p>
-                    </div>
-                  ) : (
-                    <p className="text-[11px] text-slate-500 font-mono mb-2">
-                      No classified headlines tagged to this theme in the current
-                      sync window.
-                    </p>
-                  )}
-
-                  {drift?.narrativeShiftDetails && (
-                    <p className="text-[11px] text-slate-400 leading-relaxed mb-2">
-                      {drift.narrativeShiftDetails}
-                    </p>
-                  )}
-
-                  {evidence.length > 0 && (
-                    <div className="space-y-1.5 mb-2">
-                      <p className="text-[9px] font-mono uppercase tracking-wide text-sigil-gold/80">
-                        Evidence
-                      </p>
-                      {evidence.map((item, index) => (
-                        <div
-                          key={`${item.title}-${index}`}
-                          className="rounded-lg border border-slate-900 bg-slate-950/40 p-2"
+                  {showStress && stress && (
+                    <div className="rounded-lg border border-sigil-gold/20 bg-sigil-gold/[0.04] p-2.5 mb-2">
+                      <div className="flex items-center gap-2 flex-wrap mb-1.5">
+                        <p className="text-[9px] font-mono uppercase tracking-wide text-sigil-gold/90">
+                          Scenario impact
+                        </p>
+                        <span
+                          className="text-[8px] font-mono uppercase px-1 py-px rounded border"
+                          style={{
+                            color: stressDisplay.color,
+                            borderColor: `${stressDisplay.color}44`,
+                            backgroundColor: stressDisplay.bg,
+                          }}
                         >
-                          <div className="flex items-center gap-2 flex-wrap mb-1">
-                            <span
-                              className="text-[8px] font-mono uppercase px-1 py-px rounded border"
-                              style={{
-                                color: sentimentColor(item.sentiment),
-                                borderColor: `${sentimentColor(item.sentiment)}44`,
-                              }}
-                            >
-                              {item.sentiment || "neutral"}
-                            </span>
-                            <span className="text-[8px] font-mono text-slate-600">
-                              sig {item.significance}
-                            </span>
-                          </div>
-                          <p className="text-[11px] text-slate-200 leading-snug">
-                            {item.title}
+                          {stressDisplay.label}
+                        </span>
+                        {stress.impactType && (
+                          <span className="text-[8px] font-mono text-slate-500 uppercase">
+                            {IMPACT_TYPE_LABELS[stress.impactType] || stress.impactType}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[12px] text-slate-100 leading-snug">
+                        {stress.rationale}
+                      </p>
+                      {stress.transmission && (
+                        <p className="mt-1.5 text-[10px] font-mono text-slate-500 leading-relaxed">
+                          <span className="text-slate-400">Chain · </span>
+                          {stress.transmission}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {showLive && (
+                    <>
+                      {topHeadline ? (
+                        <div className="rounded-lg border border-slate-900 bg-slate-950/50 p-2 mb-2">
+                          <p className="text-[9px] font-mono uppercase tracking-wide text-sigil-gold/80 mb-1">
+                            Top headline · today
+                          </p>
+                          <p className="text-[12px] text-slate-100 leading-snug">
+                            {topHeadline}
                           </p>
                         </div>
-                      ))}
-                    </div>
+                      ) : (
+                        <p className="text-[11px] text-slate-500 font-mono mb-2">
+                          No classified headlines tagged to this theme in the
+                          current sync window.
+                        </p>
+                      )}
+
+                      {drift?.narrativeShiftDetails && (
+                        <p className="text-[11px] text-slate-400 leading-relaxed mb-2">
+                          {drift.narrativeShiftDetails}
+                        </p>
+                      )}
+
+                      {evidence.length > 0 && (
+                        <div className="space-y-1.5 mb-2">
+                          <p className="text-[9px] font-mono uppercase tracking-wide text-sigil-gold/80">
+                            Evidence · today
+                          </p>
+                          {evidence.map((item, index) => (
+                            <div
+                              key={`${item.title}-${index}`}
+                              className="rounded-lg border border-slate-900 bg-slate-950/40 p-2"
+                            >
+                              <div className="flex items-center gap-2 flex-wrap mb-1">
+                                <span
+                                  className="text-[8px] font-mono uppercase px-1 py-px rounded border"
+                                  style={{
+                                    color: sentimentColor(item.sentiment),
+                                    borderColor: `${sentimentColor(item.sentiment)}44`,
+                                  }}
+                                >
+                                  {item.sentiment || "neutral"}
+                                </span>
+                                <span className="text-[8px] font-mono text-slate-600">
+                                  sig {item.significance}
+                                </span>
+                              </div>
+                              <p className="text-[11px] text-slate-200 leading-snug">
+                                {item.title}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </>
                   )}
 
                   <p className="text-[10px] font-mono text-slate-600 leading-relaxed">
@@ -211,7 +299,7 @@ const ThesisRadar = ({
                     {theme.short_description}
                   </p>
 
-                  {pulse.source === "estimated" && !isMock && headlineCount > 0 && (
+                  {pulse.source === "estimated" && !isMock && headlineCount > 0 && showLive && (
                     <p className="mt-2 text-[9px] font-mono text-slate-600">
                       Drift derived from headline sentiment when Claude theme
                       scoring is skipped.

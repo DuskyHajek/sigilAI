@@ -14,6 +14,10 @@ import { generateResearchQueue } from "./services/researchQueue.js";
 import { generateAdversarialAnalysis } from "./services/adversarial.js";
 import { generateThesisDriftReport } from "./services/thesisDrift.js";
 import {
+  generateStressTest,
+  listStressScenarios,
+} from "./services/stressTest.js";
+import {
   readCache,
   writeCache,
   getCacheAgeHours,
@@ -171,6 +175,32 @@ api.get("/dashboard", async (req, res) => {
     res.json(await getDashboardFromCache());
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+api.get("/stress-scenarios", async (req, res) => {
+  try {
+    res.json({ scenarios: listStressScenarios() });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+api.post("/stress-test", async (req, res) => {
+  try {
+    const scenarioId = String(req.body?.scenarioId || "").trim();
+    if (!scenarioId) {
+      return res.status(400).json({ error: "scenarioId is required" });
+    }
+
+    const forceMock = !isLiveConfigured();
+    const result = await generateStressTest(scenarioId, { mock: forceMock });
+    res.json(result);
+  } catch (error) {
+    console.error("Stress test failed:", error);
+    res.status(error.message?.startsWith("Unknown scenario") ? 404 : 500).json({
+      error: error.message,
+    });
   }
 });
 

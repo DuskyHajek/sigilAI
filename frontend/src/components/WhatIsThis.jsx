@@ -1,4 +1,4 @@
-import { Activity, ArrowRight, Brain, FileText, LineChart, Newspaper, SearchCheck, ShieldAlert, Sparkles } from "lucide-react";
+import { Activity, ArrowRight, Brain, FileText, FlaskConical, LineChart, Newspaper, SearchCheck, ShieldAlert, Sparkles } from "lucide-react";
 
 const PANELS = [
   {
@@ -9,12 +9,17 @@ const PANELS = [
   {
     icon: ShieldAlert,
     label: "01b · Challenge the Thesis",
-    text: "Adversarial pass — stress-test each pillar with bear cases, blind spots, and counter-indicators.",
+    text: "Adversarial pass on today's headlines — bear cases, blind spots, and counter-indicators.",
+  },
+  {
+    icon: FlaskConical,
+    label: "01c · Thesis Stress Tester",
+    text: "Hypothetical “what if” scenarios — see all 7 pillars and watchlist exposure without waiting for news.",
   },
   {
     icon: Activity,
     label: "02 · Thesis Radar",
-    text: "All seven pillars in one view — drift status, headline count, tickers. Expand for evidence.",
+    text: "All seven pillars — today's drift plus scenario overlay when a stress test is active.",
   },
   {
     icon: Sparkles,
