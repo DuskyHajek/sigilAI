@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 import {
   BookOpen,
   Brain,
@@ -638,6 +639,15 @@ export default function MasteryGuide() {
               description={activeTheme.description}
               icon={BookOpen}
             />
+            {activeTab === "datacentres" && (
+              <Link
+                to="/value-chain"
+                className="inline-flex items-center gap-1.5 mb-4 text-xs font-semibold text-sigil-gold border border-sigil-gold/30 rounded-full px-4 py-2 hover:bg-sigil-gold/8 transition-colors"
+              >
+                <Layers size={14} aria-hidden="true" />
+                Explore the full 22-tier value chain →
+              </Link>
+            )}
             <TipBox icon={ClipboardList}>
               Expand each section below — concepts first, then books, courses, voices, and mental
               models. Collapsed hints show what each block contains.

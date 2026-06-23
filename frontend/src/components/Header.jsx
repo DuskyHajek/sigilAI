@@ -1,14 +1,22 @@
 import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { RefreshCw, Cpu, Check, X, BookOpen } from "lucide-react";
+import { RefreshCw, Cpu, Check, X, BookOpen, Layers } from "lucide-react";
 import { fetchHealth } from "../api";
 import SyncProgress from "./SyncProgress";
 import DashboardSectionNav from "./DashboardSectionNav";
+import ValueChainSectionNav from "./ValueChainSectionNav";
 
-const Header = ({ onSync, syncState, lastUpdated, showSectionNav = false }) => {
+const Header = ({
+  onSync,
+  syncState,
+  lastUpdated,
+  showSectionNav = false,
+  showValueChainNav = false,
+}) => {
   const [health, setHealth] = useState(null);
   const location = useLocation();
   const onDashboard = location.pathname === "/";
+  const onValueChain = location.pathname === "/value-chain";
 
   useEffect(() => {
     fetchHealth()
@@ -78,6 +86,9 @@ const Header = ({ onSync, syncState, lastUpdated, showSectionNav = false }) => {
           <div className="flex items-center gap-3 shrink-0">
             {onDashboard && showSectionNav && (
               <DashboardSectionNav variant="desktop" />
+            )}
+            {onValueChain && showValueChainNav && (
+              <ValueChainSectionNav variant="desktop" />
             )}
 
             <div
@@ -152,6 +163,9 @@ const Header = ({ onSync, syncState, lastUpdated, showSectionNav = false }) => {
         {onDashboard && showSectionNav && (
           <DashboardSectionNav variant="mobile" />
         )}
+        {onValueChain && showValueChainNav && (
+          <ValueChainSectionNav variant="mobile" />
+        )}
 
         <nav className="flex items-center gap-1 border-t border-white/6 pt-2">
           <NavLink
@@ -166,6 +180,21 @@ const Header = ({ onSync, syncState, lastUpdated, showSectionNav = false }) => {
             }
           >
             Dashboard
+          </NavLink>
+          <NavLink
+            to="/value-chain"
+            title="22-tier AI infrastructure value chain — phases, bottlenecks & watchlist mapping"
+            className={({ isActive }) =>
+              `flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                isActive
+                  ? "bg-sigil-gold text-black"
+                  : "text-white/60 hover:text-white hover:bg-white/5"
+              }`
+            }
+          >
+            <Layers size={12} aria-hidden="true" />
+            <span className="sm:hidden">Stack</span>
+            <span className="hidden sm:inline">Value Chain</span>
           </NavLink>
           <NavLink
             to="/mastery-guide"

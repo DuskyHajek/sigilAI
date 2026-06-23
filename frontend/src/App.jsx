@@ -13,6 +13,7 @@ import DashboardZone from "./components/DashboardZone";
 import EditorialSpotlight from "./components/EditorialSpotlight";
 import ResearchQueue from "./components/ResearchQueue";
 import MasteryGuide from "./pages/MasteryGuide";
+import ValueChain from "./pages/ValueChain";
 import { fetchDashboard, fetchHealth, triggerSync } from "./api";
 import {
   editorialShowsBlindspot,
@@ -181,6 +182,7 @@ function App() {
         syncState={syncState}
         lastUpdated={data?.lastUpdated}
         showSectionNav={!loading}
+        showValueChainNav
       />
 
       <Routes>
@@ -296,6 +298,7 @@ function App() {
             </main>
           }
         />
+        <Route path="/value-chain" element={<ValueChain />} />
         <Route path="/mastery-guide" element={<MasteryGuide />} />
       </Routes>
     </div>
