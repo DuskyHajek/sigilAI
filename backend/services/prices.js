@@ -95,6 +95,7 @@ export const fetchPrices = async (options = {}) => {
         theme: item.theme,
         angle: item.angle,
         priority: item.priority,
+        spotlight: item.spotlight || null,
         price: quote.price,
         currency: quote.currency,
         change52w: quote.change52w,
@@ -122,6 +123,7 @@ export const fetchPrices = async (options = {}) => {
           theme: item.theme,
           angle: item.angle,
           priority: item.priority,
+          spotlight: item.spotlight || cached.spotlight || null,
           priceSource: "yahoo_cached",
           context: "",
         };
@@ -135,6 +137,7 @@ export const fetchPrices = async (options = {}) => {
         theme: item.theme,
         angle: item.angle,
         priority: item.priority,
+        spotlight: item.spotlight || null,
         price: 0,
         change52w: 0,
         priceSource: "unavailable",

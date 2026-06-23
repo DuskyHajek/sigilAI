@@ -6,8 +6,15 @@ import {
   Filter,
   Search,
   ChevronDown,
+  Rocket,
 } from "lucide-react";
 import { THEMES } from "@config/thesis.js";
+
+const SPOTLIGHT_LABELS = {
+  ipo: "IPO",
+};
+
+const spotlightSortKey = (stock) => (stock.spotlight ? 0 : 1);
 
 const THEME_LABELS = Object.fromEntries(
   THEMES.map((t) => [
@@ -50,7 +57,7 @@ const Watchlist = ({ watchlistData }) => {
 
   const filteredData = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return stocks.filter((item) => {
+    const matches = stocks.filter((item) => {
       const matchesTheme =
         selectedTheme === "all" || item.theme === selectedTheme;
       const matchesQuery =
@@ -61,7 +68,18 @@ const Watchlist = ({ watchlistData }) => {
 
       return matchesTheme && matchesQuery;
     });
+
+    return [...matches].sort(
+      (a, b) =>
+        spotlightSortKey(a) - spotlightSortKey(b) ||
+        a.ticker.localeCompare(b.ticker)
+    );
   }, [query, selectedTheme, stocks]);
+
+  const spotlightStocks = useMemo(
+    () => stocks.filter((item) => item.spotlight),
+    [stocks]
+  );
 
   if (!watchlistData) return null;
 
@@ -145,6 +163,29 @@ const Watchlist = ({ watchlistData }) => {
         </div>
       </div>
 
+      {spotlightStocks.length > 0 &&
+        (selectedTheme === "all" || selectedTheme === "space") &&
+        !query.trim() && (
+          <div className="mb-4 rounded-xl border border-sigil-gold/25 bg-sigil-gold/[0.06] px-4 py-3">
+            <div className="flex items-start gap-3">
+              <div className="p-2 rounded-lg bg-sigil-gold/10 border border-sigil-gold/20 shrink-0">
+                <Rocket size={16} className="text-sigil-gold" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-sigil-gold/90 mb-1">
+                  Spotlight
+                </p>
+                <p className="text-sm text-slate-200 leading-relaxed">
+                  SpaceX is now public as{" "}
+                  <span className="font-mono text-sigil-gold">SPCX</span> — the
+                  largest IPO in history. Launch monopoly, Starlink, and
+                  Starship now trade under one ticker.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
       <div className="overflow-y-auto flex-1 max-h-[70vh] lg:max-h-[620px] pr-2 space-y-2">
         {filteredData.length === 0 ? (
           <div className="text-center py-10 text-slate-500 text-sm">
@@ -157,11 +198,18 @@ const Watchlist = ({ watchlistData }) => {
             const label = THEME_LABELS[stock.theme];
             const isExpanded = expandedTicker === stock.ticker;
             const displayName = stock.company || stock.name || stock.ticker;
+            const spotlightLabel = stock.spotlight
+              ? SPOTLIGHT_LABELS[stock.spotlight] || stock.spotlight
+              : null;
 
             return (
               <div
                 key={stock.ticker}
-                className="glass-panel glass-panel-hover rounded-xl border border-slate-900 p-3 group"
+                className={`glass-panel glass-panel-hover rounded-xl p-3 group ${
+                  stock.spotlight
+                    ? "border border-sigil-gold/30 bg-sigil-gold/[0.03] shadow-[0_0_24px_rgba(229,193,88,0.08)]"
+                    : "border border-slate-900"
+                }`}
               >
                 <div className="grid grid-cols-1 xl:grid-cols-[minmax(220px,0.95fr)_minmax(0,1.35fr)_minmax(118px,auto)] gap-3 xl:items-center">
                   <div className="min-w-0">
@@ -180,6 +228,11 @@ const Watchlist = ({ watchlistData }) => {
                       >
                         {label?.name || stock.theme}
                       </span>
+                      {spotlightLabel && (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono uppercase tracking-wide border border-sigil-gold/35 text-sigil-gold bg-sigil-gold/10 shrink-0">
+                          {spotlightLabel}
+                        </span>
+                      )}
                     </div>
                     <div className="mt-1 flex items-center gap-1.5 min-w-0">
                       <span className="text-[10px] text-slate-500 truncate">
@@ -244,7 +297,9 @@ const Watchlist = ({ watchlistData }) => {
                       ) : (
                         <ArrowDownRight size={12} />
                       )}
-                      <span className="text-[9px] opacity-70 mr-0.5">52W</span>
+                      <span className="text-[9px] opacity-70 mr-0.5">
+                        {stock.spotlight === "ipo" ? "IPO" : "52W"}
+                      </span>
                       {isPositive ? "+" : ""}
                       {change}%
                     </span>

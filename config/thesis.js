@@ -139,8 +139,10 @@ export const THEMES = [
     short_description:
       "Launch cost collapse, satellite constellations, orbital defense — asymmetric bets",
     long_description:
-      "Three forces converging: (1) Launch costs have collapsed — SpaceX's reusable rockets dropped cost-to-orbit by two orders of magnitude, opening entirely new use cases; (2) New US-China space race with national security implications — sovereign satellite networks, space-based ISR, orbital defense systems; (3) AI creating new demand drivers — orbital data centers with constant solar power, satellite-based AI inference for remote regions. Important framing: space positions are SMALL and ASYMMETRIC. These are options on massive outcomes, not core holdings. Most will go to zero. A small number will 10-50x. Allocate accordingly — 2-5% of portfolio maximum, expected value math justifies the risk.",
+      "Three forces converging: (1) Launch costs have collapsed — SpaceX's reusable rockets dropped cost-to-orbit by two orders of magnitude, opening entirely new use cases; (2) New US-China space race with national security implications — sovereign satellite networks, space-based ISR, orbital defense systems; (3) AI creating new demand drivers — orbital data centers with constant solar power, satellite-based AI inference for remote regions. SpaceX (SPCX) is the space theme anchor — launch monopoly, Starlink scale, Starship optionality, and now the largest IPO in history. Secondary names (RKLB, ASTS) remain small asymmetric bets: options on massive outcomes, not core holdings. Most will go to zero. A small number will 10-50x. Size the anchor separately from the asymmetric sleeve.",
     news_keywords: [
+      "SpaceX IPO",
+      "SPCX stock",
       "SpaceX launch",
       "satellite constellation",
       "orbital infrastructure",
@@ -379,6 +381,25 @@ export const WATCHLIST = [
     theme: "warfare",
     angle: "European defense prime — NATO ramp structural",
     priority: "core",
+  },
+  {
+    ticker: "SPCX",
+    company: "SpaceX",
+    aliases: [
+      "SpaceX",
+      "Space Exploration Technologies",
+      "Starlink",
+      "Starship",
+      "Falcon 9",
+      "Falcon Heavy",
+      "reusable rocket",
+      "SpaceX IPO",
+    ],
+    theme: "space",
+    angle:
+      "Launch monopoly + Starlink scale + Starship optionality — now public (SPCX)",
+    priority: "core",
+    spotlight: "ipo",
   },
   {
     ticker: "RKLB",

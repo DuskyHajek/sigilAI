@@ -134,6 +134,8 @@ const MOCK_CONTEXTS = {
   AVAV: "AeroVironment posts record backlog on European loitering-munition demand, proving tactical drone asymmetry at scale.",
   "RHM.DE":
     "Rheinmetall expands artillery shell capacity, showing European industrial manufacturing — not software — is the NATO ramp bottleneck.",
+  SPCX:
+    "SpaceX closes $85.7B IPO at $135/share on Nasdaq (SPCX) — largest public offering in history. Starlink subscriber growth and Starship cadence now tradeable under one ticker.",
   RKLB: "Rocket Lab executes successful Neutron hot-fire test, positioning as the key alternative launch provider to SpaceX.",
   ASTS: "AST SpaceMobile advances direct-to-cell satellite tests, a high-beta bet on orbital broadband bypassing terrestrial towers.",
   EXAS: "Cologuard adoption accelerates with AI-assisted pathology reads, strengthening diagnostics-over-drug-discovery positioning.",
@@ -154,6 +156,7 @@ export const getMockWatchlist = () =>
     theme: item.theme,
     angle: item.angle,
     priority: item.priority,
+    spotlight: item.spotlight || null,
     price: mockPrice(item.ticker),
     change52w: mockChange(item.ticker),
     priceSource: "mock",
@@ -178,6 +181,7 @@ const mockPrice = (ticker) => {
     KTOS: 48.3,
     AVAV: 168.5,
     "RHM.DE": 485.0,
+    SPCX: 194.11,
     RKLB: 24.8,
     ASTS: 32.5,
     EXAS: 62.4,
@@ -204,6 +208,7 @@ const mockChange = (ticker) => {
     KTOS: 18.7,
     AVAV: 22.1,
     "RHM.DE": 25.4,
+    SPCX: 43.8,
     RKLB: -5.2,
     ASTS: 11.3,
     EXAS: 4.8,
