@@ -126,7 +126,7 @@ const Watchlist = ({ watchlistData, stressResult }) => {
   };
 
   return (
-    <div className="glass-panel border border-slate-800 p-5 md:p-6 rounded-2xl flex flex-col h-full">
+    <div className="glass-panel border border-slate-800 p-5 md:p-6 rounded-2xl flex flex-col h-full min-h-[480px] max-h-[min(720px,75vh)]">
       <div className="mb-4">
         <div className="flex items-center gap-2 mb-1">
           <Sparkles size={18} className="text-sigil-gold shrink-0" />
@@ -177,7 +177,7 @@ const Watchlist = ({ watchlistData, stressResult }) => {
         </div>
       </div>
 
-      <div className="overflow-y-auto flex-1 max-h-[70vh] lg:max-h-[620px] divide-y divide-slate-800/70">
+      <div className="overflow-y-auto flex-1 min-h-0 pr-1 divide-y divide-slate-800/70">
         {filteredData.length === 0 ? (
           <div className="text-center py-10 text-slate-500 text-sm">
             No tickers match this view.

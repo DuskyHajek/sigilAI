@@ -89,7 +89,7 @@ const ThesisRadar = ({
         window.requestAnimationFrame(() => {
           document
             .getElementById(`thesis-row-${themeId}`)
-            ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            ?.scrollIntoView({ behavior: "smooth", block: "start" });
         });
       }
       return next;
@@ -97,7 +97,7 @@ const ThesisRadar = ({
   };
 
   return (
-    <div className="glass-panel border border-slate-800 p-5 rounded-2xl h-full flex flex-col min-h-0 lg:max-h-[680px]">
+    <div className="glass-panel border border-slate-800 p-5 rounded-2xl h-full flex flex-col min-h-[480px] max-h-[min(720px,75vh)]">
       <div className="mb-3 shrink-0">
         <h2 className="text-base font-semibold text-slate-100 flex items-center gap-2">
           <Activity size={17} className="text-sigil-gold shrink-0" />
@@ -112,11 +112,7 @@ const ThesisRadar = ({
         </p>
       </div>
 
-      <div
-        className={`thesis-radar-list${
-          expandedTheme ? " thesis-radar-list--detail" : " thesis-radar-list--compact"
-        }`}
-      >
+      <div className="thesis-radar-list">
         {THEMES.map((theme) => {
           const pulse = themeData[theme.id] || {};
           const drift = driftByTheme[theme.id];
@@ -231,15 +227,17 @@ const ThesisRadar = ({
                 </div>
               </button>
 
-              <div className="thesis-radar-row__preview-wrap">
-                {previewText ? (
-                  <p className="thesis-radar-row__preview">{previewText}</p>
-                ) : (
-                  <p className="thesis-radar-row__preview thesis-radar-row__preview--empty">
-                    No headlines this sync · expand for thesis scope
-                  </p>
-                )}
-              </div>
+              {!isExpanded && (
+                <div className="thesis-radar-row__preview-wrap">
+                  {previewText ? (
+                    <p className="thesis-radar-row__preview">{previewText}</p>
+                  ) : (
+                    <p className="thesis-radar-row__preview thesis-radar-row__preview--empty">
+                      No headlines this sync · expand for thesis scope
+                    </p>
+                  )}
+                </div>
+              )}
 
               {isExpanded && (
                 <div className="thesis-radar-row__detail">
@@ -265,7 +263,7 @@ const ThesisRadar = ({
                           </span>
                         )}
                       </div>
-                      <p className="text-[12px] text-slate-100 leading-snug">
+                      <p className="text-[13px] text-slate-100 leading-relaxed">
                         {stress.rationale}
                       </p>
                       {stress.transmission && (
@@ -284,7 +282,7 @@ const ThesisRadar = ({
                           <p className="text-[9px] font-mono uppercase tracking-wide text-sigil-gold/80 mb-1">
                             Top headline · today
                           </p>
-                          <p className="text-[12px] text-slate-100 leading-snug">
+                          <p className="text-[13px] text-slate-100 leading-relaxed">
                             {topHeadline}
                           </p>
                         </div>
@@ -325,7 +323,7 @@ const ThesisRadar = ({
                                   sig {item.significance}
                                 </span>
                               </div>
-                              <p className="text-[11px] text-slate-200 leading-snug">
+                              <p className="text-[12px] text-slate-200 leading-relaxed">
                                 {item.title}
                               </p>
                             </div>
@@ -335,7 +333,7 @@ const ThesisRadar = ({
                     </>
                   )}
 
-                  <p className="text-[10px] font-mono text-slate-600 leading-relaxed">
+                  <p className="text-[11px] text-slate-500 leading-relaxed">
                     <span className="text-sigil-gold/80">Thesis · </span>
                     {theme.short_description}
                   </p>

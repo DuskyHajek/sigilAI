@@ -27,16 +27,9 @@ const StressTestZone = ({
 
   return (
     <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-5 pt-5 pb-0 border-b border-slate-800/80">
-        <div>
-          <h2 className="text-base font-semibold text-slate-100">Stress test</h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Counter-thesis from today&apos;s news, or hypothetical macro shocks.
-          </p>
-        </div>
-
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 px-5 pt-4 pb-0">
         <div
-          className="flex gap-1 p-1 rounded-lg bg-slate-950/60 border border-slate-800 shrink-0"
+          className="flex gap-1 p-1 rounded-lg bg-slate-950/60 border border-slate-800 shrink-0 w-full sm:w-auto"
           role="tablist"
           aria-label="Stress test mode"
         >
@@ -63,7 +56,7 @@ const StressTestZone = ({
         </div>
       </div>
 
-      <div className="p-5 md:p-6">
+      <div className="p-5 md:p-6 pt-4 border-t border-slate-800/60 mt-4">
         {activeTab === "live" ? (
           <ChallengeThesis
             adversarialAssessment={adversarialAssessment}

@@ -295,19 +295,16 @@
   flex: 1;
   min-height: 0;
   gap: 4px;
-}
-
-.thesis-radar-list--compact {
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(229, 193, 88, 0.35) transparent;
 }
 
-.thesis-radar-list--compact::-webkit-scrollbar {
+.thesis-radar-list::-webkit-scrollbar {
   width: 5px;
 }
 
-.thesis-radar-list--compact::-webkit-scrollbar-thumb {
+.thesis-radar-list::-webkit-scrollbar-thumb {
   background: rgba(229, 193, 88, 0.3);
   border-radius: 3px;
 }
@@ -316,27 +313,17 @@
   padding: 0;
   border-radius: 8px;
   min-height: 0;
-}
-
-/* Collapsed: content-height rows — no empty vertical stretch */
-.thesis-radar-list--compact .thesis-radar-row {
   flex: 0 0 auto;
 }
 
-.thesis-radar-list--detail {
-  overflow: hidden;
-}
-
-.thesis-radar-list--detail .thesis-radar-row:not(.thesis-radar-row--expanded) {
-  flex: 0 0 auto;
+.thesis-radar-list .theme-card.thesis-radar-row--expanded {
+  overflow: visible;
 }
 
 .thesis-radar-row--expanded {
-  flex: 1 1 auto;
-  min-height: 11rem;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .thesis-radar-row__expand-hint--open {
@@ -350,6 +337,10 @@
   flex-shrink: 0;
   display: block;
   cursor: pointer;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
 }
 
 .thesis-radar-row__trigger--expanded {
@@ -386,7 +377,7 @@
 
 .thesis-radar-row__inner {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   min-width: 0;
 }
@@ -400,16 +391,16 @@
   justify-content: center;
   flex-shrink: 0;
   font-size: 13px;
+  margin-top: 1px;
 }
 
 .thesis-radar-row__main {
   flex: 1;
   min-width: 0;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 6px;
   align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-  row-gap: 3px;
 }
 
 .thesis-radar-row__name {
@@ -420,8 +411,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
-  flex: 1 1 100%;
-  max-width: none;
+  grid-column: 1 / -1;
 }
 
 .thesis-radar-row__meta {
@@ -429,6 +419,7 @@
   align-items: center;
   gap: 4px;
   flex-shrink: 0;
+  flex-wrap: wrap;
 }
 
 .thesis-radar-row__tickers {
@@ -436,14 +427,11 @@
   align-items: center;
   gap: 3px;
   flex-shrink: 0;
-  flex: 1 1 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 @media (max-width: 1279px) {
-  .thesis-radar-list--compact {
-    max-height: 420px;
-  }
-
   .thesis-radar-row__preview-wrap {
     padding-left: 38px;
   }
@@ -454,12 +442,13 @@
 }
 
 .thesis-radar-row__detail {
-  flex: 1 1 auto;
-  min-height: 8rem;
-  overflow-y: auto;
+  flex: 0 0 auto;
+  overflow: visible;
   border-top: 1px solid rgba(15, 23, 42, 0.6);
   margin: 0 8px 8px;
-  padding-top: 8px;
+  padding: 10px 4px 4px;
+  max-height: min(420px, 55vh);
+  overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(229, 193, 88, 0.35) transparent;
 }
