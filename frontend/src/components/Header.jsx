@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { RefreshCw, Cpu, Check, X, BookOpen } from "lucide-react";
 import { fetchHealth } from "../api";
 import SyncProgress from "./SyncProgress";
+import DashboardSectionNav from "./DashboardSectionNav";
 
-const Header = ({ onSync, syncState, lastUpdated }) => {
+const Header = ({ onSync, syncState, lastUpdated, showSectionNav = false }) => {
   const [health, setHealth] = useState(null);
+  const location = useLocation();
+  const onDashboard = location.pathname === "/";
 
   useEffect(() => {
     fetchHealth()
@@ -16,109 +19,109 @@ const Header = ({ onSync, syncState, lastUpdated }) => {
   const isLive = health?.mode === "LIVE";
 
   const formatLastSyncedAgo = () => {
-    // Prefer backend-computed cache age to keep the render pure.
     if (typeof health?.cacheAge === "number") {
       const cacheAgeHours = health.cacheAge;
       if (cacheAgeHours < 1) {
         const mins = Math.max(1, Math.round(cacheAgeHours * 60));
-        return `${mins} min ago`;
+        return `${mins}m ago`;
       }
       const hrs = Math.max(1, Math.round(cacheAgeHours));
-      return `${hrs} hr ago`;
+      return `${hrs}h ago`;
     }
 
-    // Fallback: show timestamp if available (still render-pure).
     if (!lastUpdated) return "N/A";
     const date = new Date(lastUpdated);
     if (!Number.isFinite(date.getTime())) return "N/A";
     return date.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
-      second: "2-digit",
     });
   };
 
-  const syncLabel = () => {
+  const syncTitle = () => {
     switch (syncState) {
       case "syncing":
-        return "Syncing...";
+        return "Syncing live data…";
       case "success":
-        return "Synced";
+        return "Sync complete";
       case "error":
-        return "Sync failed";
+        return "Sync failed — retry";
       default:
         return "Sync live data";
     }
   };
 
   const SyncIcon =
-    syncState === "success"
-      ? Check
-      : syncState === "error"
-        ? X
-        : RefreshCw;
+    syncState === "success" ? Check : syncState === "error" ? X : RefreshCw;
+
+  const statusLabel = isLive ? "Live" : "Demo";
+  const syncedAgo = formatLastSyncedAgo();
 
   return (
     <header className="border-b border-slate-900 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col gap-3">
-        {/* Top row: branding + sync button */}
-        <div className="flex items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-sigil-gold/10 border border-sigil-gold/30 text-sigil-gold shadow-lg shadow-sigil-gold/5">
-            <Cpu size={24} className="animate-pulse" />
-          </div>
-          <div>
-            <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="text-xl font-bold tracking-tight text-white m-0 font-sans leading-none">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col gap-2.5">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="p-2 rounded-xl bg-sigil-gold/10 border border-sigil-gold/30 text-sigil-gold shrink-0">
+              <Cpu size={22} />
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-lg font-bold tracking-tight text-white m-0 font-sans leading-none truncate">
                 SIGIL SUPERNOVA
               </h1>
+              <p className="text-xs text-slate-500 font-sans mt-1 hidden sm:block">
+                Thesis-aware intelligence
+              </p>
+            </div>
+          </div>
 
-              <span
-                className={`flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-mono font-bold ${
-                  isLive
-                    ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-400"
-                    : "bg-amber-500/5 border-amber-500/20 text-amber-400"
+          <div className="flex items-center gap-3 shrink-0">
+            {onDashboard && showSectionNav && (
+              <DashboardSectionNav variant="desktop" />
+            )}
+
+            <div
+              className={`flex items-center gap-1 pl-2.5 pr-1 py-1 rounded-full border text-xs font-mono ${
+                isLive
+                  ? "border-emerald-500/20 text-emerald-400/90 bg-emerald-500/5"
+                  : "border-amber-500/20 text-amber-400/90 bg-amber-500/5"
+              }`}
+            >
+              <span className="whitespace-nowrap">
+                <span className={isLive ? "text-emerald-400" : "text-amber-400"}>
+                  ●
+                </span>{" "}
+                {statusLabel} · {syncedAgo}
+              </span>
+              <button
+                type="button"
+                onClick={onSync}
+                disabled={syncState === "syncing"}
+                title={syncTitle()}
+                aria-label={syncTitle()}
+                className={`ml-0.5 p-1.5 rounded-md transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 ${
+                  syncState === "success"
+                    ? "text-emerald-400"
+                    : syncState === "error"
+                      ? "text-rose-400"
+                      : "text-slate-500 hover:text-sigil-gold hover:bg-slate-800/60"
                 }`}
               >
-                <span className={isLive ? "text-emerald-400" : "text-amber-400"}>
-                  {isLive ? "●" : "◦"}
-                </span>
-                <span>{isLive ? "LIVE" : "DEMO DATA"}</span>
-              </span>
-
-              <span className="text-xs font-mono text-slate-500">
-                Last synced {formatLastSyncedAgo()}
-              </span>
+                <SyncIcon
+                  size={14}
+                  className={syncState === "syncing" ? "animate-spin" : ""}
+                />
+              </button>
             </div>
-
-            <p className="text-sm text-slate-400 font-sans mt-1">
-              Thesis-aware intelligence · 7 themes · 20 tickers
-            </p>
           </div>
-        </div>
-
-          <button
-            onClick={onSync}
-            disabled={syncState === "syncing"}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:scale-105 active:scale-95 disabled:scale-100 cursor-pointer disabled:cursor-not-allowed ${
-              syncState === "success"
-                ? "bg-emerald-500 text-slate-950"
-                : syncState === "error"
-                  ? "bg-rose-500 text-white"
-                  : "bg-sigil-gold hover:bg-yellow-500 disabled:bg-slate-800 text-slate-950 disabled:text-slate-500"
-            }`}
-          >
-            <SyncIcon
-              size={14}
-              className={syncState === "syncing" ? "animate-spin" : ""}
-            />
-            <span>{syncLabel()}</span>
-          </button>
         </div>
 
         {syncState === "syncing" && <SyncProgress />}
 
-        {/* Bottom row: nav links */}
+        {onDashboard && showSectionNav && (
+          <DashboardSectionNav variant="mobile" />
+        )}
+
         <nav className="flex items-center gap-1 border-t border-slate-800/50 pt-2">
           <NavLink
             to="/"

@@ -1,17 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Routes, Route } from "react-router-dom";
 import { AlertTriangle, ServerCrash } from "lucide-react";
 import ThesisRadar from "./components/ThesisRadar";
 import SignalStrip from "./components/SignalStrip";
 import Watchlist from "./components/Watchlist";
 import WeeklyBrief from "./components/WeeklyBrief";
-import ChallengeThesis from "./components/ChallengeThesis";
-import StressTestPanel from "./components/StressTestPanel";
+import StressTestZone from "./components/StressTestZone";
+import ScenarioBanner from "./components/ScenarioBanner";
 import Header from "./components/Header";
 import WhatIsThis from "./components/WhatIsThis";
+import DashboardZone from "./components/DashboardZone";
+import EditorialSpotlight from "./components/EditorialSpotlight";
 import ResearchQueue from "./components/ResearchQueue";
 import MasteryGuide from "./pages/MasteryGuide";
 import { fetchDashboard, fetchHealth, triggerSync } from "./api";
+import {
+  editorialShowsBlindspot,
+  pickEditorialSpotlight,
+} from "./utils/editorialSpotlight.js";
 
 function App() {
   const [data, setData] = useState(null);
@@ -29,6 +35,22 @@ function App() {
   });
 
   const stressActive = stressState.status === "ready" && stressState.result;
+
+  const editorialSpotlight = useMemo(
+    () =>
+      data
+        ? pickEditorialSpotlight({
+            watchlist: data.watchlist,
+            adversarialAssessment: data.adversarialAssessment,
+            thesisDriftReport: data.thesisDriftReport,
+            stressActive,
+          })
+        : null,
+    [data, stressActive]
+  );
+
+  const suppressBlindspotInChallenge =
+    editorialShowsBlindspot(editorialSpotlight);
 
   const loadDashboardData = async () => {
     try {
@@ -138,94 +160,137 @@ function App() {
     window.setTimeout(() => setHighlightThemeId(null), 3500);
   };
 
+  const handleClearScenario = () => {
+    setStressState({
+      status: "idle",
+      scenarioId: null,
+      result: null,
+      viewMode: "live",
+      error: null,
+    });
+  };
+
+  const handleStressViewMode = (mode) => {
+    setStressState((prev) => ({ ...prev, viewMode: mode }));
+  };
+
   return (
     <div className="min-h-screen bg-bg-dark text-slate-100 flex flex-col font-sans">
       <Header
         onSync={handleSync}
         syncState={syncState}
         lastUpdated={data?.lastUpdated}
+        showSectionNav={!loading}
       />
 
       <Routes>
         <Route
           path="/"
           element={
-            <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex flex-col gap-6">
+            <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex flex-col">
               <WhatIsThis />
 
-              {error && (
-                <div className="glass-panel border-rose-500/20 p-4 rounded-xl flex items-center gap-3 text-rose-400 text-sm">
-                  <ServerCrash size={18} className="shrink-0" />
-                  <span>{error}</span>
-                </div>
-              )}
+              {(error || syncNotice) && (
+                <div className="mt-4 flex flex-col gap-3">
+                  {error && (
+                    <div className="border border-rose-500/20 bg-rose-500/5 p-4 rounded-xl flex items-center gap-3 text-rose-400 text-sm">
+                      <ServerCrash size={18} className="shrink-0" />
+                      <span>{error}</span>
+                    </div>
+                  )}
 
-              {syncNotice && (
-                <div className="glass-panel border-amber-500/20 bg-amber-500/5 p-4 rounded-xl flex items-center gap-3 text-amber-300 text-sm">
-                  <AlertTriangle size={18} className="shrink-0" />
-                  <span>{syncNotice}</span>
+                  {syncNotice && (
+                    <div className="border border-amber-500/20 bg-amber-500/5 p-4 rounded-xl flex items-center gap-3 text-amber-300 text-sm">
+                      <AlertTriangle size={18} className="shrink-0" />
+                      <span>{syncNotice}</span>
+                    </div>
+                  )}
                 </div>
               )}
 
               {loading ? (
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
+                <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1">
                   <div className="lg:col-span-1 glass-panel p-6 rounded-2xl shimmer min-h-[300px]"></div>
                   <div className="lg:col-span-2 glass-panel p-6 rounded-2xl shimmer min-h-[500px]"></div>
                   <div className="lg:col-span-3 glass-panel p-6 rounded-2xl shimmer min-h-[150px]"></div>
                 </div>
               ) : (
                 <>
-                  <SignalStrip
-                    thesisDriftReport={
-                      stressActive ? null : data?.thesisDriftReport
-                    }
-                    onClusterClick={handleClusterClick}
-                  />
+                  <DashboardZone
+                    id="zone-today"
+                    label="Today"
+                    className="mt-6"
+                  >
+                    <EditorialSpotlight
+                      watchlist={data?.watchlist}
+                      adversarialAssessment={data?.adversarialAssessment}
+                      thesisDriftReport={data?.thesisDriftReport}
+                      stressActive={stressActive}
+                      onClusterClick={handleClusterClick}
+                    />
 
-                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 w-full">
+                    <SignalStrip
+                      thesisDriftReport={
+                        stressActive ? null : data?.thesisDriftReport
+                      }
+                      onClusterClick={handleClusterClick}
+                    />
+
                     <WeeklyBrief
                       weeklyBriefText={data?.weeklyBrief}
                       isMock={data?.isMock}
                       generatedAt={data?.lastUpdated}
                     />
-                    <ChallengeThesis
+                  </DashboardZone>
+
+                  <DashboardZone id="zone-stress-test" label="Stress test">
+                    <StressTestZone
                       adversarialAssessment={data?.adversarialAssessment}
                       isMock={data?.isMock}
+                      suppressBlindspotAlert={suppressBlindspotInChallenge}
+                      stressState={stressState}
+                      onStressStateChange={setStressState}
                     />
-                  </div>
+                  </DashboardZone>
 
-                  <StressTestPanel
-                    stressState={stressState}
-                    onStressStateChange={setStressState}
-                    isMock={data?.isMock}
-                  />
-
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-                    <div className="lg:col-span-1 h-full">
-                      <ThesisRadar
-                        themeData={data?.themePulse}
-                        thesisDriftReport={data?.thesisDriftReport}
-                        watchlistData={data?.watchlist}
-                        isMock={data?.isMock}
-                        highlightThemeId={highlightThemeId}
-                        stressResult={stressState.result}
-                        stressViewMode={stressState.viewMode}
+                  <DashboardZone id="zone-explore" label="Thesis & watchlist">
+                    {stressActive && (
+                      <ScenarioBanner
+                        stressState={stressState}
+                        onClear={handleClearScenario}
+                        onViewModeChange={handleStressViewMode}
                       />
-                    </div>
-                    <div className="lg:col-span-2 h-full">
-                      <Watchlist
-                        watchlistData={data?.watchlist}
-                        stressResult={stressState.result}
-                      />
-                    </div>
-                  </div>
+                    )}
 
-                  <ResearchQueue
-                    researchQueue={data?.researchQueue}
-                    isMock={data?.isMock}
-                  />
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 items-stretch">
+                      <div id="zone-radar" className="h-full scroll-mt-28">
+                        <ThesisRadar
+                          themeData={data?.themePulse}
+                          thesisDriftReport={data?.thesisDriftReport}
+                          watchlistData={data?.watchlist}
+                          isMock={data?.isMock}
+                          highlightThemeId={highlightThemeId}
+                          stressResult={stressState.result}
+                          stressViewMode={stressState.viewMode}
+                        />
+                      </div>
+                      <div id="zone-watchlist" className="h-full scroll-mt-28">
+                        <Watchlist
+                          watchlistData={data?.watchlist}
+                          stressResult={stressState.result}
+                        />
+                      </div>
+                    </div>
+                  </DashboardZone>
 
-                  <footer className="text-center pb-4 pt-2">
+                  <DashboardZone id="zone-next-steps" label="Next steps">
+                    <ResearchQueue
+                      researchQueue={data?.researchQueue}
+                      isMock={data?.isMock}
+                    />
+                  </DashboardZone>
+
+                  <footer className="text-center pb-4 pt-8 mt-4 border-t border-white/[0.04]">
                     <p className="text-[11px] font-mono text-slate-600">
                       Application demo · Supernova thesis encoded in{" "}
                       <span className="text-slate-500">config/thesis.js</span> · AI

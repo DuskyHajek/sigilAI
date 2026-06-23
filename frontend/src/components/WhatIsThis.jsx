@@ -1,34 +1,44 @@
-import { Activity, ArrowRight, Brain, FileText, FlaskConical, LineChart, Newspaper, SearchCheck, ShieldAlert, Sparkles } from "lucide-react";
+import { useState } from "react";
+import {
+  Activity,
+  ArrowRight,
+  Brain,
+  ChevronDown,
+  FileText,
+  LineChart,
+  Newspaper,
+  SearchCheck,
+  ShieldAlert,
+  Sparkles,
+  X,
+} from "lucide-react";
+
+const TOUR_DISMISSED_KEY = "supernova-dashboard-tour-dismissed";
 
 const PANELS = [
   {
     icon: FileText,
-    label: "01 · Analyst Brief",
+    label: "Analyst Brief",
     text: "Start here — a short AI summary of the strongest signals found in the current news pull.",
   },
   {
     icon: ShieldAlert,
-    label: "01b · Challenge the Thesis",
-    text: "Adversarial pass on today's headlines — bear cases, blind spots, and counter-indicators.",
-  },
-  {
-    icon: FlaskConical,
-    label: "01c · Thesis Stress Tester",
-    text: "Hypothetical “what if” scenarios — see all 7 pillars and watchlist exposure without waiting for news.",
+    label: "Stress test",
+    text: "Live adversarial pass on today's headlines, or hypothetical macro scenarios — two tabs in one zone.",
   },
   {
     icon: Activity,
-    label: "02 · Thesis Radar",
+    label: "Thesis Radar",
     text: "All seven pillars with a headline preview on each row — click for full evidence.",
   },
   {
     icon: Sparkles,
-    label: "03 · Watchlist",
+    label: "Watchlist",
     text: "21 public names with price data and a short note tied to each company angle.",
   },
   {
     icon: SearchCheck,
-    label: "04 · Research Queue",
+    label: "Research Queue",
     text: "3–7 follow-ups on what to read, verify, or search next based on this sync.",
   },
 ];
@@ -39,15 +49,65 @@ const DATA_FLOW = [
   { icon: Brain, name: "Claude", detail: "Summaries + scoring" },
 ];
 
+const readTourDismissed = () => {
+  try {
+    return localStorage.getItem(TOUR_DISMISSED_KEY) === "1";
+  } catch {
+    return false;
+  }
+};
+
 const WhatIsThis = () => {
+  const [expanded, setExpanded] = useState(() => !readTourDismissed());
+
+  const dismiss = () => {
+    setExpanded(false);
+    try {
+      localStorage.setItem(TOUR_DISMISSED_KEY, "1");
+    } catch {
+      /* private browsing */
+    }
+  };
+
+  const reopen = () => setExpanded(true);
+
+  if (!expanded) {
+    return (
+      <section className="dashboard-tour-bar" aria-label="Dashboard overview">
+        <p className="text-sm text-slate-500">
+          Thesis-aware demo · sync for live headlines and AI summaries
+        </p>
+        <button
+          type="button"
+          onClick={reopen}
+          className="inline-flex items-center gap-1 text-xs font-mono text-sigil-gold/80 hover:text-sigil-gold transition-colors shrink-0"
+        >
+          How this works
+          <ChevronDown size={12} />
+        </button>
+      </section>
+    );
+  }
+
   return (
     <section className="hero-guide rounded-2xl border border-sigil-gold/20 overflow-hidden">
       <div className="hero-guide__accent" aria-hidden="true" />
 
       <div className="relative p-5 md:p-6">
-        <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-sigil-gold/90 mb-2">
-          Supernova thesis · intelligence demo
-        </p>
+        <div className="flex items-start justify-between gap-4 mb-2">
+          <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-sigil-gold/90">
+            Supernova thesis · intelligence demo
+          </p>
+          <button
+            type="button"
+            onClick={dismiss}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-950/60 px-2.5 py-1 text-[11px] font-mono text-slate-400 hover:text-slate-200 hover:border-slate-700 transition-colors shrink-0"
+            aria-label="Dismiss tour"
+          >
+            <X size={12} />
+            Got it
+          </button>
+        </div>
 
         <h2 className="text-lg md:text-xl font-semibold text-white leading-snug max-w-3xl">
           A small live demo for tracking Sigil&apos;s Supernova themes across news,

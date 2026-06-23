@@ -34,13 +34,12 @@ const sentimentColor = (sentiment) => {
 
 const Badge = ({ label, display, title, dimmed = false }) => (
   <span
-    className={`text-[8px] font-mono uppercase tracking-wide px-1 py-px rounded border shrink-0 ${
+    className={`text-[8px] font-mono uppercase tracking-wide px-1 py-px rounded border shrink-0 bg-transparent ${
       dimmed ? "opacity-45" : ""
     }`}
     style={{
       color: display.color,
-      backgroundColor: display.bg,
-      borderColor: display.border,
+      borderColor: display.border || `${display.color}55`,
     }}
     title={title}
   >
@@ -98,16 +97,13 @@ const ThesisRadar = ({
   };
 
   return (
-    <div className="glass-panel border-gold-glow p-5 rounded-2xl h-full flex flex-col min-h-0 lg:max-h-[680px]">
+    <div className="glass-panel border border-slate-800 p-5 rounded-2xl h-full flex flex-col min-h-0 lg:max-h-[680px]">
       <div className="mb-3 shrink-0">
-        <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-sigil-gold/80 mb-1">
-          Panel 02
-        </p>
-        <h2 className="text-lg font-semibold text-slate-100 flex items-center gap-2">
+        <h2 className="text-base font-semibold text-slate-100 flex items-center gap-2">
           <Activity size={17} className="text-sigil-gold shrink-0" />
           Thesis Radar
         </h2>
-        <p className="text-[11px] text-slate-400 mt-0.5 leading-snug">
+        <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
           {stressActive
             ? stressViewMode === "stress"
               ? "Each pillar shows a scenario read — click for the full transmission chain."
@@ -203,10 +199,10 @@ const ThesisRadar = ({
                       {tickers.map((stock) => (
                         <span
                           key={stock.ticker}
-                          className={`px-1 py-px rounded text-[9px] font-mono border shrink-0 ${
+                          className={`px-1 py-px rounded text-[9px] font-mono border shrink-0 bg-transparent ${
                             stock.spotlight
-                              ? "border-sigil-gold/35 text-sigil-gold bg-sigil-gold/10"
-                              : "border-slate-800 text-slate-500 bg-slate-950/60"
+                              ? "border-sigil-gold/35 text-sigil-gold"
+                              : "border-slate-700 text-slate-500"
                           }`}
                         >
                           {stock.ticker}

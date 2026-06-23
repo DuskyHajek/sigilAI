@@ -17,6 +17,12 @@ const cleanKeyword = (keyword) => {
   return value;
 };
 
+const outlineBadgeStyle = (color) => ({
+  color,
+  borderColor: `${color}55`,
+  backgroundColor: "transparent",
+});
+
 const ResearchQueue = ({ researchQueue, isMock }) => {
   const items = researchQueue?.items || [];
 
@@ -48,13 +54,23 @@ const ResearchQueue = ({ researchQueue, isMock }) => {
           const themeColor = theme?.color_hex || "#D6A742";
           const keywords = (item.keywords || [])
             .map(cleanKeyword)
-            .filter(Boolean)
-            .slice(0, 3);
+            .filter(Boolean);
+          const tickers = item.tickers || [];
+          const secondaryBadge = tickers[0]
+            ? { type: "ticker", label: tickers[0] }
+            : keywords[0]
+              ? { type: "keyword", label: keywords[0] }
+              : null;
+          const overflowCount =
+            tickers.length +
+            keywords.length -
+            (secondaryBadge?.type === "ticker" ? 1 : 0) -
+            (secondaryBadge?.type === "keyword" ? 1 : 0);
 
           return (
             <li
               key={`${item.action}-${index}`}
-              className="relative overflow-hidden rounded-xl border border-slate-900 bg-slate-950/40 p-3.5"
+              className="relative overflow-hidden rounded-xl border border-slate-900 bg-slate-950/20 p-3.5"
             >
               <div
                 className="absolute left-0 top-0 h-full w-1"
@@ -68,13 +84,30 @@ const ResearchQueue = ({ researchQueue, isMock }) => {
                   {theme && (
                     <span
                       className="px-2 py-0.5 rounded-full text-[10px] font-mono border"
-                      style={{
-                        color: themeColor,
-                        borderColor: `${themeColor}55`,
-                        backgroundColor: `${themeColor}12`,
-                      }}
+                      style={outlineBadgeStyle(themeColor)}
                     >
                       {theme.display_name}
+                    </span>
+                  )}
+                  {secondaryBadge && (
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-mono border ${
+                        secondaryBadge.type === "ticker"
+                          ? "border-sigil-gold/30 text-sigil-gold/90"
+                          : "border-slate-700 text-slate-500"
+                      }`}
+                      style={
+                        secondaryBadge.type === "ticker"
+                          ? outlineBadgeStyle("#e5c158")
+                          : undefined
+                      }
+                    >
+                      {secondaryBadge.label}
+                    </span>
+                  )}
+                  {overflowCount > 0 && (
+                    <span className="text-[10px] font-mono text-slate-600">
+                      +{overflowCount} more
                     </span>
                   )}
                 </div>
@@ -82,25 +115,6 @@ const ResearchQueue = ({ researchQueue, isMock }) => {
                 <p className="text-sm text-slate-100 leading-relaxed">
                   {cleanAction(item.action)}
                 </p>
-
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {(item.tickers || []).map((ticker) => (
-                    <span
-                      key={ticker}
-                      className="px-2 py-0.5 rounded-full text-[10px] font-mono border border-sigil-gold/20 text-sigil-gold/90 bg-sigil-gold/5"
-                    >
-                      {ticker}
-                    </span>
-                  ))}
-                  {keywords.map((keyword) => (
-                    <span
-                      key={keyword}
-                      className="px-2 py-0.5 rounded-full text-[10px] font-mono border border-slate-800 text-slate-500 bg-slate-900/60"
-                    >
-                      {keyword}
-                    </span>
-                  ))}
-                </div>
               </div>
             </li>
           );

@@ -10,7 +10,12 @@ const SOURCE_LABELS = {
   unavailable: "Unavailable this sync",
 };
 
-const ChallengeThesis = ({ adversarialAssessment, isMock }) => {
+const ChallengeThesis = ({
+  adversarialAssessment,
+  isMock,
+  suppressBlindspotAlert = false,
+  embedded = false,
+}) => {
   const risks = adversarialAssessment?.asymmetricRisks ?? [];
   const blindspotAlert = adversarialAssessment?.blindspotAlert ?? "";
   const source = adversarialAssessment?.source;
@@ -20,22 +25,37 @@ const ChallengeThesis = ({ adversarialAssessment, isMock }) => {
     source === "unavailable" ||
     (!hasRisks && blindspotAlert === "Analysis temporarily unavailable.");
 
+  const showBlindspotAlert =
+    blindspotAlert && !suppressBlindspotAlert;
+
   const sourceLabel = isMock
     ? "Demo adversarial pass"
     : SOURCE_LABELS[source] ||
       (hasRisks ? "Claude · adversarial pass" : "No counter-signals today");
 
+  const wrapperClass = embedded
+    ? "flex flex-col"
+    : "glass-panel p-6 rounded-2xl border border-rose-500/15 h-full flex flex-col";
+
   return (
-    <div className="glass-panel p-6 rounded-2xl border border-rose-500/15 h-full flex flex-col">
+    <div className={wrapperClass}>
       <div className="flex-1">
-        <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-rose-400/80 mb-1">
-          Counter-thesis · read with the brief
-        </p>
+        {!embedded && (
+          <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-rose-400/80 mb-1">
+            Counter-thesis · read with the brief
+          </p>
+        )}
         <div className="flex items-center gap-3 flex-wrap">
           <div className="flex items-center gap-2">
-            <ShieldAlert size={16} className="text-rose-400" />
-            <h3 className="text-sm font-semibold text-slate-200 uppercase tracking-widest">
-              Challenge the Thesis
+            {!embedded && <ShieldAlert size={16} className="text-rose-400" />}
+            <h3
+              className={`font-semibold text-slate-200 ${
+                embedded
+                  ? "text-sm text-slate-300"
+                  : "text-sm uppercase tracking-widest"
+              }`}
+            >
+              {embedded ? "Bear cases from today's headlines" : "Challenge the Thesis"}
             </h3>
           </div>
           <span
@@ -51,23 +71,26 @@ const ChallengeThesis = ({ adversarialAssessment, isMock }) => {
           </span>
         </div>
 
-        <p className="mt-1 text-xs text-slate-500 leading-relaxed">
-          Stress-tests each pillar&apos;s investment logic — bear cases, blind
-          spots, and &ldquo;what if we are wrong?&rdquo; Separate from the
-          brief&apos;s single counter-signal line.
-        </p>
+        {!embedded && (
+          <p className="mt-1 text-xs text-slate-500 leading-relaxed">
+            Stress-tests each pillar&apos;s investment logic — bear cases, blind
+            spots, and &ldquo;what if we are wrong?&rdquo;
+          </p>
+        )}
 
         {!hasRisks ? (
           <div
             className={`mt-4 rounded-xl border p-4 ${
-              isCleanEmpty
-                ? "border-slate-800 bg-slate-950/30"
-                : source === "claude"
-                  ? "border-rose-500/15 bg-rose-500/5"
-                  : "border-slate-800 bg-slate-950/40"
+              embedded
+                ? "border-slate-800/80 bg-transparent"
+                : isCleanEmpty
+                  ? "border-slate-800 bg-slate-950/30"
+                  : source === "claude"
+                    ? "border-rose-500/15 bg-rose-500/5"
+                    : "border-slate-800 bg-slate-950/40"
             }`}
           >
-            {source === "claude" && blindspotAlert && (
+            {source === "claude" && showBlindspotAlert && (
               <p className="text-[10px] font-mono uppercase tracking-wide text-rose-400/90 mb-2">
                 Adversarial read
               </p>
@@ -75,8 +98,11 @@ const ChallengeThesis = ({ adversarialAssessment, isMock }) => {
             <p className="text-sm text-slate-400 leading-relaxed">
               {isUnavailable
                 ? "Adversarial analysis could not run this sync — usually a timeout or API error. Retry Sync once."
-                : blindspotAlert ||
-                  "No meaningful counter-signals detected in today's headline sample."}
+                : showBlindspotAlert
+                  ? blindspotAlert
+                  : suppressBlindspotAlert
+                    ? "Counter-thesis watch is highlighted above — expand risk cards below when present."
+                    : "No meaningful counter-signals detected in today's headline sample."}
             </p>
           </div>
         ) : (
@@ -88,7 +114,11 @@ const ChallengeThesis = ({ adversarialAssessment, isMock }) => {
               return (
                 <li
                   key={`${risk.targetTheme}-${index}`}
-                  className="relative overflow-hidden rounded-xl border border-slate-900 bg-slate-950/40 p-4"
+                  className={`relative overflow-hidden rounded-xl border p-4 ${
+                    embedded
+                      ? "border-slate-800/80 bg-transparent"
+                      : "border-slate-900 bg-slate-950/40"
+                  }`}
                 >
                   <div
                     className="absolute left-0 top-0 h-full w-1"
@@ -132,10 +162,10 @@ const ChallengeThesis = ({ adversarialAssessment, isMock }) => {
           </ol>
         )}
 
-        {hasRisks && blindspotAlert && (
+        {hasRisks && showBlindspotAlert && (
           <div className="mt-4 rounded-xl border border-rose-500/20 bg-rose-500/5 p-4">
             <p className="text-[10px] font-mono uppercase tracking-wide text-rose-400/90 mb-1">
-              Blindspot alert
+              Thesis gap
             </p>
             <p className="text-sm text-slate-200 leading-relaxed">
               {blindspotAlert}
@@ -143,7 +173,7 @@ const ChallengeThesis = ({ adversarialAssessment, isMock }) => {
           </div>
         )}
 
-        {source === "headlines" && hasRisks && (
+        {source === "headlines" && hasRisks && !embedded && (
           <p className="mt-3 text-[10px] font-mono text-slate-600 leading-relaxed">
             Claude adversarial pass did not complete (often a Vercel timeout or
             API rate limit during Sync) — showing high-significance bearish

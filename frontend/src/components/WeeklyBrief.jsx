@@ -12,44 +12,33 @@ const WeeklyBrief = ({ weeklyBriefText, isMock, generatedAt }) => {
   };
 
   return (
-    <div className="glass-panel p-6 rounded-2xl border border-emerald-500/15">
-      <div className="flex flex-col lg:flex-row lg:items-start gap-4 justify-between">
-        <div className="flex-1">
-          <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-emerald-400/80 mb-1">
-            Panel 01 · Start here
-          </p>
-          <div className="flex items-center gap-3 flex-wrap">
-            <div className="flex items-center gap-2">
-              <FileText size={16} className="text-emerald-400" />
-              <h3 className="text-sm font-semibold text-slate-200 uppercase tracking-widest">
-                Analyst Brief
-              </h3>
-            </div>
-
-            <span className="text-[11px] font-mono text-slate-500">
-              {formatGeneratedAt(generatedAt)}
-            </span>
-
-            <span
-              className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded border ${
-                isMock
-                  ? "text-amber-400/90 border-amber-500/20 bg-amber-500/5"
-                  : "text-emerald-400/90 border-emerald-500/20 bg-emerald-500/5"
-              }`}
-            >
-              {isMock ? "Demo narrative" : "Claude · Supernova prompt"}
-            </span>
-          </div>
-
-          <p className="mt-1 text-xs text-slate-500">
-            Synthesized across all themes — top signal, secondary watch, counter-thesis risk.
-          </p>
-
-          <p className="mt-3 text-[15px] text-slate-100 leading-relaxed whitespace-pre-wrap border-l-2 border-emerald-500/30 pl-4 py-1 font-sans">
-            {weeklyBriefText || "Click Sync to generate the latest brief."}
-          </p>
+    <div className="glass-panel p-6 md:p-7 rounded-2xl border border-slate-800">
+      <div className="flex items-center gap-3 flex-wrap mb-3">
+        <div className="flex items-center gap-2">
+          <FileText size={18} className="text-sigil-gold shrink-0" />
+          <h2 className="text-base font-semibold text-slate-100">
+            Analyst Brief
+          </h2>
         </div>
+
+        <span className="text-[11px] font-mono text-slate-500">
+          {formatGeneratedAt(generatedAt)}
+        </span>
+
+        <span
+          className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded border ${
+            isMock
+              ? "text-amber-400/90 border-amber-500/20 bg-transparent"
+              : "text-emerald-400/90 border-emerald-500/20 bg-transparent"
+          }`}
+        >
+          {isMock ? "Demo narrative" : "Claude · Supernova prompt"}
+        </span>
       </div>
+
+      <p className="text-[17px] md:text-lg text-slate-100 leading-relaxed whitespace-pre-wrap border-l-2 border-sigil-gold/30 pl-4 py-0.5 font-sans">
+        {weeklyBriefText || "Click Sync to generate the latest brief."}
+      </p>
     </div>
   );
 };

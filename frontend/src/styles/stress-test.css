@@ -80,11 +80,9 @@
 }
 
 .watchlist-row--stress-exposed {
-  border-color: rgba(244, 63, 94, 0.35) !important;
-  box-shadow: 0 0 0 1px rgba(244, 63, 94, 0.12);
+  background: rgba(244, 63, 94, 0.03);
 }
 
 .watchlist-row--stress-resilient {
-  border-color: rgba(16, 185, 129, 0.35) !important;
-  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.12);
+  background: rgba(16, 185, 129, 0.03);
 }
