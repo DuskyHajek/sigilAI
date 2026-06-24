@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { Activity, ChevronDown } from "lucide-react";
+import { Activity, ChevronDown, HelpCircle } from "lucide-react";
 import { THEMES, THEME_COLORS, THEME_ICONS } from "@config/thesis.js";
 import {
   buildThemeDriftMap,
+  DRIFT_DISPLAY,
   getDriftDisplay,
   getHeadlineCount,
   getThemeTickers,
@@ -26,12 +27,6 @@ const SHORT_THEME_NAMES = {
   adversarial: "Adv. AI",
 };
 
-const sentimentColor = (sentiment) => {
-  if (sentiment === "bullish") return "var(--color-bullish)";
-  if (sentiment === "bearish") return "var(--color-bearish)";
-  return "#94a3b8";
-};
-
 const Badge = ({ label, display, title, dimmed = false }) => (
   <span
     className={`text-[8px] font-mono uppercase tracking-wide px-1 py-px rounded border shrink-0 bg-transparent ${
@@ -47,6 +42,72 @@ const Badge = ({ label, display, title, dimmed = false }) => (
   </span>
 );
 
+const sentimentColor = (sentiment) => {
+  if (sentiment === "bullish") return "var(--color-bullish)";
+  if (sentiment === "bearish") return "var(--color-bearish)";
+  return "#94a3b8";
+};
+
+const DRIFT_LEGEND = Object.values(DRIFT_DISPLAY);
+
+function ThesisRadarHelp({ stressActive, stressViewMode }) {
+  const expandDetail = stressActive
+    ? stressViewMode === "stress"
+      ? "scenario impact read, transmission chain, and how the shock hits this pillar"
+      : "today's headlines and evidence plus the scenario read when a stress test is active"
+    : "classified headlines with sentiment, narrative shift notes, and the pillar thesis one-liner";
+
+  return (
+    <div className="thesis-radar-help mt-2.5 rounded-xl border border-white/8 bg-[#141414]/90 p-3 space-y-2.5">
+      <p className="text-[11px] text-slate-400 leading-relaxed">
+        <span className="text-slate-300 font-medium">Point · </span>
+        Scan all seven Supernova pillars in one pass — is today&apos;s news
+        supporting or challenging each thesis? Use this before diving into
+        individual watchlist names below.
+      </p>
+      <div>
+        <p className="text-[9px] font-mono uppercase tracking-widest text-slate-500 mb-1.5">
+          On each row
+        </p>
+        <ul className="space-y-1.5 text-[11px] text-slate-400 leading-relaxed">
+          {DRIFT_LEGEND.map((item) => (
+            <li key={item.label} className="flex gap-2">
+              <span
+                className="shrink-0 text-[8px] font-mono uppercase px-1 py-px rounded border h-fit mt-0.5"
+                style={{
+                  color: item.color,
+                  borderColor: item.border || `${item.color}55`,
+                }}
+              >
+                {item.label}
+              </span>
+              <span>{item.hint}</span>
+            </li>
+          ))}
+          <li>
+            <span className="text-slate-300 font-mono text-[10px]">N hl · </span>
+            Headlines tagged to this pillar in the current sync (click More even
+            at 0 hl for thesis scope)
+          </li>
+          <li>
+            <span className="text-slate-300 font-mono text-[10px]">Tickers · </span>
+            Up to three watchlist names in this pillar — gold border marks a
+            spotlight position
+          </li>
+          <li>
+            <span className="text-slate-300 font-mono text-[10px]">Preview · </span>
+            Strongest headline or narrative shift without expanding
+          </li>
+        </ul>
+      </div>
+      <p className="text-[11px] text-slate-400 leading-relaxed">
+        <span className="text-sigil-gold/90 font-medium">Click More · </span>
+        Opens {expandDetail}.
+      </p>
+    </div>
+  );
+}
+
 const ThesisRadar = ({
   themeData,
   thesisDriftReport,
@@ -58,6 +119,7 @@ const ThesisRadar = ({
   stackedLayout = false,
 }) => {
   const [expandedTheme, setExpandedTheme] = useState(null);
+  const [showHelp, setShowHelp] = useState(false);
 
   const toggleTheme = (themeId) => {
     setExpandedTheme((current) => (current === themeId ? null : themeId));
@@ -110,10 +172,25 @@ const ThesisRadar = ({
         <p className="text-xs text-[#a0a0a0] mt-1 leading-snug">
           {stressActive
             ? stressViewMode === "stress"
-              ? "Each pillar shows a scenario read — click for the full transmission chain."
-              : "Today's signal preview on every row — click any pillar for headlines and evidence."
-            : "Preview on every row — click More for headlines, evidence, and thesis scope."}
+              ? "Each pillar shows a scenario read — click More for the full transmission chain."
+              : "Today's drift status and headline preview on every row — click More for evidence."
+            : "One row per pillar: drift status, headline count, and a preview — click More for full evidence and thesis scope."}
         </p>
+        <button
+          type="button"
+          onClick={() => setShowHelp((open) => !open)}
+          className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-semibold text-sigil-gold/80 hover:text-sigil-gold transition-colors"
+          aria-expanded={showHelp}
+        >
+          <HelpCircle size={13} aria-hidden="true" />
+          {showHelp ? "Hide guide" : "How to read this"}
+        </button>
+        {showHelp && (
+          <ThesisRadarHelp
+            stressActive={stressActive}
+            stressViewMode={stressViewMode}
+          />
+        )}
       </div>
 
       <div className="thesis-radar-list">

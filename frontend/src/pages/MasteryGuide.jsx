@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -641,44 +640,46 @@ export default function MasteryGuide() {
         />
       </div>
 
-      {/* Tab navigation — meta vs pillar groups with visual separator */}
+      {/* Tab navigation — labeled groups instead of unexplained two columns */}
       <nav
         aria-label={mode === "reference" ? "Reference sections" : "Practice sections"}
-        className={`mb-4 sm:mb-6 ${
-          mode === "reference"
-            ? "flex flex-wrap items-center gap-1.5"
-            : "grid grid-cols-3 gap-1.5"
-        }`}
+        className="mb-4 sm:mb-6"
       >
-        {mode === "reference"
-          ? NAV_TAB_GROUPS.map((group, groupIndex) => (
-              <Fragment key={group.id}>
-                {groupIndex > 0 && (
-                  <span
-                    className="hidden md:block w-px h-6 bg-slate-700/70 mx-0.5 shrink-0 self-center"
-                    aria-hidden
-                  />
-                )}
-                <div
-                  className={`flex flex-wrap gap-1.5 ${
-                    group.id === "pillars" ? "flex-1 min-w-0" : ""
-                  }`}
-                >
+        {mode === "reference" ? (
+          <div className="space-y-3">
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              Start on{" "}
+              <span className="text-slate-400 font-medium">Overview</span> for
+              the big picture, then pick a pillar for its books and concepts — or
+              jump to Reading / Glossary anytime.
+            </p>
+            {NAV_TAB_GROUPS.map((group) => (
+              <div key={group.id}>
+                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 mb-1.5">
+                  <span className="text-[10px] font-mono font-semibold uppercase tracking-widest text-slate-500">
+                    {group.label}
+                  </span>
+                  <span className="text-[10px] text-slate-600">{group.hint}</span>
+                </div>
+                <div className="flex gap-1.5 overflow-x-auto pb-0.5 -mx-1 px-1 scrollbar-hide">
                   {group.tabs.map((tab) => (
                     <button
                       key={tab.id}
                       type="button"
                       onClick={() => setActiveTab(tab.id)}
-                      className={tabBtn(activeTab === tab.id)}
+                      className={filterBtn(activeTab === tab.id)}
                       title={tab.label}
                     >
                       {tab.shortLabel}
                     </button>
                   ))}
                 </div>
-              </Fragment>
-            ))
-          : PRACTICE_TABS.map(tab => {
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-1.5">
+            {PRACTICE_TABS.map((tab) => {
               const Icon = tab.icon;
               return (
                 <button
@@ -694,6 +695,8 @@ export default function MasteryGuide() {
                 </button>
               );
             })}
+          </div>
+        )}
       </nav>
 
       {/* Content panel */}

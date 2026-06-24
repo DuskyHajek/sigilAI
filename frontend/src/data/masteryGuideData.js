@@ -16,12 +16,16 @@ export const NAV_TABS = [
 export const NAV_TAB_GROUPS = [
   {
     id: "meta",
+    label: "Cross-theme",
+    hint: "Overview, shared models, reading list & glossary",
     tabs: NAV_TABS.filter((tab) =>
       ["overview", "mental-models", "reading", "glossary"].includes(tab.id)
     ),
   },
   {
     id: "pillars",
+    label: "7 pillars",
+    hint: "Full curriculum per Supernova investment theme",
     tabs: NAV_TABS.filter((tab) =>
       [
         "datacentres",

@@ -20,7 +20,7 @@ const PANELS = [
   {
     icon: Activity,
     label: "Thesis Radar",
-    text: "All seven pillars with headline previews — click any row for evidence.",
+    text: "All seven pillars at a glance — drift status, headline count, and preview. Click More on any row for evidence and thesis scope.",
   },
   {
     icon: Sparkles,
