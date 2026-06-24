@@ -1,4 +1,4 @@
-import { SearchCheck } from "lucide-react";
+import { ExternalLink, SearchCheck } from "lucide-react";
 import { THEMES } from "@config/thesis.js";
 import { SectionHeader } from "./learning/LearningUI";
 
@@ -24,6 +24,12 @@ const outlineBadgeStyle = (color) => ({
   backgroundColor: "transparent",
 });
 
+const buildSearchUrl = (keywords, action) => {
+  const terms = (keywords || []).slice(0, 3).join(" ");
+  const query = terms || cleanAction(action).slice(0, 100);
+  return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+};
+
 const ResearchQueue = ({ researchQueue, isMock }) => {
   const items = researchQueue?.items || [];
 
@@ -47,6 +53,7 @@ const ResearchQueue = ({ researchQueue, isMock }) => {
             .map(cleanKeyword)
             .filter(Boolean);
           const tickers = item.tickers || [];
+          const sources = item.sources || [];
           const secondaryBadge = tickers[0]
             ? { type: "ticker", label: tickers[0] }
             : keywords[0]
@@ -57,6 +64,7 @@ const ResearchQueue = ({ researchQueue, isMock }) => {
             keywords.length -
             (secondaryBadge?.type === "ticker" ? 1 : 0) -
             (secondaryBadge?.type === "keyword" ? 1 : 0);
+          const searchUrl = buildSearchUrl(keywords, item.action);
 
           return (
             <li
@@ -106,6 +114,55 @@ const ResearchQueue = ({ researchQueue, isMock }) => {
                 <p className="text-sm text-white leading-relaxed">
                   {cleanAction(item.action)}
                 </p>
+
+                {(sources.length > 0 || keywords.length > 0) && (
+                  <div className="mt-2.5 flex flex-col gap-1.5">
+                    {sources.map((source) => (
+                      <a
+                        key={source.url}
+                        href={source.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/source inline-flex items-start gap-1.5 text-[11px] font-mono text-sigil-gold hover:text-emerald-300 transition-colors"
+                      >
+                        <ExternalLink
+                          size={11}
+                          className="mt-0.5 shrink-0 opacity-80 group-hover/source:opacity-100"
+                          aria-hidden="true"
+                        />
+                        <span className="min-w-0 leading-snug">
+                          <span className="group-hover/source:underline underline-offset-2">
+                            {source.title}
+                          </span>
+                          {source.source && (
+                            <span className="text-slate-500">
+                              {" "}
+                              · {source.source}
+                            </span>
+                          )}
+                        </span>
+                      </a>
+                    ))}
+
+                    {sources.length === 0 && (
+                      <a
+                        href={searchUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/search inline-flex items-center gap-1.5 text-[11px] font-mono text-sigil-gold hover:text-emerald-300 transition-colors"
+                      >
+                        <ExternalLink
+                          size={11}
+                          className="shrink-0 opacity-80 group-hover/search:opacity-100"
+                          aria-hidden="true"
+                        />
+                        <span className="group-hover/search:underline underline-offset-2">
+                          Search this topic
+                        </span>
+                      </a>
+                    )}
+                  </div>
+                )}
               </div>
             </li>
           );

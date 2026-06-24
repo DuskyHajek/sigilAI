@@ -333,6 +333,13 @@ export const getMockResearchQueue = () => ({
       keywords: ["HBM supply", "SK Hynix", "Micron", "datacenter memory"],
       theme: "datacenters",
       tickers: ["000660.KS", "MU"],
+      sources: [
+        {
+          title: "SK Hynix raises HBM output target as AI memory demand surges",
+          url: "https://www.reuters.com/technology/sk-hynix-hbm-ai-memory-2026/",
+          source: "Reuters",
+        },
+      ],
     },
     {
       action:
@@ -340,6 +347,13 @@ export const getMockResearchQueue = () => ({
       keywords: ["AI agents", "vertical SaaS", "UiPath", "Constellation Software"],
       theme: "application",
       tickers: ["PATH", "CSU.TO"],
+      sources: [
+        {
+          title: "Enterprise AI agents move from pilots to production workflows",
+          url: "https://www.bloomberg.com/news/articles/2026-enterprise-ai-agents",
+          source: "Bloomberg",
+        },
+      ],
     },
     {
       action:
@@ -347,6 +361,13 @@ export const getMockResearchQueue = () => ({
       keywords: ["loitering munitions", "Kratos", "AeroVironment", "NATO drones"],
       theme: "warfare",
       tickers: ["KTOS", "AVAV"],
+      sources: [
+        {
+          title: "NATO members accelerate loitering munition orders",
+          url: "https://www.defensenews.com/global/2026/nato-loitering-munitions/",
+          source: "Defense News",
+        },
+      ],
     },
     {
       action:
@@ -354,6 +375,13 @@ export const getMockResearchQueue = () => ({
       keywords: ["SaaS churn", "AI coding", "software moat"],
       theme: "application",
       tickers: [],
+      sources: [
+        {
+          title: "AI coding tools trigger churn fears across thin-wrapper SaaS",
+          url: "https://www.ft.com/content/ai-saas-disruption-2026",
+          source: "Financial Times",
+        },
+      ],
     },
     {
       action:
@@ -361,6 +389,13 @@ export const getMockResearchQueue = () => ({
       keywords: ["deepfake fraud", "AI cybersecurity", "CrowdStrike", "Palo Alto"],
       theme: "adversarial",
       tickers: ["CRWD", "PANW"],
+      sources: [
+        {
+          title: "AI-powered identity fraud hits record levels, banks warn",
+          url: "https://www.wsj.com/articles/ai-fraud-deepfake-2026",
+          source: "Wall Street Journal",
+        },
+      ],
     },
   ],
 });

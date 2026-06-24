@@ -6,6 +6,90 @@ import { callClaudeJSON } from "./llm.js";
 const IS_VERCEL = !!process.env.VERCEL;
 
 const EMPTY_CONTEXT = "No thesis-relevant developments in the last 7 days.";
+const MAX_SOURCES = 2;
+
+const normalizeSource = (source) => ({
+  title: String(source?.title || "").trim(),
+  url: String(source?.url || "").trim(),
+  source: source?.source ? String(source.source).trim() : null,
+});
+
+const isValidSource = (source) =>
+  source.title && source.url && /^https?:\/\//i.test(source.url);
+
+const articleSource = (article) =>
+  normalizeSource({
+    title: article.title,
+    url: article.url,
+    source: article.source?.name || article.source || null,
+  });
+
+export const findSourcesForItem = (item, classifiedArticles) => {
+  const scoreArticleForItem = (article) => {
+    if (!article.url) return -1;
+
+    let score = article.significance || 0;
+    const action = item.action.toLowerCase();
+    const oneLine = (article.one_line || "").toLowerCase();
+    const title = (article.title || "").toLowerCase();
+
+    if (oneLine && oneLine.length > 20 && action.includes(oneLine)) score += 20;
+    else if (oneLine && action.includes(oneLine.slice(0, 50))) score += 12;
+    if (title && action.includes(title.slice(0, 40))) score += 15;
+    if (item.theme && article.themes?.includes(item.theme)) score += 4;
+
+    for (const keyword of item.keywords || []) {
+      const term = String(keyword).toLowerCase();
+      if (term.length >= 3 && (title.includes(term) || oneLine.includes(term))) {
+        score += 3;
+      }
+    }
+
+    for (const ticker of item.tickers || []) {
+      const symbol = String(ticker).toLowerCase();
+      if (title.includes(symbol) || oneLine.includes(symbol)) score += 2;
+    }
+
+    return score;
+  };
+
+  const scored = classifiedArticles
+    .map((article) => ({ article, score: scoreArticleForItem(article) }))
+    .filter(({ score }) => score > 0)
+    .sort(
+      (a, b) =>
+        b.score - a.score ||
+        (b.article.significance || 0) - (a.article.significance || 0)
+    );
+
+  const seen = new Set();
+  const sources = [];
+
+  const pushSource = (article) => {
+    const source = articleSource(article);
+    if (!isValidSource(source) || seen.has(source.url)) return;
+    seen.add(source.url);
+    sources.push(source);
+  };
+
+  for (const { article } of scored) {
+    pushSource(article);
+    if (sources.length >= MAX_SOURCES) return sources;
+  }
+
+  if (sources.length < MAX_SOURCES && item.theme) {
+    const themeArticles = classifiedArticles
+      .filter((article) => article.themes?.includes(item.theme) && article.url)
+      .sort((a, b) => (b.significance || 0) - (a.significance || 0));
+
+    for (const article of themeArticles) {
+      pushSource(article);
+      if (sources.length >= MAX_SOURCES) break;
+    }
+  }
+
+  return sources;
+};
 
 const normalizeItem = (item) => ({
   action: String(item.action || "").trim(),
@@ -18,6 +102,36 @@ const normalizeItem = (item) => ({
     .map((t) => String(t).trim())
     .filter(Boolean)
     .slice(0, 4),
+  sources: (item.sources || [])
+    .map(normalizeSource)
+    .filter(isValidSource)
+    .slice(0, MAX_SOURCES),
+});
+
+const enrichItemsWithSources = (items, classifiedArticles) =>
+  items.map((item) => {
+    const existing = item.sources || [];
+    if (existing.length >= MAX_SOURCES) return item;
+
+    const matched = findSourcesForItem(item, classifiedArticles);
+    const seen = new Set(existing.map((source) => source.url));
+    const merged = [...existing];
+
+    for (const source of matched) {
+      if (seen.has(source.url)) continue;
+      merged.push(source);
+      seen.add(source.url);
+      if (merged.length >= MAX_SOURCES) break;
+    }
+
+    return { ...item, sources: merged };
+  });
+
+const finalizeQueue = (items, classifiedArticles) => ({
+  items: enrichItemsWithSources(
+    items.map((item) => normalizeItem(item)),
+    classifiedArticles
+  ),
 });
 
 export const buildResearchSignals = (
@@ -51,6 +165,10 @@ export const buildResearchSignals = (
       thesis: pulse.thesis_score,
       reason: pulse.reason,
       headlines: themeArticles.slice(0, 3).map((a) => a.title),
+      articles: themeArticles
+        .slice(0, 3)
+        .map((article) => articleSource(article))
+        .filter(isValidSource),
       tickers: themeStocks.slice(0, 4).map((s) => s.ticker),
     });
   }
@@ -65,6 +183,8 @@ export const buildResearchSignals = (
       sentiment: article.sentiment,
       title: article.title,
       one_line: article.one_line,
+      url: article.url,
+      sourceName: article.source?.name || null,
     });
   }
 
@@ -135,6 +255,15 @@ export const buildResearchQueueProgrammatic = (signals) => {
       ],
       theme: signal.themes?.[0] || null,
       tickers: [],
+      sources: signal.url
+        ? [
+            normalizeSource({
+              title: signal.title,
+              url: signal.url,
+              source: signal.sourceName,
+            }),
+          ].filter(isValidSource)
+        : [],
     });
   }
 
@@ -174,8 +303,8 @@ export const generateResearchQueue = async (
   const fallback = buildResearchQueueProgrammatic(signals);
 
   if (signals.length === 0) {
-    return {
-      items: [
+    return finalizeQueue(
+      [
         {
           action:
             "Run Sync to pull headlines, then use theme filters to find what deserves deeper work.",
@@ -184,11 +313,12 @@ export const generateResearchQueue = async (
           tickers: [],
         },
       ],
-    };
+      classifiedArticles
+    );
   }
 
   if (IS_VERCEL) {
-    return fallback;
+    return finalizeQueue(fallback.items, classifiedArticles);
   }
 
   try {
@@ -214,11 +344,13 @@ export const generateResearchQueue = async (
         deduped.push(item);
         if (deduped.length >= 7) break;
       }
-      if (deduped.length >= 3) return { items: deduped };
+      if (deduped.length >= 3) {
+        return finalizeQueue(deduped, classifiedArticles);
+      }
     }
   } catch (err) {
     console.error("Research queue generation failed:", err.message);
   }
 
-  return fallback;
+  return finalizeQueue(fallback.items, classifiedArticles);
 };
