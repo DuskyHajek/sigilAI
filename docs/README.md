@@ -14,7 +14,7 @@ Read these in order when onboarding to the repo.
 | Doc | Purpose |
 |-----|---------|
 | [01_thesis_config.md](./01_thesis_config.md) | Theme IDs, watchlist, keywords, colors (`config/thesis.js`) |
-| [02_prompt_library.md](./02_prompt_library.md) | Claude prompt reference and tuning notes |
+| [02_prompt_library.md](./02_prompt_library.md) | Full Claude prompt text, stress scenarios, token limits, tuning |
 | [03_maintenance_playbook.md](./03_maintenance_playbook.md) | Day-to-day edits: watchlist, prompts, cache, troubleshooting |
 | [04_dev_setup.md](./04_dev_setup.md) | Local install, env vars, Vercel deploy, validation commands |
 

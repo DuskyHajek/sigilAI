@@ -19,6 +19,20 @@ const ADVERSARIAL_UNAVAILABLE = {
 
 const THEME_ID_SET = new Set(THEMES.map((t) => t.id));
 
+const VALID_RISK_TYPES = new Set([
+  "structural",
+  "timing",
+  "execution",
+  "exogenous",
+]);
+
+const normalizeRiskType = (value) => {
+  const normalized = String(value || "")
+    .trim()
+    .toLowerCase();
+  return VALID_RISK_TYPES.has(normalized) ? normalized : "structural";
+};
+
 const articleKey = (article) =>
   (article.url || article.title || "").toLowerCase().trim();
 
@@ -136,6 +150,7 @@ const normalizeRisk = (risk) => {
   return {
     targetTheme: themeId,
     headlineRisk,
+    riskType: normalizeRiskType(risk.riskType),
     adversarialArgument,
     counterIndicatorToWatch,
   };
@@ -220,6 +235,7 @@ const buildStrictHeadlineFallback = (classifiedArticles, themePulse) => {
       return {
         targetTheme: article._assignedTheme,
         headlineRisk: synthesizeHeadlineRisk(article, theme),
+        riskType: "timing",
         adversarialArgument: `${article.title} — flagged bearish for the ${theme.display_name} thesis (significance ${article.significance}).`,
         counterIndicatorToWatch:
           theme.bear_signals?.[0] || "Follow-up headlines reversing this read",

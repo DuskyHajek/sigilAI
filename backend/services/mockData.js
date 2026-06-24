@@ -235,6 +235,7 @@ export const getMockAdversarialAssessment = () => ({
   asymmetricRisks: [
     {
       targetTheme: "datacenters",
+      riskType: "timing",
       headlineRisk: "HBM exclusivity may be a mirage",
       adversarialArgument:
         "SK Hynix capacity headlines mask Samsung HBM3e yield recovery — if memory bottlenecks ease faster than capex cycles, second-order picks re-rate down while Nvidia stays bid.",
@@ -243,6 +244,7 @@ export const getMockAdversarialAssessment = () => ({
     },
     {
       targetTheme: "application",
+      riskType: "structural",
       headlineRisk: "Agentic AI could collapse vertical SaaS moats faster than modeled",
       adversarialArgument:
         "Enterprise coding agents are shipping workflow replacement, not augmentation — PATH and CSU.TO angles assume sticky ops data; thin-wrapper churn may accelerate before incumbents adapt.",
@@ -251,6 +253,7 @@ export const getMockAdversarialAssessment = () => ({
     },
     {
       targetTheme: "space",
+      riskType: "execution",
       headlineRisk: "Launch cadence optimism ignores capital intensity",
       adversarialArgument:
         "Neutron milestones do not fix unit economics — constellation capex remains front-loaded while ASTS-style direct-to-cell bets need sustained funding in a higher-rate environment.",

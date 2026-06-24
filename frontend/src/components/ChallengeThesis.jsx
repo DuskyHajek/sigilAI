@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { ShieldAlert } from "lucide-react";
 import { THEMES } from "@config/thesis.js";
+import { RISK_TYPE_LABELS, RISK_TYPE_HINTS } from "../utils/stressDisplay.js";
 
 const getTheme = (themeId) => THEMES.find((theme) => theme.id === themeId);
 
@@ -10,6 +11,7 @@ const GENERIC_EMPTY_BLINDSPOT =
 /** Curated structural bear watches — first bear_signal per pillar from thesis config. */
 const STANDING_RISKS = THEMES.map((theme) => ({
   targetTheme: theme.id,
+  riskType: "structural",
   headlineRisk: theme.bear_signals?.[0] ?? "Structural downside scenario",
   adversarialArgument: theme.short_description,
   counterIndicatorToWatch:
@@ -26,6 +28,8 @@ const SOURCE_LABELS = {
 const RiskCard = ({ risk, index, embedded, standing = false }) => {
   const theme = getTheme(risk.targetTheme);
   const themeColor = theme?.color_hex || "#f43f5e";
+  const riskType = risk.riskType || (standing ? "structural" : null);
+  const riskTypeLabel = riskType ? RISK_TYPE_LABELS[riskType] || riskType : null;
 
   return (
     <li
@@ -56,6 +60,14 @@ const RiskCard = ({ risk, index, embedded, standing = false }) => {
               }}
             >
               {theme.display_name}
+            </span>
+          )}
+          {riskTypeLabel && !standing && (
+            <span
+              className="px-2 py-0.5 rounded-full text-[10px] font-mono border border-slate-700/60 text-slate-400 bg-slate-900/50"
+              title={RISK_TYPE_HINTS[riskType] || riskTypeLabel}
+            >
+              {riskTypeLabel}
             </span>
           )}
         </div>

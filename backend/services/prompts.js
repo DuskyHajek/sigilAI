@@ -57,6 +57,12 @@ ANALYTICAL STYLE:
 - Distinguish between thesis-relevant and generic financial noise.
 - Acknowledge when evidence contradicts the thesis — intellectual honesty matters.
 - Avoid generic financial commentary. One sharp insight beats five hedged observations.
+
+VOICE AND REASONING:
+- Prefer specific mechanisms, companies, products, and metrics over abstract theme labels.
+- Distinguish structural thesis invalidation from timing/cycle risk from exogenous macro shocks — these imply different portfolio responses.
+- Counter-signals must cite evidence from the input data, not generic bear cases.
+- Second-order reasoning: state the causal chain (event → mechanism → thesis implication), not the headline restated.
 `;
 
 export const buildClassifyPrompt = (article) => `
@@ -80,11 +86,13 @@ Classify and score this article. Return ONLY valid JSON, no other text, no markd
 
 Rules:
 - "themes": array of applicable theme IDs from: ["datacenters","application","robotics","warfare","space","biotech","adversarial"]. Empty array if not relevant.
+- Tag a theme only if the article's primary subject directly concerns it — not a tangential mention. If an article clearly spans multiple primary subjects, include every relevant theme.
 - Tag "application" for AI agents, AI coding tools, copilots, enterprise AI adoption, workflow automation, SaaS AI, vertical software, or software moat disruption.
-- If an article fits more than one theme, include every relevant theme rather than forcing a single label.
 - "sentiment": relative to the Supernova thesis (bullish = good for thesis, bearish = bad for thesis)
 - "significance": integer 1-5. 1=background noise, 2=worth noting, 3=notable, 4=important, 5=major development
-- "one_line": one sentence (max 20 words) explaining why this matters for the thesis. null if not relevant.
+- "one_line": one sentence (max 25 words). Format: [specific company or mechanism] + [what happened] + [thesis implication]. null if not relevant.
+  Good: "SK Hynix HBM3e yields reach 87% — confirms memory wall thesis holds, margin expansion follows."
+  Bad: "Memory market developments support the datacenter infrastructure thesis."
 - "relevant": false if the article has no clear connection to any Supernova theme
 `;
 
@@ -114,9 +122,10 @@ Write ONE sentence, maximum 25 words.
 Requirements:
 - Must connect the headlines to this company's specific investment angle
 - Must explain why it matters for the Supernova investment thesis
+- Cite a specific proper noun, product, contract, or metric FROM the headlines when one is present — do not invent facts not in the headlines
 - Must not start with the company name or ticker
 - Must not include phrases like "this week", "recently", "according to"
-- If headlines are sector-level only, explain the implication for this specific company angle
+- If HEADLINE MATCH is theme or raw (not direct): use conditional language ("would benefit if…", "exposure rises if…") — do not state direct company impact unless the mechanism clearly applies to this angle
 - If no meaningful news: write exactly "No thesis-relevant developments in the last 7 days."
 
 Output the sentence only. No preamble.
@@ -179,7 +188,7 @@ ${themePulses
 Write a 3-4 sentence investment brief. Structure strictly:
 Sentence 1: The single most important development this week and why it matters for the portfolio thesis.
 Sentence 2: One secondary development or emerging pattern worth monitoring.
-Sentence 3: Any counter-signal, risk, or development that challenges the thesis.
+Sentence 3: Today's specific disconfirming signal — must reference a concrete headline or development from TOP DEVELOPMENTS above (name the company, policy, or mechanism). Challenge the CIO (a separate panel) addresses structural thesis risks; this sentence addresses what in today's news flow contradicts or tests the thesis right now.
 Sentence 4 (optional): One specific actionable implication — "watch X", "this strengthens the case for Y", etc.
 
 Tone: direct, analytical, zero hedging. Write like a senior analyst briefing a CIO before a Monday call.
@@ -242,18 +251,20 @@ CRITICAL INSTRUCTIONS:
 3. Adopt a sharp, sophisticated, intellectually aggressive financial tone. Speak directly to a brilliant, busy CIO. Do not include conversational fluff.
 4. targetTheme MUST be a theme id: datacenters, application, robotics, warfare, space, biotech, or adversarial.
 5. headlineRisk MUST be a sharp, synthesized counter-thesis line (e.g. "Agent routing tools normalize cross-border model access — domestic workflow moats may be overstated"). NEVER paste the raw headline title or one_line verbatim.
-6. If the feed has no material bear cases, return asymmetricRisks: [] and explain why in blindspotAlert. Do not invent generic risks.
-7. Even when headlines read bullish for the thesis, extract how a skeptical CIO could still be wrong — contrarian reads on supportive news are valid.
+6. riskType MUST classify how a CIO should respond — one of: "structural" (thesis invalidation — reduce conviction), "timing" (cycle/positioning — adjust sizing not thesis), "execution" (specific company or implementation risk within a valid theme), "exogenous" (macro/geopolitical shock outside portfolio control — monitor, do not overreact).
+7. If the feed has no material bear cases, return asymmetricRisks: [] and explain why in blindspotAlert. Do not invent generic risks.
+8. Even when headlines read bullish for the thesis, extract how a skeptical CIO could still be wrong — contrarian reads on supportive news are valid.
 
 Return your response strictly as a valid JSON object matching this TypeScript interface:
 interface AdversarialBrief {
   asymmetricRisks: Array<{
     targetTheme: string;
-    headlineRisk: string; 
-    adversarialArgument: string; 
-    counterIndicatorToWatch: string; 
+    headlineRisk: string;
+    riskType: "structural" | "timing" | "execution" | "exogenous";
+    adversarialArgument: string;
+    counterIndicatorToWatch: string;
   }>;
-  blindspotAlert: string; 
+  blindspotAlert: string;
 }
 
 JSON Output:

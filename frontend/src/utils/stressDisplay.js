@@ -31,6 +31,20 @@ export const IMPACT_TYPE_LABELS = {
   sentiment: "Sentiment",
 };
 
+export const RISK_TYPE_LABELS = {
+  structural: "Structural",
+  timing: "Timing",
+  execution: "Execution",
+  exogenous: "Exogenous",
+};
+
+export const RISK_TYPE_HINTS = {
+  structural: "Thesis invalidation — reduce conviction",
+  timing: "Cycle/positioning — adjust sizing",
+  execution: "Company-specific risk within theme",
+  exogenous: "Macro shock — monitor, don't overreact",
+};
+
 export const SCENARIO_CATEGORY_STYLES = {
   geopolitical: {
     chip: "border-rose-500/25 text-rose-300/90 hover:bg-rose-500/10",
