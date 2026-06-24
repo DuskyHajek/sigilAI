@@ -5,12 +5,8 @@
 .vc-infographic__frame {
   position: relative;
   border-radius: 1rem;
-  border: 0.5px solid rgba(255, 255, 255, 0.1);
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.03) 0%,
-    rgba(255, 255, 255, 0.01) 100%
-  );
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  background: #121212;
   overflow: hidden;
 }
 
@@ -18,11 +14,23 @@
   position: relative;
 }
 
+.vc-infographic__scroll-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 48px rgba(0, 0, 0, 0.35);
+}
+
 .vc-infographic__scroll {
   overflow-x: auto;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  padding: 0.5rem;
+  background: #161616;
 }
 
 .vc-infographic__scroll::-webkit-scrollbar {
@@ -38,7 +46,8 @@
     bottom: 0;
     width: 2.5rem;
     pointer-events: none;
-    background: linear-gradient(to left, #0a0a0a 12%, transparent 100%);
+    z-index: 2;
+    background: linear-gradient(to left, #161616 12%, transparent 100%);
   }
 }
 
@@ -58,6 +67,17 @@
   width: 100%;
   height: auto;
   vertical-align: top;
+  border-radius: 0.375rem;
+  /* Softens white blow-out on dark UI — full fidelity in lightbox */
+  filter: brightness(0.86) contrast(0.94) saturate(0.82);
+  transition: filter 0.25s ease;
+}
+
+@media (hover: hover) {
+  .vc-infographic__trigger:hover .vc-infographic__img,
+  .vc-infographic__trigger:focus-visible .vc-infographic__img {
+    filter: brightness(0.92) contrast(0.97) saturate(0.88);
+  }
 }
 
 @media (max-width: 1023px) {
@@ -163,6 +183,7 @@
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   padding: 2.75rem 0.75rem 0.75rem;
+  background: #141414;
 }
 
 @media (min-width: 640px) {
@@ -176,6 +197,9 @@
   width: 100%;
   height: auto;
   margin: 0 auto;
+  border-radius: 0.375rem;
+  /* Light touch only — user opened for full detail */
+  filter: brightness(0.94) contrast(0.98) saturate(0.92);
 }
 
 @media (max-width: 1023px) {
