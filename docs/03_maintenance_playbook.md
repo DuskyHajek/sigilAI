@@ -46,7 +46,7 @@ If the name maps to the AI infrastructure physical stack, also add an entry to `
 
 ## Update Value Chain content
 
-1. Edit `frontend/src/data/aiInfraData.js` (`PHASES`, `TIERS`, `RISK_OVERLAYS`, `WATCHLIST_TIER_MAP`).
+1. Edit `frontend/src/data/aiInfraData.js` (`PHASES`, `TIERS`, `WATCHLIST_TIER_MAP`).
 2. Use integer `tier.tier` (1–22) for all cross-references — not string slugs in maps.
 3. Run `npm run build --prefix frontend`.
 4. No backend sync or cache invalidation required.

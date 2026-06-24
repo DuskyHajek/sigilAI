@@ -31,12 +31,7 @@ const TierCard = ({
 }) => {
   const phase = getPhaseById(tier.phase);
   const hasWatchlist = tierHasWatchlistExposure(tier);
-  const tickers = [
-    ...new Set([
-      ...getTickersForTier(tier.tier),
-      ...(tier.watchlistTickers ?? []),
-    ]),
-  ];
+  const tickers = getTickersForTier(tier.tier);
 
   return (
     <article
@@ -83,11 +78,6 @@ const TierCard = ({
                 {tier.name}
               </h4>
               {tier.essential && <EssentialBadge />}
-              {hasWatchlist && (
-                <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full border border-sigil-gold/35 text-sigil-gold/90 bg-sigil-gold/[0.06]">
-                  SIGIL
-                </span>
-              )}
             </div>
             {tickers.length > 0 && (
               <div className="flex flex-wrap gap-1 mb-1.5">
@@ -164,7 +154,7 @@ const TierCard = ({
           </DetailBlock>
 
           <DetailBlock
-            label="Sigil angle"
+            label="Investment angle"
             accent="border-l-2 border-l-sigil-gold/40 pl-3"
           >
             <p className="text-xs text-[#a0a0a0] leading-relaxed">

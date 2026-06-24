@@ -1,5 +1,5 @@
 import { Fragment, useMemo, useRef, useEffect, useState } from "react";
-import { PHASES } from "../../data/aiInfraData.js";
+import { PHASES, TIERS } from "../../data/aiInfraData.js";
 import { filterTiers } from "../../utils/valueChainUtils.js";
 import { SearchInput } from "../learning/LearningUI";
 import { filterBtn } from "../learning/learningStyles";
@@ -102,6 +102,16 @@ const TierExplorer = ({
     setActiveScrollPhase(targetPhaseId);
   };
 
+  const tierCountHint = essentialOnly ? (
+    <span className="text-[10px] font-mono text-slate-500">
+      Showing {filtered.length} of {TIERS.length} tiers
+    </span>
+  ) : (
+    <span className="text-[10px] font-mono text-slate-600">
+      {filtered.length} tier{filtered.length === 1 ? "" : "s"}
+    </span>
+  );
+
   return (
     <div className="space-y-4">
       {showPhaseChrome ? (
@@ -123,11 +133,9 @@ const TierExplorer = ({
               onClick={() => onWatchlistChange(!watchlistOnly)}
               className={filterBtn(watchlistOnly)}
             >
-              {watchlistOnly ? "Show all tiers" : "🔖 Watchlist only"}
+              {watchlistOnly ? "Show all tiers" : "🔖 Holdings only"}
             </button>
-            <span className="text-[10px] font-mono text-slate-600">
-              {filtered.length} tiers
-            </span>
+            {tierCountHint}
           </div>
         </div>
       ) : (
@@ -170,11 +178,9 @@ const TierExplorer = ({
               onClick={() => onWatchlistChange(!watchlistOnly)}
               className={filterBtn(watchlistOnly)}
             >
-              {watchlistOnly ? "Show all tiers" : "🔖 Watchlist only"}
+              {watchlistOnly ? "Show all tiers" : "🔖 Holdings only"}
             </button>
-            <span className="text-[10px] font-mono text-slate-600">
-              {filtered.length} tier{filtered.length === 1 ? "" : "s"}
-            </span>
+            {tierCountHint}
           </div>
         </>
       )}

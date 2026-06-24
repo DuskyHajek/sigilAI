@@ -6,9 +6,8 @@ import DashboardZone from "../components/DashboardZone";
 import StackMap from "../components/value-chain/StackMap";
 import TierExplorer from "../components/value-chain/TierExplorer";
 import WatchlistStack from "../components/value-chain/WatchlistStack";
-import RiskOverlays from "../components/value-chain/RiskOverlays";
 import { TipBox } from "../components/learning/LearningUI";
-import { PHASES, TIERS, RISK_OVERLAYS } from "../data/aiInfraData.js";
+import { PHASES, TIERS, WATCHLIST_TIER_MAP } from "../data/aiInfraData.js";
 import {
   parseSearchParams,
   buildSearchParams,
@@ -96,7 +95,10 @@ export default function ValueChain() {
             {[
               { value: String(PHASES.length), label: "Phases" },
               { value: String(TIERS.length), label: "Tiers" },
-              { value: String(RISK_OVERLAYS.length), label: "Overlays" },
+              {
+                value: String(Object.keys(WATCHLIST_TIER_MAP).length),
+                label: "Holdings",
+              },
             ].map((stat) => (
               <div
                 key={stat.label}
@@ -137,19 +139,12 @@ export default function ValueChain() {
         />
       </DashboardZone>
 
-      <DashboardZone id="vc-overlays" label="Risk overlays">
-        <p className="text-xs text-[#a0a0a0] mb-4 leading-relaxed">
-          Three institutional alpha signals — read these before browsing tiers.
-          Click to expand affected tiers and watch signals.
-        </p>
-        <RiskOverlays onTierSelect={handleTierSelect} />
-      </DashboardZone>
-
       <DashboardZone id="vc-holdings" label="Holdings on the stack">
         <div className="vc-holdings-feature">
           <p className="vc-holdings-feature__lead">
-            Where your watchlist sits in the physical stack — no other terminal
-            maps tickers to supply-chain tier. Click to jump.
+            {Object.keys(WATCHLIST_TIER_MAP).length} of 21 watchlist names mapped
+            to the physical stack — no other terminal maps tickers to
+            supply-chain tier. Click to jump.
           </p>
           <WatchlistStack onTierSelect={handleTierSelect} />
         </div>

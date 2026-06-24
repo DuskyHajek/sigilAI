@@ -9,14 +9,13 @@
  * to the software layer where compute is monetised — across 7 phases and 22 tiers.
  *
  * ID CONTRACT:
- *   tier.tier (integer 1–22) — canonical cross-reference key for WATCHLIST_TIER_MAP,
- *     RISK_OVERLAYS.tiersAffected, and URL params (?tier=10).
+ *   tier.tier (integer 1–22) — canonical cross-reference key for WATCHLIST_TIER_MAP
+ *     and URL params (?tier=10).
  *   tier.id (string "t01"…) — stable React key / slug only.
  *
  * STRUCTURE:
  *   PHASES       — 7 macro phases, each with a strategic thesis role
  *   TIERS        — 22 individual tiers, each with role, players, moat, bottleneck, metric
- *   RISK_OVERLAYS — 3 institutional alpha signals from the hedge fund overlay section
  *   WATCHLIST_MAP — maps existing Sigil watchlist tickers into the tier they belong to
  */
 
@@ -121,7 +120,6 @@ export const TIERS = [
     moat: "Geologic monopoly. A single geographic location dictates global semiconductor wafer synthesis viability. Cannot be replicated — the geology took millions of years to form.",
     bottleneck: "Severe geographic concentration. Ecological or seismic disruptions at Spruce Pine instantly freeze global wafer production. No substitute exists at commercial scale.",
     metric: "Spot price spreads of Grade-I quartz and long-term supply contract duration.",
-    watchlistTickers: [],
     sigil_angle: "The most overlooked single point of failure in the entire AI stack. Not a tradeable equity, but the framing anchor for why physical supply chain risk is real.",
   },
   {
@@ -141,7 +139,6 @@ export const TIERS = [
     moat: "Industrial backlog scale and specialised manufacturing. Large transformers cannot be rapidly scaled — they are wound by hand by skilled tradespeople in limited facilities globally.",
     bottleneck: "Backlog lead times currently exceeding 3–4 years globally, directly gating the power turn-on date of newly constructed datacentres. This is why energy is the terminal bottleneck.",
     metric: "Backlog-to-Revenue conversion velocity and pricing power margins on custom electrical skids.",
-    watchlistTickers: [],
     sigil_angle: "The reason datacentre construction outpaces power delivery. A building can be built in 18 months; the transformer to power it has a 3-year queue. This gap is the investment thesis for Tier 16 energy plays.",
   },
 
@@ -163,7 +160,6 @@ export const TIERS = [
     moat: "Extreme chemical precision and high capital requirements. Growing a silicon ingot takes days — any voltage fluctuation during growth ruins the entire batch. Japan controls the majority of global supply.",
     bottleneck: "Furnace capacity and raw materials geopolitics — export restrictions on gallium and germanium (both Chinese near-monopolies) constrain production.",
     metric: "EBITDA margin and volume of Long-Term Agreements (LTAs) with foundry customers.",
-    watchlistTickers: [],
     sigil_angle: "Japan controls ~55% of global silicon wafer supply. One seismic event — or one export control decision — reshapes the entire upstream supply chain.",
   },
   {
@@ -183,7 +179,6 @@ export const TIERS = [
     moat: "Patented, highly proprietary chemical formulations for EUV photoresists. This chemical moat is nearly impossible to reverse-engineer — it took decades of R&D to develop.",
     bottleneck: "Severe geographic concentration in Japan. A major seismic event in key production prefectures can freeze global fab operations within weeks due to lack of consumables.",
     metric: "R&D-to-Revenue ratio for next-generation sub-2nm node chemistry.",
-    watchlistTickers: [],
     sigil_angle: "The invisible supply chain risk. Nobody talks about photoresists — until supply stops. Three Japanese companies are the single source for the chemicals that make frontier chip manufacturing possible.",
   },
   {
@@ -203,7 +198,6 @@ export const TIERS = [
     moat: "Near-100% switching costs. Retraining thousands of hardware engineers and rewriting legacy codebases to switch EDA vendors is an existential corporate risk — it almost never happens.",
     bottleneck: "Simulation compute time. Simulating a modern AI chip layout before physical tape-out takes months, delaying time-to-market for every chip generation.",
     metric: "Net Revenue Retention (NRR > 115%) and subscription backlog durability.",
-    watchlistTickers: [],
     sigil_angle: "Synopsys and Cadence are two of the most durable moats in all of technology. NRR above 115% means customers spend more each year — the switching cost moat is so high that price increases are absorbed without churn.",
   },
 
@@ -226,7 +220,6 @@ export const TIERS = [
     moat: "Deep software ecosystems. Nvidia's CUDA is where all modern AI libraries are natively written — switching the underlying chip means rewriting every AI framework. The moat is the software, not the silicon.",
     bottleneck: "Total reliance on external manufacturing. If foundries run out of capacity, fabless designers cannot deliver units regardless of demand.",
     metric: "Gross Margin >75% (Nvidia's level indicates absolute pricing power) and inventory turnover.",
-    watchlistTickers: ["NVDA"],
     sigil_angle: "NVDA in the watchlist. The Sigil physical layer thesis: NVDA is not an AI software play — it is a physical GPU scarcity play. Order backlog extends into 2027. The moat is CUDA lock-in reinforcing hardware dominance.",
   },
   {
@@ -245,7 +238,6 @@ export const TIERS = [
     moat: "Unparalleled engineering complexity. A single High-NA EUV machine costs over $350M and contains 100,000+ global components. It took ASML 25 years and €6B+ in R&D to build. No competitor has come close.",
     bottleneck: "Physical assembly and calibration limits. Only ~60 EUV machines can be produced per year. Lead times are measured in multiple years. Export controls (US, Netherlands, Japan) restrict sale to China.",
     metric: "Order backlog and Book-to-Bill ratio (new orders / fulfilled revenue).",
-    watchlistTickers: [],
     sigil_angle: "The most defensible monopoly in technology. ASML is not in the Sigil watchlist — but understanding it is essential because it is the single upstream gate for all advanced AI chip manufacturing.",
   },
   {
@@ -266,7 +258,6 @@ export const TIERS = [
     moat: "Deep integration into fab yield curves. Machines must etch at 1:100 aspect ratios with atomic precision without structural compromise. Replacing a tool mid-process risks destroying an entire fab's yield.",
     bottleneck: "Sub-component supply chain constraints — specialised vacuum chambers, precision valves, and laser components from a small number of suppliers.",
     metric: "Market share capture in structural architecture shifts, particularly the transition to Gate-All-Around (GAA) transistors at 2nm and below.",
-    watchlistTickers: ["AMAT"],
     sigil_angle: "AMAT in the watchlist. WFE is the second-order datacenter play — when hyperscalers commit capex, TSMC orders more WFE. AMAT benefits 12–18 months before GPU supply actually increases.",
   },
   {
@@ -285,7 +276,6 @@ export const TIERS = [
     moat: "Immense CapEx scale and the yield learning curve. Building one modern fab costs $20B+. Optimising it to >80% yield requires decades of institutional knowledge that cannot be acquired or copied.",
     bottleneck: "Geopolitical concentration. Taiwan is the single point of failure in the global semiconductor supply chain. Any Taiwan Strait escalation causes immediate global tech collapse — the core bear case.",
     metric: "CapEx utilisation rate and Blended Wafer ASP (Average Selling Price) by node.",
-    watchlistTickers: [],
     sigil_angle: "The most important geopolitical risk in the Sigil portfolio. TSMC is not in the watchlist (difficult for a European/crypto-native fund to access TWSE easily), but it anchors the Taiwan Strait bear case and all hardware supply thesis.",
   },
 
@@ -306,7 +296,6 @@ export const TIERS = [
     moat: "Extreme stacking precision and thermal management. If one layer in an 8- or 12-layer HBM stack fails, the entire module is discarded. SK Hynix's yield advantage translates directly to lower cost per good unit.",
     bottleneck: "Substrate utilisation — HBM production consumes 3× more wafer area than standard commodity DRAM, compressing total memory supply capacity. Every HBM wafer is three commodity DRAM wafers that don't get made.",
     metric: "HBM market share and premium margin expansion index over commodity DRAM.",
-    watchlistTickers: ["000660.KS", "MU"],
     sigil_angle: "Both 000660.KS (SK Hynix) and MU (Micron) are core watchlist positions. The memory wall thesis: LLM inference is memory-bandwidth-bound, not compute-bound. Whoever ships the most HBM wins. SK Hynix leads; Micron is catching up with US geopolitical tailwind.",
   },
   {
@@ -326,7 +315,6 @@ export const TIERS = [
     moat: "Sub-micron mechanical placement and advanced thermal interface materials. CoWoS is TSMC's moat within a moat — not just chip fab, but the assembly step that integrates everything.",
     bottleneck: "CoWoS capacity was the binding constraint on H100 supply in 2024 — more than GPU fab capacity itself. Even if TSMC had fab capacity, CoWoS shortfall limited deliverable units.",
     metric: "CoWoS capacity in wafer starts per month and hybrid bonding order pipelines.",
-    watchlistTickers: [],
     sigil_angle: "The bottleneck below the bottleneck. Most people tracked GPU fab capacity in 2024 — the real constraint was packaging. This is the 'second-order bottleneck' pattern: fixing one tier reveals the next.",
   },
   {
@@ -344,7 +332,6 @@ export const TIERS = [
     moat: "Deep software integration — testing routines are written inside EDA tools during the chip design phase, locking customers in for the entire generation. Teradyne + Advantest hold >85% global duopoly.",
     bottleneck: "Test time scalability. As AI chips grow exponentially more complex, the time to test one chip increases, creating a delivery backlog effect even when everything upstream is running.",
     metric: "Tester utilisation rates and maintaining gross margins above 55%.",
-    watchlistTickers: [],
     sigil_angle: "The invisible toll booth at the end of the fab line. Not glamorous — but a duopoly with >85% market share and switching costs baked in at the design phase. Classic 'picks and shovels' moat.",
   },
 
@@ -367,7 +354,6 @@ export const TIERS = [
     moat: "Complex system-level thermal and electrical engineering. Designing motherboards that do not warp or melt under 100kW+ power loads requires deep institutional R&D — not just assembly.",
     bottleneck: "Component availability (high-density power connectors, specialised bus systems) and assembly facilities equipped for liquid-cooled rack form factors.",
     metric: "Gross and operating margins (expanding when proprietary rack-level designs are sold) and backlog-to-revenue conversion velocity.",
-    watchlistTickers: [],
     sigil_angle: "Thin-margin assembly business — unless they own the rack design. Supermicro's liquid-cooled rack architecture is the exception: proprietary form factor that hyperscalers need. Margin expansion follows design wins.",
   },
   {
@@ -388,7 +374,6 @@ export const TIERS = [
     moat: "Deep patent walls in optical component manufacturing and the extreme engineering complexity required to design high-bandwidth switch silicon at 800G and 1.6T.",
     bottleneck: "Shortages in high-speed optical transceivers (800G and 1.6T) and specialised laser diodes required for photonic interconnects. Copper interconnects hit physical limits at 100kW+ rack densities.",
     metric: "Port shipment volumes for 800G/1.6T speeds and non-GAAP gross margins of top-tier networking chip suppliers.",
-    watchlistTickers: [],
     sigil_angle: "Photonics as the next bottleneck. The Sigil memo explicitly mentions photonics entering a productive phase. As rack power density exceeds copper's physical limits, optical interconnects become mandatory — a structural shift from optional to required.",
   },
   {
@@ -408,7 +393,6 @@ export const TIERS = [
     moat: "Strict qualification and co-engineering partnerships with server vendors. Vertiv designs liquid cooling architectures in lockstep with Nvidia — a qualification process that takes years and creates sticky revenue.",
     bottleneck: "Production capacity for leak-free fluid manifolds, specialised quick-disconnect valves, and industrial-scale Coolant Distribution Units (CDUs).",
     metric: "Organic sales expansion within high-density white-space applications and backlog duration extending beyond 12 months.",
-    watchlistTickers: [],
     sigil_angle: "The thermal constraint is the rack density constraint. Every increase in GPU compute power requires a proportional increase in liquid cooling capacity. Vertiv benefits from every Nvidia GPU generation upgrade — without being exposed to GPU fab risk.",
   },
 
@@ -432,7 +416,6 @@ export const TIERS = [
     moat: "Operational nuclear, hydroelectric, or high-capacity assets situated near major fibre paths, paired with long-term regulatory licences. You cannot replicate a nuclear plant — the licence alone takes a decade.",
     bottleneck: "Grid interconnection queue wait times exceeding 5 years in the US. Multi-year lead times for high-voltage transformers (Tier 2 above). These two constraints gate every new datacentre's power turn-on date.",
     metric: "Price per MWh on long-term corporate PPAs and gigawatts of locked-in generation pipeline capacity.",
-    watchlistTickers: [],
     sigil_angle: "The Risk Overlay 3 call from the institutional document: 'Compute is cyclically deflationary; secure electrical power is a structural monopoly.' Hyperscalers are structurally forced to sign decades-long premium PPAs — a permanent wealth transfer from digital tech balance sheets to hard utility assets.",
   },
   {
@@ -452,7 +435,6 @@ export const TIERS = [
     moat: "First-mover land acquisition with pre-secured, high-capacity fibre pathways and pre-allocated power rights that are legally unavailable to new entrants in many markets.",
     bottleneck: "Local zoning restrictions, environmental pushback on energy and water use, and regions completely tapped out of baseline power allocation. Northern Virginia (Ashburn) — the world's largest datacentre market — is functionally full.",
     metric: "Adjusted Funds From Operations (AFFO) per share growth and development pipeline yield.",
-    watchlistTickers: [],
     sigil_angle: "Pre-allocated power rights as the real asset. The land is secondary — the power licence that comes with it is the moat. In tapped-out markets, the incumbent with power rights can charge hyperscalers any price they want.",
   },
 
@@ -474,7 +456,6 @@ export const TIERS = [
     moat: "Network effects on quality data loops and proprietary RLHF (Reinforcement Learning from Human Feedback) workforces. The best data annotators attract the most sophisticated clients, whose feedback improves the annotators' tooling.",
     bottleneck: "Scarcity of frontier-grade domain expert data — PhD-level mathematics, advanced biology, legal reasoning — to grade and curate model output. Human expert time is the irreplaceable scarce resource.",
     metric: "Quality-adjusted cost per token and contract backlog of enterprise data preparation pipelines.",
-    watchlistTickers: [],
     sigil_angle: "The 'data wall' after the memory wall. Public internet data is approaching exhaustion for frontier model training. Synthetic data and expert-curated RLHF data is the next bottleneck — and Scale AI is the dominant infrastructure player.",
   },
   {
@@ -495,7 +476,6 @@ export const TIERS = [
     moat: "Massive scale of secured GPU allocations (Nvidia tier-1 priority status) and proprietary cluster management software maximising uptime. CoreWeave's Nvidia relationship is its entire moat.",
     bottleneck: "Continuous capital access to fund rolling CapEx deployments before hardware generations depreciate under aggressive 18–24-month cycles. This is the Hardware Obsolescence Trap (Risk Overlay 1).",
     metric: "Cluster utilisation rate and Cost of Compute per GPU-hour. Economic depreciation match index: hardware lifetime vs. debt amortisation schedule.",
-    watchlistTickers: [],
     sigil_angle: "Bitcoin miners as the hidden Neocloud. Sigil memo explicitly: miners already have datacentre-ready facilities, power infrastructure, and cheap energy — exactly what GPU compute requires. Converting from ASIC to GPU is operationally straightforward.",
   },
   {
@@ -515,7 +495,6 @@ export const TIERS = [
     moat: "Proprietary custom compilation and software execution stacks that extract higher token performance from hardware than the underlying cloud layers can natively offer. Software efficiency as the moat.",
     bottleneck: "High volatility in token unit economics and structural margin decay if model architectural shifts render specific compilation techniques obsolete. This layer faces the most commoditisation risk.",
     metric: "Cost per million tokens at sustained concurrency and enterprise API call volume retention.",
-    watchlistTickers: [],
     sigil_angle: "The Deepseek moment lives here. Every breakthrough in inference efficiency originates in this layer. It is both the most competitive and most consequential tier for the hardware supercycle thesis — cheap inference = Jevons paradox = more compute demand.",
   },
   {
@@ -535,7 +514,6 @@ export const TIERS = [
     moat: "Deep developer workflow entrenchment. Replacing a distributed orchestrator handling multi-billion parameter training without crashing is an extraordinarily high-risk operation — almost never done mid-project.",
     bottleneck: "Critical shortage of distributed engineering talent capable of optimising multi-node cluster configurations. The human expertise layer is the bottleneck.",
     metric: "Net Revenue Retention (NRR) and open-source contributor velocity.",
-    watchlistTickers: [],
     sigil_angle: "Developer tooling moats are underrated. Once an ML team builds their entire training pipeline around Ray or W&B, the switching cost equals weeks of cluster downtime risk. High NRR is the tell.",
   },
   {
@@ -556,63 +534,7 @@ export const TIERS = [
     moat: "Proprietary indexing algorithms maintaining low-latency semantic search over billions of high-dimensional vectors at enterprise scale. The moat deepens with data volume — more vectors indexed = harder to migrate.",
     bottleneck: "High RAM and compute utilisation costs for real-time data vectorisation and ingestion pipeline latency at enterprise scale.",
     metric: "Total vectors indexed under active management and data pipeline throughput speeds.",
-    watchlistTickers: [],
     sigil_angle: "RAG is why enterprise data moats translate to AI product moats. A company with 10 years of proprietary customer data can build a RAG system that no competitor can replicate — even with the same LLM. This is the technical mechanism behind Sigil's 'data moat' investment thesis.",
-  },
-];
-
-// ─── RISK OVERLAYS ────────────────────────────────────────────────────────────
-// From the institutional hedge fund section of the Gemini document.
-// These are the three structural alpha signals for sizing and directional decisions.
-
-export const RISK_OVERLAYS = [
-  {
-    id: "overlay1",
-    number: 1,
-    name: "Hardware Obsolescence Trap",
-    shortName: "Obsolescence Trap",
-    type: "bear",
-    color: "#E24B4A",
-    summary: "GPU generations cycle every 18–24 months. Standard corporate depreciation models assume 4–5 years. Debt-funded clusters face margin collapse before the loan is repaid.",
-    detail: "When analysing Tier 19 (Neoclouds) or any debt-fuelled compute operator, model heavily front-loaded or accelerated depreciation. A cluster built on H100s faces precipitous drops in market rental pricing per GPU-hour when H200s and Blackwell arrive — long before the underlying asset acquisition debt is amortised. This threatens abrupt structural margin decay. Risk Indicator: when a Neocloud's debt amortisation schedule extends beyond the expected competitive hardware lifecycle of its current GPU generation, that is a structural insolvency setup.",
-    tiersAffected: [19],
-    watchSignals: [
-      "Neocloud debt amortisation period vs. Nvidia GPU generation cadence",
-      "GPU-hour rental price trends across CoreWeave, Lambda, Azure",
-      "Nvidia roadmap announcements (Blackwell → Rubin → next)",
-    ],
-  },
-  {
-    id: "overlay2",
-    number: 2,
-    name: "CapEx-to-Revenue Air Pocket",
-    shortName: "CapEx Air Pocket",
-    type: "cyclical",
-    color: "#EF9F27",
-    summary: "Hyperscaler CapEx is a leading indicator for semiconductor equipment (Tiers 7–8) but a lagging indicator for enterprise software adoption. When CapEx outpaces revenue capture for 4+ quarters, cyclical overcapacity follows.",
-    detail: "Track the delta between collective Hyperscaler Cloud Revenue growth vs. Hyperscaler Infrastructure CapEx expansion. When CapEx growth outpaces revenue capture for 4+ consecutive quarters, it signals cyclical overcapacity. This creates structured short exposure opportunities in high-multiple, highly cyclical names in Tier 8 (WFE) and Tier 13 (Rack Integrators) ahead of sudden corporate order pauses. The 'air pocket' is the period between when hyperscalers pause ordering and when WFE companies report the revenue slowdown. Markets typically price this 2–3 quarters late.",
-    tiersAffected: [7, 8, 13],
-    watchSignals: [
-      "Quarterly hyperscaler CapEx guidance (Microsoft, Google, Amazon, Meta)",
-      "WFE order books at ASML, Applied Materials, Lam Research",
-      "Cloud revenue growth rate vs. CapEx growth rate delta",
-    ],
-  },
-  {
-    id: "overlay3",
-    number: 3,
-    name: "Power Arbitrage as Macro Moat",
-    shortName: "Power Arbitrage",
-    type: "bull",
-    color: "#1D9E75",
-    summary: "Compute is cyclically deflationary. Secure electrical power is a structural monopoly. Hyperscalers are structurally forced to sign decades-long premium PPAs — a permanent wealth transfer from digital balance sheets to hard utility assets.",
-    detail: "The most durable risk-adjusted alpha in the AI infrastructure stack lies not with volatile chip designers but with Independent Power Producers (IPPs) and infrastructure gatekeepers in Tier 16. Entities possessing operational nuclear, hydroelectric, or specialised natural gas networks with pre-approved grid interconnection agreements hold a structural call option on the entire AI revolution. Tech firms can replicate datacentre templates globally; they cannot manufacture a gigawatt of stable, zero-carbon electricity on demand. The grid interconnection queue (5+ years) and transformer lead times (3–4 years) mean this moat compounds over time rather than eroding.",
-    tiersAffected: [2, 16, 17],
-    watchSignals: [
-      "Constellation Energy, Vistra Corp nuclear PPA pricing and pipeline",
-      "US grid interconnection queue clearance rate",
-      "Behind-the-meter generation capacity additions at hyperscaler sites",
-    ],
   },
 ];
 

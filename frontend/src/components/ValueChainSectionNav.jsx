@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 export const VALUE_CHAIN_SECTIONS = [
   { id: "vc-map", label: "Map" },
-  { id: "vc-overlays", label: "Overlays" },
   { id: "vc-holdings", label: "Holdings" },
   { id: "vc-tiers", label: "Tiers" },
 ];

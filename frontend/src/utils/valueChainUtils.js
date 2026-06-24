@@ -29,10 +29,8 @@ export const getTickersForTier = (tierNumber) =>
     .filter(([, entry]) => entry.tier === tierNumber)
     .map(([ticker]) => ticker);
 
-export const tierHasWatchlistExposure = (tier) => {
-  const mapped = getWatchlistTierNumbers();
-  return mapped.has(tier.tier) || (tier.watchlistTickers?.length ?? 0) > 0;
-};
+export const tierHasWatchlistExposure = (tier) =>
+  getWatchlistTierNumbers().has(tier.tier);
 
 export const filterTiers = ({
   phaseId = null,
