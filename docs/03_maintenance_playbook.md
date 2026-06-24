@@ -62,7 +62,8 @@ Full reference: `docs/06_value_chain.md`.
    - `news_keywords` for NewsAPI searches;
    - `bull_signals` and `bear_signals` for reference.
 3. If the thesis logic changed meaningfully, also update `SYSTEM_PROMPT` in `backend/services/prompts.js`.
-4. Run a fresh sync.
+4. For **Application Layer** coverage, tune `news_keywords` in `config/thesis.js` **and** the classify prompt rule — NewsAPI search is the bottleneck, not prompt alone. See `docs/01_thesis_config.md` § News keywords.
+5. Run a fresh sync (locally for prompt quality evaluation — Vercel lite sync is not ground truth).
 
 ## Tune relevance filtering
 
@@ -78,12 +79,16 @@ export const SETTINGS = {
   weekly_brief_max_tokens: 500,
   research_queue_max_tokens: 450,
   adversarial_max_tokens: 700,
+  adversarial_max_articles: 10,
+  adversarial_min_significance: 3,
   thesis_drift_max_tokens: 800,
+  stress_test_max_tokens: 900,
 
   significance_threshold: 2,
   max_articles_per_theme: 10,
 
-  cache_ttl_hours: 1,
+  // 0 = always full sync on click (current testing default). Use 1+ for prod.
+  cache_ttl_hours: 0,
 };
 ```
 
@@ -92,6 +97,8 @@ Useful changes:
 - Increase `significance_threshold` to reduce noisy articles.
 - Decrease `max_articles_per_theme` to make sync faster and cheaper.
 - Increase token budgets only when outputs are being truncated.
+- Set `cache_ttl_hours: 1` (or higher) before stable production/demo deploys.
+- Tune `adversarial_min_significance` if headline fallback fires too often or too rarely.
 
 ## Update prompts
 
@@ -99,15 +106,18 @@ All prompt builders live in `backend/services/prompts.js`.
 
 Current prompt surfaces:
 
-- `SYSTEM_PROMPT`
-- `buildClassifyPrompt`
+- `SYSTEM_PROMPT` — includes `VOICE AND REASONING` (mechanism-first, structural vs timing vs exogenous)
+- `buildClassifyPrompt` — `one_line` quality bar is upstream seed for brief, drift, queue, adversarial
 - `buildStockContextPrompt`
 - `buildThemePulsePrompt`
-- `buildWeeklyBriefPrompt`
+- `buildWeeklyBriefPrompt` — sentence 3 = today's disconfirming headline (not structural CIO risks)
 - `buildResearchQueuePrompt`
-- `buildChallengeTheCioPrompt`
+- `buildChallengeTheCioPrompt` — outputs `riskType` per risk card
 - `buildThesisDriftPrompt`
+- `buildStressTestPrompt` — on-demand via `POST /api/stress-test` (not during sync)
 - `buildThesisConfig`
+
+Full verbatim text and tuning notes: `docs/02_prompt_library.md`.
 
 After changing a prompt:
 
@@ -135,8 +145,8 @@ On Vercel, the backend uses lighter sync limits and the frontend aborts after 55
 ## Adversarial & thesis drift services
 
 - `backend/services/adversarial.js` — Challenge the Thesis panel.
-  - Primary: Claude JSON pass → `source: "claude"`.
-  - Fallback: `buildStrictHeadlineFallback()` — high-sig bearish headlines (merges sig≥2 when &lt;2 at sig≥3); `buildHeadlineBlindspotAlert()` for specific Thesis gap copy; `source: "headlines"`.
+  - Primary: Claude JSON pass → `source: "claude"`. Each risk includes `riskType`: `structural` | `timing` | `execution` | `exogenous` (badge in UI).
+  - Fallback: `buildStrictHeadlineFallback()` — high-sig bearish headlines (merges sig≥2 when &lt;2 at sig≥3); `buildHeadlineBlindspotAlert()` for specific Thesis gap copy; fallback cards use `riskType: "timing"`; `source: "headlines"`.
   - Empty feed: standing risks from `config/thesis.js` on frontend; programmatic `blindspotAlert` when no bearish flow.
   - Prompt rule 9: `blindspotAlert` must name theme-specific gaps, not meta-advice.
 - `backend/services/thesisDrift.js` — Signal clustering plus drift status for Thesis Radar. Always returns 7 theme rows (merges Claude output with programmatic fallback from `themePulse.thesis_score`). Clusters may be empty on timeout.
@@ -149,7 +159,7 @@ Both new payload fields use strict empty schemas so older cache entries and part
 | Component | File | Notes |
 |-----------|------|-------|
 | Analyst Brief layout | `frontend/src/components/WeeklyBrief.jsx` | Sentence split must stay decimal-safe (`$2.4T`). Do not revert to naive `.` splitting. |
-| Counter-thesis | `frontend/src/components/ChallengeThesis.jsx` | Thesis gap, source badges, risk card styling aligned with `ResearchQueue.jsx`. |
+| Counter-thesis | `frontend/src/components/ChallengeThesis.jsx` | Thesis gap, source badges, **`riskType` pill** on live risk cards, styling aligned with `ResearchQueue.jsx`. |
 | Pillars layout | `frontend/src/App.jsx` | Stacked: `ThesisRadar` + `Watchlist` with `stackedLayout` prop (not `xl:grid-cols-2`). |
 | Zone spacing | `frontend/src/index.css` | `.dashboard-zone + .dashboard-zone` rhythm. |
 

@@ -11,8 +11,8 @@ The app has three main areas:
 Four working intelligence sections plus a signal strip:
 
 0. **Today's signals** — cross-company headline clusters from the thesis drift pass (when available).
-1. **Analyst Brief** — 3–4 sentences; UI splits into scannable lines with lead sentence highlighted (decimal-safe for `$2.4T`, etc.).
-2. **Challenge the Thesis** — adversarial bear cases, **Thesis gap** (specific blindspot), source badge; headline fallback on Vercel timeout.
+1. **Analyst Brief** — 3–4 sentences; sentence 3 cites a **specific disconfirming headline** from today (distinct from structural CIO risks below). UI splits into scannable lines with lead sentence highlighted (decimal-safe for `$2.4T`, etc.).
+2. **Challenge the Thesis** — adversarial bear cases with **`riskType` badges** (Structural / Timing / Execution / Exogenous), **Thesis gap** (specific blindspot), source badge; headline fallback on Vercel timeout.
 3. **Thesis Radar** — all 7 pillars: drift status, headline count, tickers; compact panel above watchlist.
 4. **Watchlist** — 21 curated public names with price data, change, and thesis-specific AI note (SPCX spotlight); full-width primary panel.
 5. **Research Queue** — 3–7 suggested follow-up checks; card grid is the visual reference for other panels.
@@ -109,6 +109,7 @@ supernova-dashboard/
 │   │   ├── researchQueue.js      # Follow-up research suggestions
 │   │   ├── adversarial.js        # Challenge the Thesis (adversarial pass)
 │   │   ├── thesisDrift.js        # Signal clusters + drift status (7 pillars)
+│   │   ├── stressTest.js         # On-demand scenario stress tests
 │   │   └── newsAggregation.js    # Annotated news flow for drift prompt
 │   └── data/
 │       └── cache.json            # Local cache, generated at runtime
@@ -188,7 +189,7 @@ Start at [`docs/README.md`](docs/README.md) for the full index.
 - `docs/supernova_dashboard_spec.md` — current architecture spec.
 - `docs/06_value_chain.md` — Value Chain explorer reference.
 - `docs/01_thesis_config.md` — thesis and watchlist reference.
-- `docs/02_prompt_library.md` — prompt reference and tuning notes.
+- `docs/02_prompt_library.md` — full prompt text, stress scenarios, token limits, tuning checklist.
 - `docs/03_maintenance_playbook.md` — common maintenance tasks.
 - `docs/04_dev_setup.md` — local setup and Vercel deployment.
 - `docs/archive/` — implemented feature specs (historical).

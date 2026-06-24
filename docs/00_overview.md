@@ -16,7 +16,12 @@ If Claude times out on deployment, the strip hides; the rest of the dashboard st
 
 ### 1. Analyst Brief
 
-A short Claude-generated brief that starts the page. It summarizes the strongest signal, a secondary development, and a counter-thesis risk. The intended tone is a CIO morning note, not a chatbot recap.
+A short Claude-generated brief that starts the page. It summarizes the strongest signal, a secondary development, and **today's disconfirming signal** (sentence 3). The intended tone is a CIO morning note, not a chatbot recap.
+
+**Content split vs Challenge the Thesis:**
+
+- **Brief sentence 3** — references a **specific headline** from today's news flow (company, policy, or mechanism). Answers: what in today's feed contradicts or tests the thesis?
+- **Challenge the CIO** — **structural** thesis risks with `riskType` badges (invalidation vs timing vs execution vs exogenous). Answers: what if the pillar premise is wrong?
 
 **UI rendering** (`WeeklyBrief.jsx`):
 
@@ -31,6 +36,7 @@ Structured adversarial pass: 2–3 bear cases with counter-indicators to watch, 
 **UI** (`ChallengeThesis.jsx` inside `StressTestZone`):
 
 - Risk cards use the same visual language as **Research Tasks** (theme color bar, theme pill, `border-white/8`, `bg-[#1a1a1a]`).
+- **`riskType` badge** on each live risk card: Structural / Timing / Execution / Exogenous — indicates how a CIO should respond (reduce conviction vs resize vs monitor). Hidden on standing risks from thesis config.
 - **Source badge** reflects data provenance:
   - `Claude · adversarial pass` — full LLM pass succeeded.
   - `High-sig bearish headline` / `High-sig bearish headlines` — headline fallback (count-aware label).
@@ -41,7 +47,7 @@ Structured adversarial pass: 2–3 bear cases with counter-indicators to watch, 
 
 1. Bearish articles assigned to themes, filtered by significance ≥ `adversarial_min_significance` (default 3).
 2. If fewer than 2 high-sig hits, merge in bearish articles at `significance_threshold` (default 2) from other themes.
-3. Up to 3 deduped risk cards; `source: "headlines"`.
+3. Up to 3 deduped risk cards with `riskType: "timing"`; `source: "headlines"`.
 
 ### 3. Thesis Radar
 
@@ -138,7 +144,7 @@ Offline review exports: `docs/sigil-supernova-learning-hub-export.html`, `docs/s
 
 ### Anthropic Claude API
 
-Claude is the judgment layer. It classifies articles, writes stock notes, scores theme pulses when appropriate, generates the analyst brief, and creates the research queue.
+Claude is the judgment layer. It classifies articles (including structured `one_line` summaries that seed downstream panels), writes stock notes, scores theme pulses when appropriate, generates the analyst brief, adversarial assessment, thesis drift, and research queue.
 
 Default model: `claude-sonnet-4-6`, configurable with `CLAUDE_MODEL`.
 

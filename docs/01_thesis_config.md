@@ -84,9 +84,23 @@ How fields are used:
 - `display_name` appears in UI and theme summaries.
 - `short_description` appears in expanded theme cards.
 - `long_description` is sent to Claude for theme pulse scoring.
-- `news_keywords` drives NewsAPI queries.
+- `news_keywords` drives NewsAPI queries (one query per keyword per theme). **This is the primary input bottleneck** — prompt tuning alone cannot fix missing Theme 2 headlines if keywords do not match NewsAPI results.
 - `color_hex` is used for watchlist badges.
-- `bull_signals` and `bear_signals` are reference material for maintainers.
+- `bull_signals` and `bear_signals` are reference material for maintainers and standing adversarial risks in the UI.
+
+## News keywords
+
+The authoritative keyword list lives in `config/thesis.js` — do not duplicate it here. When adding keywords, prefer concrete product/platform terms over generic labels.
+
+**Application Layer** (`application`) — highest maintenance priority. Current keywords (20) cover agents, copilots, enterprise AI, and SaaS disruption, including for example:
+
+- Agent/workflow: `AI agents`, `agentic workflow`, `workflow automation AI`, `AI workflow software`
+- Platforms: `Microsoft Copilot`, `Salesforce Agentforce`, `GitHub Copilot`, `Cursor AI`, `Claude Code`, `UiPath AI`
+- Disruption signal: `replacing SaaS with AI`
+
+When Theme 2 coverage is weak after sync, update keywords here **and** the application rule in `buildClassifyPrompt` (`backend/services/prompts.js`). See `docs/02_prompt_library.md` Prompt 1 tuning.
+
+Other themes: see `news_keywords` arrays in `config/thesis.js` for datacenters, robotics, warfare, space, biotech, and adversarial.
 
 ## Watchlist object shape
 
