@@ -134,11 +134,26 @@ On Vercel, the backend uses lighter sync limits and the frontend aborts after 55
 
 ## Adversarial & thesis drift services
 
-- `backend/services/adversarial.js` — Challenge the Thesis panel. Falls back to bearish-article and negative-`thesis_score` heuristics if Claude fails.
+- `backend/services/adversarial.js` — Challenge the Thesis panel.
+  - Primary: Claude JSON pass → `source: "claude"`.
+  - Fallback: `buildStrictHeadlineFallback()` — high-sig bearish headlines (merges sig≥2 when &lt;2 at sig≥3); `buildHeadlineBlindspotAlert()` for specific Thesis gap copy; `source: "headlines"`.
+  - Empty feed: standing risks from `config/thesis.js` on frontend; programmatic `blindspotAlert` when no bearish flow.
+  - Prompt rule 9: `blindspotAlert` must name theme-specific gaps, not meta-advice.
 - `backend/services/thesisDrift.js` — Signal clustering plus drift status for Thesis Radar. Always returns 7 theme rows (merges Claude output with programmatic fallback from `themePulse.thesis_score`). Clusters may be empty on timeout.
 - `backend/services/newsAggregation.js` — Sorts classified articles by significance before slicing the top 20 for LLM prompts.
 
 Both new payload fields use strict empty schemas so older cache entries and partial sync failures do not crash the UI.
+
+## Dashboard UI maintenance
+
+| Component | File | Notes |
+|-----------|------|-------|
+| Analyst Brief layout | `frontend/src/components/WeeklyBrief.jsx` | Sentence split must stay decimal-safe (`$2.4T`). Do not revert to naive `.` splitting. |
+| Counter-thesis | `frontend/src/components/ChallengeThesis.jsx` | Thesis gap, source badges, risk card styling aligned with `ResearchQueue.jsx`. |
+| Pillars layout | `frontend/src/App.jsx` | Stacked: `ThesisRadar` + `Watchlist` with `stackedLayout` prop (not `xl:grid-cols-2`). |
+| Zone spacing | `frontend/src/index.css` | `.dashboard-zone + .dashboard-zone` rhythm. |
+
+When editing brief or adversarial prompts, re-run sync and verify UI checklist in `docs/02_prompt_library.md` § Practical review checklist.
 
 ## Cache behavior
 
@@ -184,6 +199,9 @@ Never commit `.env`.
 | Sync times out on Vercel | Function duration limit | Retry once, reduce article limits, or sync locally. |
 | Prices show `unavailable` | Yahoo endpoint failed | Retry later; cached Yahoo values are used when available. |
 | Watchlist notes are generic | Weak headline match or no direct company news | Improve `aliases` in `WATCHLIST` or theme keywords. |
+| Brief shows `$2.` and `4T` on separate lines | Naive sentence split on decimal point | Use decimal-safe split in `WeeklyBrief.jsx` (see `docs/02_prompt_library.md` Prompt 4). |
+| Thesis gap says “verify whether risks are priced in” | Old cache or generic fallback copy | Re-sync; ensure `buildHeadlineBlindspotAlert` / prompt rule 9; frontend re-synthesizes legacy strings. |
+| Counter-thesis shows 1 risk but plural badge | Stale UI before count-aware labels | Badge is now singular/plural by risk count (`headlineSourceLabel`). |
 | Theme pulse feels noisy | Significance threshold too low | Raise `significance_threshold` in `config/settings.js`. |
 | Deployed data disappears | No remote KV configured | Add Vercel KV or Upstash REST env vars. |
 | Claude returns malformed JSON | Prompt edge case | Inspect backend logs and tighten the JSON-only prompt. |

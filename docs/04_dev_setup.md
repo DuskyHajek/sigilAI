@@ -189,8 +189,9 @@ After a successful sync on deployment you should see:
 
 - **Thesis Radar** — all 7 pillars with drift status, headline counts, and tickers (drift falls back to programmatic mapping if Claude thesis drift times out).
 - **Today's signals** strip — only when the thesis drift Claude pass completes; hidden otherwise (not an error).
-- **Challenge the Thesis** — adversarial risks when Claude completes; bearish-headline fallback otherwise.
-- **Watchlist** — 21 names with Yahoo prices where available.
+- **Challenge the Thesis** — adversarial risks when Claude completes; headline fallback (`source: "headlines"`) with count-aware badge and theme-specific **Thesis gap** otherwise.
+- **Analyst Brief** — 3–4 sentences rendered as separate lines; first sentence emphasized; no break at decimal valuations (e.g. `$2.4T`).
+- **Watchlist** — 21 names with Yahoo prices where available; full-width panel below compact Thesis Radar.
 
 If sync fails:
 

@@ -1,14 +1,24 @@
 import { FileText } from "lucide-react";
 import { SectionHeader } from "./learning/LearningUI";
 
+/** Split brief into sentences without breaking decimals like $2.4T or 15.5x. */
 const splitBriefSentences = (text) => {
   const trimmed = String(text || "").trim();
   if (!trimmed) return [];
 
-  const parts = trimmed.match(/[^.!?]+(?:[.!?]+|$)/g);
-  if (!parts) return [trimmed];
+  const re = /(?<!\d)[.!?](?!\d)(?=\s+[A-Z]|$)/g;
+  const sentences = [];
+  let last = 0;
 
-  return parts.map((part) => part.trim()).filter(Boolean);
+  for (const match of trimmed.matchAll(re)) {
+    sentences.push(trimmed.slice(last, match.index + 1).trim());
+    last = match.index + match[0].length;
+  }
+
+  const rest = trimmed.slice(last).trim();
+  if (rest) sentences.push(rest);
+
+  return sentences.length > 0 ? sentences : [trimmed];
 };
 
 const WeeklyBrief = ({ weeklyBriefText, isMock, generatedAt }) => {
