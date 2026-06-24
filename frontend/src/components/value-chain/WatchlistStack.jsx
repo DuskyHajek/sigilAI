@@ -1,23 +1,30 @@
 import { Link } from "react-router-dom";
+import { ArrowUpRight } from "lucide-react";
 import { WATCHLIST_STACK_ENTRIES } from "../../utils/valueChainUtils.js";
 
 const WatchlistStack = ({ onTierSelect }) => (
   <div className="space-y-4">
     <div className="vc-ticker-grid">
-      {WATCHLIST_STACK_ENTRIES.map(({ ticker, tierNumber, note }) => (
+      {WATCHLIST_STACK_ENTRIES.map(({ ticker, tierNumber, note, tier }) => (
         <button
           key={ticker}
           type="button"
           onClick={() => onTierSelect(tierNumber)}
-          className="vc-ticker-row group"
+          className="vc-ticker-card group"
         >
-          <span className="text-xs font-mono font-bold text-sigil-gold shrink-0 w-[4.5rem] truncate">
-            {ticker}
-          </span>
-          <span className="vc-tier-badge">Tier {tierNumber}</span>
-          <span className="text-[11px] text-slate-400 leading-snug line-clamp-2 min-w-0 flex-1 group-hover:text-slate-300 transition-colors">
-            {note}
-          </span>
+          <div className="vc-ticker-card__head">
+            <span className="vc-ticker-card__sym">{ticker}</span>
+            <span className="vc-tier-badge">Tier {tierNumber}</span>
+            <ArrowUpRight
+              size={14}
+              className="vc-ticker-card__arrow text-slate-600 group-hover:text-sigil-gold transition-colors shrink-0 ml-auto"
+              aria-hidden="true"
+            />
+          </div>
+          <p className="vc-ticker-card__tier-name">
+            {tier?.name ?? `Tier ${tierNumber}`}
+          </p>
+          <p className="vc-ticker-card__note">{note}</p>
         </button>
       ))}
     </div>

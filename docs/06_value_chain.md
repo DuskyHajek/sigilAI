@@ -74,12 +74,12 @@ All 22 tiers with filters:
 | Normal | `tier.essential === false` | Muted border, ~72% opacity |
 | Watchlist | Mapped ticker or `watchlistTickers` | Stronger green border glow on essential tiers |
 
-**Phase chrome** (when 2+ phases visible in the filtered list)
+**Phase chrome** (when browsing all phases with no search query)
 
-- **Phase separators** — coloured label + phase name + `thesisRole` between tier groups
-- **Sticky phase nav** — compact chip bar sticks below the header while scrolling; active chip tracks scroll position via `IntersectionObserver`; click chip → smooth scroll to that phase group
+- **Phase separator banners** — full-width coloured band with phase label, name, and `thesisRole`
+- **Sticky explorer toolbar** — single bar (no duplicate phase pills): scroll-position chips + essential/watchlist filters; phase filter pills appear only when a phase filter or search is active
 
-Phase separators and sticky nav are hidden when a single phase filter is active (only one group visible).
+Phase separators and sticky toolbar are hidden when a single-phase filter or search query is active.
 
 Each tier card expands to: players, moat, bottleneck (amber accent), key metric, **Sigil angle** (gold accent).
 

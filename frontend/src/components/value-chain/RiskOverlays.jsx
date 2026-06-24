@@ -8,18 +8,21 @@ const TYPE_STYLES = {
     badgeClass: "bg-rose-500/10 text-rose-400 border-rose-500/25",
     border: "border-rose-500/25",
     surface: "bg-rose-500/[0.06]",
+    cardMod: "vc-risk-card--bear",
   },
   cyclical: {
     badge: "CYCLICAL",
     badgeClass: "bg-amber-500/10 text-amber-400 border-amber-500/25",
     border: "border-amber-500/25",
     surface: "bg-amber-500/[0.06]",
+    cardMod: "vc-risk-card--cyclical",
   },
   bull: {
     badge: "BULL",
     badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/25",
     border: "border-emerald-500/25",
     surface: "bg-emerald-500/[0.06]",
+    cardMod: "vc-risk-card--bull",
   },
 };
 
@@ -29,7 +32,7 @@ const OverlayCard = ({ overlay, onTierSelect }) => {
 
   return (
     <article
-      className={`rounded-xl border ${styles.border} ${styles.surface} overflow-hidden h-full flex flex-col`}
+      className={`vc-risk-card ${styles.cardMod} rounded-xl border ${styles.border} ${styles.surface} overflow-hidden h-full flex flex-col`}
     >
       <button
         type="button"

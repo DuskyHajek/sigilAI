@@ -25,6 +25,7 @@ const TierCard = ({
   tier,
   expanded,
   highlighted = false,
+  compactPhase = false,
   onToggle,
   cardRef,
 }) => {
@@ -50,12 +51,18 @@ const TierCard = ({
       <button
         type="button"
         onClick={onToggle}
-        className="w-full text-left p-3.5 sm:p-5 group min-h-[44px]"
+        className={`w-full text-left group min-h-[44px] ${
+          tier.essential ? "p-3.5 sm:p-5" : "p-3 sm:p-4"
+        }`}
         aria-expanded={expanded}
       >
         <div className="flex items-start gap-2.5 sm:gap-3">
           <span
-            className="shrink-0 w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center text-[11px] sm:text-xs font-mono font-bold border"
+            className={`shrink-0 rounded-lg flex items-center justify-center font-mono font-bold border ${
+              tier.essential
+                ? "w-8 h-8 sm:w-9 sm:h-9 text-[11px] sm:text-xs"
+                : "w-7 h-7 sm:w-8 sm:h-8 text-[10px] sm:text-[11px]"
+            }`}
             style={{
               color: phase?.color ?? "#a0a0a0",
               borderColor: `${phase?.color ?? "#a0a0a0"}44`,
@@ -66,10 +73,21 @@ const TierCard = ({
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-0.5">
-              <h4 className="text-[13px] sm:text-sm font-semibold text-white leading-snug">
+              <h4
+                className={`leading-snug ${
+                  tier.essential
+                    ? "text-[13px] sm:text-sm font-semibold text-white"
+                    : "text-xs sm:text-[13px] font-medium text-white/75"
+                }`}
+              >
                 {tier.name}
               </h4>
               {tier.essential && <EssentialBadge />}
+              {hasWatchlist && (
+                <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full border border-sigil-gold/35 text-sigil-gold/90 bg-sigil-gold/[0.06]">
+                  SIGIL
+                </span>
+              )}
             </div>
             {tickers.length > 0 && (
               <div className="flex flex-wrap gap-1 mb-1.5">
@@ -85,7 +103,7 @@ const TierCard = ({
             )}
             <p className="text-[10px] sm:text-[11px] font-mono text-slate-500 mb-1 leading-relaxed">
               {tier.subtitle}
-              {phase ? ` · ${phase.label}` : ""}
+              {!compactPhase && phase ? ` · ${phase.label}` : ""}
             </p>
             <p
               className={`text-xs text-[#a0a0a0] leading-relaxed ${

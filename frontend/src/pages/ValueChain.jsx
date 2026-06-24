@@ -12,7 +12,6 @@ import { PHASES, TIERS, RISK_OVERLAYS } from "../data/aiInfraData.js";
 import {
   parseSearchParams,
   buildSearchParams,
-  WATCHLIST_STACK_ENTRIES,
 } from "../utils/valueChainUtils.js";
 
 export default function ValueChain() {
@@ -147,11 +146,13 @@ export default function ValueChain() {
       </DashboardZone>
 
       <DashboardZone id="vc-holdings" label="Holdings on the stack">
-        <p className="text-xs text-[#a0a0a0] mb-4 leading-relaxed">
-          {WATCHLIST_STACK_ENTRIES.length} Sigil watchlist names mapped to
-          physical stack positions. Click a ticker to jump to its tier.
-        </p>
-        <WatchlistStack onTierSelect={handleTierSelect} />
+        <div className="vc-holdings-feature">
+          <p className="vc-holdings-feature__lead">
+            Where your watchlist sits in the physical stack — no other terminal
+            maps tickers to supply-chain tier. Click to jump.
+          </p>
+          <WatchlistStack onTierSelect={handleTierSelect} />
+        </div>
       </DashboardZone>
 
       <DashboardZone id="vc-tiers" label="Tier explorer">
