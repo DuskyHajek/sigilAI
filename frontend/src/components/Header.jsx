@@ -1,10 +1,34 @@
 import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { RefreshCw, Cpu, Check, X, BookOpen, Layers } from "lucide-react";
+import { RefreshCw, Cpu, Check, X, BookOpen, Layers, LayoutDashboard } from "lucide-react";
 import { fetchHealth } from "../api";
 import SyncProgress from "./SyncProgress";
 import DashboardSectionNav from "./DashboardSectionNav";
 import ValueChainSectionNav from "./ValueChainSectionNav";
+
+const APP_SECTIONS = [
+  {
+    to: "/",
+    end: true,
+    label: "Dashboard",
+    Icon: LayoutDashboard,
+    title: "Live briefing, watchlist, and thesis radar",
+  },
+  {
+    to: "/value-chain",
+    label: "Value Chain",
+    mobileLabel: "Value Chain",
+    Icon: Layers,
+    title: "22-tier AI infrastructure stack — phases, bottlenecks & holdings",
+  },
+  {
+    to: "/mastery-guide",
+    label: "Learning Hub",
+    mobileLabel: "Learning",
+    Icon: BookOpen,
+    title: "Reference curriculum, quizzes, flashcards & scenarios",
+  },
+];
 
 const Header = ({
   onSync,
@@ -160,58 +184,38 @@ const Header = ({
 
         {syncState === "syncing" && <SyncProgress />}
 
+        <nav className="app-main-nav" aria-label="Main sections">
+          <div className="app-main-nav__track">
+            {APP_SECTIONS.map(({ to, end, label, mobileLabel, Icon, title }) => (
+              <NavLink
+                key={to}
+                to={to}
+                end={end}
+                title={title}
+                className={({ isActive }) =>
+                  `app-main-nav__link${
+                    isActive
+                      ? " app-main-nav__link--active"
+                      : " app-main-nav__link--inactive"
+                  }`
+                }
+              >
+                <Icon size={18} className="app-main-nav__icon shrink-0" aria-hidden="true" />
+                <span className="app-main-nav__label">{label}</span>
+                <span className="app-main-nav__label app-main-nav__label--mobile">
+                  {mobileLabel ?? label}
+                </span>
+              </NavLink>
+            ))}
+          </div>
+        </nav>
+
         {onDashboard && showSectionNav && (
           <DashboardSectionNav variant="mobile" />
         )}
         {onValueChain && showValueChainNav && (
           <ValueChainSectionNav variant="mobile" />
         )}
-
-        <nav className="app-main-nav flex items-center gap-1 border-t border-white/6 pt-2 overflow-x-auto -mx-1 px-1">
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) =>
-              `px-2.5 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-colors whitespace-nowrap shrink-0 ${
-                isActive
-                  ? "bg-sigil-gold text-black"
-                  : "text-white/60 hover:text-white hover:bg-white/5"
-              }`
-            }
-          >
-            Dashboard
-          </NavLink>
-          <NavLink
-            to="/value-chain"
-            title="22-tier AI infrastructure value chain — phases, bottlenecks & watchlist mapping"
-            className={({ isActive }) =>
-              `flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-colors whitespace-nowrap shrink-0 ${
-                isActive
-                  ? "bg-sigil-gold text-black"
-                  : "text-white/60 hover:text-white hover:bg-white/5"
-              }`
-            }
-          >
-            <Layers size={12} className="shrink-0" aria-hidden="true" />
-            <span className="sm:hidden">Stack</span>
-            <span className="hidden sm:inline">Value Chain</span>
-          </NavLink>
-          <NavLink
-            to="/mastery-guide"
-            title="Reference curriculum, quizzes, flashcards & scenario practice for all 7 themes"
-            className={({ isActive }) =>
-              `flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-colors whitespace-nowrap shrink-0 ${
-                isActive
-                  ? "bg-sigil-gold text-black"
-                  : "text-white/60 hover:text-white hover:bg-white/5"
-              }`
-            }
-          >
-            <BookOpen size={12} className="shrink-0" aria-hidden="true" />
-            <span className="sm:hidden">Learn</span>
-            <span className="hidden sm:inline">Learning Hub</span>
-          </NavLink>
-        </nav>
       </div>
     </header>
   );

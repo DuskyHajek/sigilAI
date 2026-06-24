@@ -427,22 +427,13 @@
 }
 
 .value-chain-page .dashboard-zone {
-  scroll-margin-top: 5.5rem;
+  scroll-margin-top: 7rem;
 }
 
 @media (min-width: 640px) {
   .value-chain-page .dashboard-zone {
-    scroll-margin-top: 7rem;
+    scroll-margin-top: 8.5rem;
   }
-}
-
-.app-main-nav {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.app-main-nav::-webkit-scrollbar {
-  display: none;
 }
 
 /* ── Tier card hierarchy ─────────────────────────────────────────────────── */
@@ -652,7 +643,7 @@
 
 .vc-explorer-sticky {
   position: sticky;
-  top: 5.5rem;
+  top: 7rem;
   z-index: 20;
   display: flex;
   flex-direction: column;
@@ -668,7 +659,7 @@
 
 @media (min-width: 640px) {
   .vc-explorer-sticky {
-    top: 7rem;
+    top: 8.5rem;
   }
 }
 
