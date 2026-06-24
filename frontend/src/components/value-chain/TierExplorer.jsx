@@ -1,9 +1,17 @@
-import { useMemo, useRef, useEffect } from "react";
+import { Fragment, useMemo, useRef, useEffect, useState } from "react";
 import { PHASES } from "../../data/aiInfraData.js";
 import { filterTiers } from "../../utils/valueChainUtils.js";
 import { SearchInput } from "../learning/LearningUI";
 import { filterBtn } from "../learning/learningStyles";
 import TierCard from "./TierCard.jsx";
+import PhaseSeparator from "./PhaseSeparator.jsx";
+import StickyPhaseNav from "./StickyPhaseNav.jsx";
+
+const groupTiersByPhase = (tiers) =>
+  PHASES.map((phase) => ({
+    phase,
+    tiers: tiers.filter((tier) => tier.phase === phase.id),
+  })).filter((group) => group.tiers.length > 0);
 
 const TierExplorer = ({
   phaseId,
@@ -18,6 +26,9 @@ const TierExplorer = ({
   onTierToggle,
 }) => {
   const tierRefs = useRef({});
+  const separatorRefs = useRef({});
+  const [highlightedTier, setHighlightedTier] = useState(null);
+  const [activeScrollPhase, setActiveScrollPhase] = useState(null);
 
   const filtered = useMemo(
     () =>
@@ -30,6 +41,17 @@ const TierExplorer = ({
     [phaseId, essentialOnly, watchlistOnly, query]
   );
 
+  const grouped = useMemo(() => groupTiersByPhase(filtered), [filtered]);
+  const showPhaseChrome = grouped.length > 1;
+
+  useEffect(() => {
+    if (!showPhaseChrome) {
+      setActiveScrollPhase(null);
+      return;
+    }
+    setActiveScrollPhase((current) => current ?? grouped[0]?.phase.id ?? null);
+  }, [showPhaseChrome, grouped]);
+
   useEffect(() => {
     if (expandedTier == null) return;
     const node = tierRefs.current[expandedTier];
@@ -37,7 +59,47 @@ const TierExplorer = ({
     window.requestAnimationFrame(() => {
       node.scrollIntoView({ behavior: "smooth", block: "center" });
     });
+    setHighlightedTier(expandedTier);
+    const timer = window.setTimeout(() => setHighlightedTier(null), 2000);
+    return () => window.clearTimeout(timer);
   }, [expandedTier, filtered.length]);
+
+  useEffect(() => {
+    if (!showPhaseChrome) return undefined;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort(
+            (a, b) => a.boundingClientRect.top - b.boundingClientRect.top
+          );
+
+        const phaseIdFromEntry = visible[0]?.target?.dataset?.phaseId;
+        if (phaseIdFromEntry) {
+          setActiveScrollPhase(phaseIdFromEntry);
+        }
+      },
+      {
+        rootMargin: "-30% 0px -55% 0px",
+        threshold: [0, 0.25, 0.5],
+      }
+    );
+
+    grouped.forEach(({ phase }) => {
+      const node = separatorRefs.current[phase.id];
+      if (node) observer.observe(node);
+    });
+
+    return () => observer.disconnect();
+  }, [showPhaseChrome, grouped]);
+
+  const scrollToPhase = (targetPhaseId) => {
+    const node = separatorRefs.current[targetPhaseId];
+    if (!node) return;
+    node.scrollIntoView({ behavior: "smooth", block: "start" });
+    setActiveScrollPhase(targetPhaseId);
+  };
 
   return (
     <div className="space-y-4">
@@ -92,19 +154,39 @@ const TierExplorer = ({
         placeholder="Search tiers, players, bottlenecks…"
       />
 
+      {showPhaseChrome && (
+        <StickyPhaseNav
+          activePhaseId={activeScrollPhase}
+          onPhaseClick={scrollToPhase}
+        />
+      )}
+
       <div className="space-y-3">
-        {filtered.map((tier) => (
-          <TierCard
-            key={tier.id}
-            tier={tier}
-            expanded={expandedTier === tier.tier}
-            onToggle={() =>
-              onTierToggle(expandedTier === tier.tier ? null : tier.tier)
-            }
-            cardRef={(el) => {
-              if (el) tierRefs.current[tier.tier] = el;
-            }}
-          />
+        {grouped.map(({ phase, tiers }) => (
+          <Fragment key={phase.id}>
+            {showPhaseChrome && (
+              <PhaseSeparator
+                phase={phase}
+                ref={(el) => {
+                  if (el) separatorRefs.current[phase.id] = el;
+                }}
+              />
+            )}
+            {tiers.map((tier) => (
+              <TierCard
+                key={tier.id}
+                tier={tier}
+                expanded={expandedTier === tier.tier}
+                highlighted={highlightedTier === tier.tier}
+                onToggle={() =>
+                  onTierToggle(expandedTier === tier.tier ? null : tier.tier)
+                }
+                cardRef={(el) => {
+                  if (el) tierRefs.current[tier.tier] = el;
+                }}
+              />
+            ))}
+          </Fragment>
         ))}
         {filtered.length === 0 && (
           <p className="text-sm text-slate-500 text-center py-10">

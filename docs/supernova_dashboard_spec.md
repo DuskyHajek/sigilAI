@@ -14,20 +14,20 @@ Three frontend routes:
 ### Dashboard (`/`)
 
 0. **Today's signals** — cross-company clusters from thesis drift (when available).
-1. **Analyst Brief** — concise generated summary of the most important current signals.
-2. **Challenge the Thesis** — adversarial bear cases and blind spots per pillar.
-3. **Thesis Radar** — 7-pillar table: drift status, headline count, tickers; expand for evidence.
-4. **Watchlist** — 21 curated names with price data, change, thesis notes, and IPO spotlight (SPCX).
-5. **Research Queue** — follow-up checks for an analyst after sync.
+1. **Analyst Brief** — 3–4 sentence CIO note; UI splits into scannable lines with the lead sentence emphasized (decimal-safe — `$2.4T` stays intact).
+2. **Challenge the Thesis** — adversarial bear cases, **Thesis gap** (specific blindspot, not meta-advice), source badge; headline fallback when Claude times out.
+3. **Thesis Radar** — 7-pillar table: drift status, headline count, tickers; expand for evidence. Compact panel in stacked layout.
+4. **Watchlist** — 21 curated names with price data, change, thesis notes, and IPO spotlight (SPCX). Full-width primary panel below Thesis Radar.
+5. **Research Queue** — follow-up checks for an analyst after sync (visual reference for card styling across the dashboard).
 
 ### Value Chain (`/value-chain`)
 
 Static AI infrastructure stack reference. No API dependency.
 
 - **Stack map** — 7 phases; click to filter tiers.
-- **Tier explorer** — 22 tiers (role, players, moat, bottleneck, metric, Sigil angle).
-- **Holdings** — watchlist tickers mapped to tiers (`WATCHLIST_TIER_MAP`).
-- **Risk overlays** — 3 institutional alpha signals.
+- **Risk overlays** — 3 institutional alpha signals (compact grid, above tiers).
+- **Holdings** — watchlist tickers mapped to tiers (`WATCHLIST_TIER_MAP`); click-to-jump grid.
+- **Tier explorer** — 22 tiers with essential hierarchy, phase separators, sticky phase nav.
 
 Shareable filters via URL params (`?tier=10`, `?phase=3`). See `docs/06_value_chain.md`.
 
@@ -106,6 +106,29 @@ updated dashboard payload
 
 There is no scheduled refresh in the current implementation. Sync is user-triggered from the header button.
 
+## Dashboard layout & visual hierarchy
+
+```text
+Daily briefing zone
+  EditorialSpotlight (SPCX CTA)
+  WeeklyBrief (lead sentence highlighted)
+  SignalStrip (when drift clusters exist)
+
+Counter-thesis & scenarios zone
+  StressTestZone → ChallengeThesis (embedded) | StressTestPanel
+
+Pillars & watchlist zone  (stacked, not 50/50 grid)
+  ThesisRadar  (compact, scrollable, stackedLayout)
+  Watchlist    (full width, primary, stackedLayout)
+
+Research tasks zone
+  ResearchQueue (2-col card grid — styling reference)
+```
+
+Zone spacing: `.dashboard-zone + .dashboard-zone` → `margin-top: 2.5rem`, `padding-top: 2rem`, subtle top border.
+
+Color hierarchy (unchanged): neon green `ACCELERATING`, rose `DRIFTING`, dark `#121212` panels, sigil-gold accents.
+
 ## Backend API
 
 | Method | Route | Response |
@@ -161,11 +184,13 @@ There is no scheduled refresh in the current implementation. Sync is user-trigge
       {
         targetTheme: "datacenters",
         headlineRisk: "HBM exclusivity may be a mirage",
+        riskType: "timing",
         adversarialArgument: "...",
         counterIndicatorToWatch: "SK Hynix capacity utilization vs Samsung HBM3e yield rates"
       }
     ],
-    blindspotAlert: "..."
+    blindspotAlert: "Three themes still score bullish on activity while thesis fit is mixed — portfolio may overweight physical bottlenecks.",
+    source: "claude"
   },
   thesisDriftReport: {
     detectedClusters: [
@@ -219,11 +244,16 @@ frontend/src/components/ValueChainSectionNav.jsx
 frontend/src/components/value-chain/StackMap.jsx
 frontend/src/components/value-chain/TierExplorer.jsx
 frontend/src/components/value-chain/TierCard.jsx
+frontend/src/components/value-chain/PhaseSeparator.jsx
+frontend/src/components/value-chain/StickyPhaseNav.jsx
 frontend/src/components/value-chain/WatchlistStack.jsx
 frontend/src/components/value-chain/RiskOverlays.jsx
 frontend/src/components/Header.jsx
 frontend/src/components/WhatIsThis.jsx
 frontend/src/components/SignalStrip.jsx
+frontend/src/components/EditorialSpotlight.jsx
+frontend/src/components/DashboardZone.jsx
+frontend/src/components/StressTestZone.jsx
 frontend/src/components/WeeklyBrief.jsx
 frontend/src/components/ChallengeThesis.jsx
 frontend/src/components/ThesisRadar.jsx
@@ -244,10 +274,9 @@ The dashboard should be demoed as a workflow:
 1. Load instantly from cache.
 2. Click **Sync live data** (requires `ANTHROPIC_API_KEY` + `NEWS_API_KEY` on deployment).
 3. Read **Today's signals** for cross-company clusters (when drift pass completes).
-4. Start with the analyst brief, then read **Challenge the Thesis** for adversarial risks.
-5. Scan all seven pillars in **Thesis Radar** — drift status, headline counts, tickers.
-6. Open a watchlist note (e.g. SPCX) and explain why the event matters to the thesis.
-7. Use the research queue as the next analyst checklist.
+4. Start with the analyst brief (scannable 3–4 lines), then read **Challenge the Thesis** for adversarial risks and the **Thesis gap** callout.
+5. Scan all seven pillars in **Thesis Radar**, then scroll to the full-width **Watchlist** — open a note (e.g. SPCX) and explain why the event matters to the thesis.
+6. Use the research queue as the next analyst checklist.
 
 ## Known constraints
 

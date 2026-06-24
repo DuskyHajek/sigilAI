@@ -1,6 +1,10 @@
 import { ChevronDown, ChevronRight } from "lucide-react";
 import EssentialBadge from "../learning/EssentialBadge";
-import { getPhaseById, getTickersForTier } from "../../utils/valueChainUtils.js";
+import {
+  getPhaseById,
+  getTickersForTier,
+  tierHasWatchlistExposure,
+} from "../../utils/valueChainUtils.js";
 
 function DetailBlock({ label, children, accent = null }) {
   return (
@@ -20,10 +24,12 @@ function DetailBlock({ label, children, accent = null }) {
 const TierCard = ({
   tier,
   expanded,
+  highlighted = false,
   onToggle,
   cardRef,
 }) => {
   const phase = getPhaseById(tier.phase);
+  const hasWatchlist = tierHasWatchlistExposure(tier);
   const tickers = [
     ...new Set([
       ...getTickersForTier(tier.tier),
@@ -35,9 +41,11 @@ const TierCard = ({
     <article
       ref={cardRef}
       id={`tier-${tier.tier}`}
-      className={`glass-panel rounded-xl overflow-hidden scroll-mt-28 transition-colors ${
+      className={`glass-panel rounded-xl overflow-hidden scroll-mt-28 transition-all duration-300 ${
+        tier.essential ? "vc-tier-card--essential" : "vc-tier-card--normal"
+      } ${hasWatchlist ? "vc-tier-card--watchlist" : ""} ${
         expanded ? "border-sigil-gold/25" : ""
-      }`}
+      } ${highlighted ? "vc-tier-card--highlight" : ""}`}
     >
       <button
         type="button"

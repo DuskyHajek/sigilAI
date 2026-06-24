@@ -18,9 +18,30 @@ If Claude times out on deployment, the strip hides; the rest of the dashboard st
 
 A short Claude-generated brief that starts the page. It summarizes the strongest signal, a secondary development, and a counter-thesis risk. The intended tone is a CIO morning note, not a chatbot recap.
 
+**UI rendering** (`WeeklyBrief.jsx`):
+
+- Backend returns plain text (3–4 sentences, no bullets).
+- Frontend splits into visually separate lines for scannability: **sentence 1** is larger and bold (lead signal); sentences 2–4 are smaller and muted.
+- Sentence splitting is **decimal-safe** — periods inside values like `$2.4T`, `15.5x`, or `€1.2B` must not break the text (regex: split only on `.` / `!` / `?` that are not between digits).
+
 ### 2. Challenge the Thesis
 
-Structured adversarial pass: 2–3 bear cases per pillar with counter-indicators to watch, plus an optional blindspot alert. Pairs with the brief — bull synthesis vs. stress-tested counter-thesis.
+Structured adversarial pass: 2–3 bear cases with counter-indicators to watch, plus an optional **Thesis gap** callout. Pairs with the brief — bull synthesis vs. stress-tested counter-thesis.
+
+**UI** (`ChallengeThesis.jsx` inside `StressTestZone`):
+
+- Risk cards use the same visual language as **Research Tasks** (theme color bar, theme pill, `border-white/8`, `bg-[#1a1a1a]`).
+- **Source badge** reflects data provenance:
+  - `Claude · adversarial pass` — full LLM pass succeeded.
+  - `High-sig bearish headline` / `High-sig bearish headlines` — headline fallback (count-aware label).
+  - `Standing risks · always on radar` — no live risks; shows curated `bear_signals[0]` per pillar from `config/thesis.js`.
+- **Thesis gap** (`blindspotAlert`) must name a **specific portfolio contradiction** (which theme, what assumption is untested) — not generic process advice like “verify whether risks are priced in”. When Claude times out, `buildHeadlineBlindspotAlert()` in `adversarial.js` synthesizes this from the displayed risk cards.
+
+**Headline fallback** (when Claude adversarial pass fails on Vercel timeout):
+
+1. Bearish articles assigned to themes, filtered by significance ≥ `adversarial_min_significance` (default 3).
+2. If fewer than 2 high-sig hits, merge in bearish articles at `significance_threshold` (default 2) from other themes.
+3. Up to 3 deduped risk cards; `source: "headlines"`.
 
 ### 3. Thesis Radar
 
@@ -32,6 +53,8 @@ All seven Supernova pillars in one scannable view:
 - **Expand**: top headline title, narrative shift, evidence list, thesis one-liner.
 
 Replaces the old Theme Pulse sentiment badges (Supportive / Mixed / Challenged).
+
+In the **Pillars & watchlist** zone, Thesis Radar sits **above** the Watchlist (stacked layout, not side-by-side). Radar is compact (`max-h ~480px`); Watchlist is the primary full-width panel below.
 
 ### 4. Watchlist
 
@@ -49,6 +72,23 @@ The stock price is useful context, but the note is the product. It explains why 
 
 After a sync, the backend generates 3-7 follow-up checks. These are practical analyst prompts: what to read, compare, verify, or search next. They are suggestions, not conclusions or investment advice.
 
+**UI reference pattern:** 2-column card grid with theme badges, ticker chips, and left color bar — other dashboard panels (Challenge the Thesis risk cards) follow this visual standard.
+
+## Dashboard layout
+
+The main route uses **chapter zones** (`DashboardZone.jsx`, styles in `frontend/src/index.css`):
+
+| Zone | Contents |
+|------|----------|
+| Daily briefing | Editorial spotlight (SPCX CTA), Analyst Brief, signal strip |
+| Counter-thesis & scenarios | `StressTestZone` — live headlines tab + hypothetical stress tester |
+| Pillars & watchlist | Thesis Radar (compact) → Watchlist (full width, primary) |
+| Research tasks | Research queue grid |
+
+Vertical rhythm: consistent `2.5rem` margin + `2rem` padding between zones (`.dashboard-zone + .dashboard-zone`). Briefing stack uses tighter internal gap (`.dashboard-zone__stack-tight`).
+
+Entry point unchanged: **SPCX spotlight** with “View SPCX in watchlist” CTA at top of daily briefing.
+
 ### 6. Value Chain
 
 Route: `/value-chain`. Header nav: **VALUE CHAIN** (mobile: **Stack**).
@@ -57,11 +97,11 @@ A static structural map of the AI infrastructure physical stack. No backend or s
 
 **Stack map** — 7 phases from pre-silicon inputs to compute monetisation; click to filter tiers.
 
-**Tier explorer** — 22 tiers with players, moat, bottleneck, key metric, and Sigil angle. Filters: phase, essentials, watchlist exposure, search.
+**Risk overlays** — 3 institutional sizing signals (obsolescence trap, CapEx air pocket, power arbitrage); compact 3-column grid above the tier list.
 
-**Holdings on the stack** — watchlist tickers mapped via `WATCHLIST_TIER_MAP` (8 names on the physical stack).
+**Holdings on the stack** — watchlist tickers mapped via `WATCHLIST_TIER_MAP` (8 names); 2-column grid with click-to-jump and tier highlight.
 
-**Risk overlays** — 3 institutional sizing signals (obsolescence trap, CapEx air pocket, power arbitrage).
+**Tier explorer** — 22 tiers with visual hierarchy (essential vs normal), phase separators, sticky phase nav while scrolling, players, moat, bottleneck, key metric, and Sigil angle. Filters: phase, essentials, watchlist exposure, search.
 
 URL params are shareable: `?tier=10`, `?phase=3`, `?essential=1`. Full reference: `docs/06_value_chain.md`.
 

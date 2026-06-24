@@ -19,7 +19,14 @@ Cross-links:
 
 ## Page zones
 
-Sticky sub-nav: **Map · Tiers · Holdings · Overlays**
+Sticky sub-nav: **Map · Overlays · Holdings · Tiers**
+
+Scroll order (top → bottom):
+
+1. **Stack map** — orientation and phase selection
+2. **Risk overlays** — institutional lens before browsing tiers
+3. **Holdings on the stack** — ticker → tier mapping (unique Sigil insight)
+4. **Tier explorer** — full 22-tier reference with filters and phase chrome
 
 ### 1. Stack map (`#vc-map`)
 
@@ -27,26 +34,9 @@ Seven macro phases (Phase 0 → Phase VI). Desktop: 4-column grid (4 + 3 rows). 
 
 Click a phase → filters Tier Explorer and scrolls to `#vc-tiers`.
 
-### 2. Tier explorer (`#vc-tiers`)
+### 2. Risk overlays (`#vc-overlays`)
 
-All 22 tiers with filters:
-
-- Phase pills
-- ⚡ Essentials only (`tier.essential === true`)
-- 🔖 Watchlist only (tiers with `WATCHLIST_TIER_MAP` or `watchlistTickers`)
-- Full-text search
-
-Each tier card expands to: players, moat, bottleneck (amber accent), key metric, **Sigil angle** (gold accent).
-
-### 3. Holdings on the stack (`#vc-holdings`)
-
-Maps Sigil watchlist tickers to tiers via `WATCHLIST_TIER_MAP`. Click a row to jump to that tier.
-
-Not every watchlist name appears here — only names mapped to the physical stack (currently 8). Robotics, space, cyber, and biotech names live outside this map.
-
-### 4. Risk overlays (`#vc-overlays`)
-
-Three institutional sizing signals from the hedge-fund overlay section:
+Three institutional sizing signals — placed **above** the tier list so they are read before browsing.
 
 | Overlay | Type | Tiers affected |
 |---------|------|----------------|
@@ -54,7 +44,44 @@ Three institutional sizing signals from the hedge-fund overlay section:
 | CapEx-to-Revenue Air Pocket | Cyclical | 7, 8, 13 |
 | Power Arbitrage as Macro Moat | Bull | 2, 16, 17 |
 
-Tier chips navigate to the Tier Explorer with `?tier=N`.
+Desktop: compact 3-column grid with type-coloured surfaces. Summary visible by default; click to expand detail, affected tiers, and watch signals.
+
+Tier chips navigate to the Tier Explorer with `?tier=N` (scroll + expand + brief highlight pulse).
+
+### 3. Holdings on the stack (`#vc-holdings`)
+
+Maps Sigil watchlist tickers to tiers via `WATCHLIST_TIER_MAP`.
+
+- **2-column ticker grid** on `sm+`: `[ticker] [Tier N badge] [note]`
+- Click a ticker → jump to its tier in the explorer (scroll, expand, 2s highlight)
+
+Not every watchlist name appears here — only names mapped to the physical stack (currently 8). Robotics, space, cyber, and biotech names live outside this map.
+
+### 4. Tier explorer (`#vc-tiers`)
+
+All 22 tiers with filters:
+
+- Phase pills (filter)
+- ⚡ Essentials only (`tier.essential === true`)
+- 🔖 Watchlist only (tiers with `WATCHLIST_TIER_MAP` or `watchlistTickers`)
+- Full-text search
+
+**Visual hierarchy**
+
+| Class | When | Effect |
+|-------|------|--------|
+| Essential | `tier.essential === true` | Green left border, full opacity |
+| Normal | `tier.essential === false` | Muted border, ~72% opacity |
+| Watchlist | Mapped ticker or `watchlistTickers` | Stronger green border glow on essential tiers |
+
+**Phase chrome** (when 2+ phases visible in the filtered list)
+
+- **Phase separators** — coloured label + phase name + `thesisRole` between tier groups
+- **Sticky phase nav** — compact chip bar sticks below the header while scrolling; active chip tracks scroll position via `IntersectionObserver`; click chip → smooth scroll to that phase group
+
+Phase separators and sticky nav are hidden when a single phase filter is active (only one group visible).
+
+Each tier card expands to: players, moat, bottleneck (amber accent), key metric, **Sigil angle** (gold accent).
 
 ## URL parameters (shareable, bidirectional)
 
@@ -62,7 +89,7 @@ Filters sync to the URL with `replace: true`:
 
 | Param | Example | Effect |
 |-------|---------|--------|
-| `tier` | `?tier=10` | Expand and scroll to tier 10 |
+| `tier` | `?tier=10` | Expand and scroll to tier 10 (+ highlight pulse) |
 | `phase` | `?phase=3` | Filter to Phase III (`PHASES[].number`) |
 | `essential` | `?essential=1` | Essentials-only |
 | `watchlist` | `?watchlist=1` | Watchlist-exposed tiers only |
@@ -105,6 +132,7 @@ export const WATCHLIST_TIER_MAP = {
 frontend/src/
 ├── data/aiInfraData.js
 ├── utils/valueChainUtils.js       # filter, parse/build URL params, watchlist stack
+├── styles/value-chain.css         # tier hierarchy, ticker grid, risk grid, phase chrome
 ├── pages/ValueChain.jsx
 ├── components/
 │   ├── ValueChainSectionNav.jsx
@@ -112,6 +140,8 @@ frontend/src/
 │       ├── StackMap.jsx
 │       ├── TierExplorer.jsx
 │       ├── TierCard.jsx
+│       ├── PhaseSeparator.jsx
+│       ├── StickyPhaseNav.jsx
 │       ├── WatchlistStack.jsx
 │       └── RiskOverlays.jsx
 ```

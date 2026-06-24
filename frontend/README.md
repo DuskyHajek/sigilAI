@@ -6,8 +6,8 @@ React + Vite frontend for the Sigil Supernova dashboard.
 
 | Path | Page | Notes |
 |---|---|---|
-| `/` | Dashboard | Live/cached intelligence: signal strip, brief, challenge the thesis, thesis radar, watchlist, research queue |
-| `/value-chain` | Value Chain | Static AI infra stack: 7 phases, 22 tiers, watchlist map, risk overlays; shareable URL filters |
+| `/` | Dashboard | Live/cached intelligence: spotlight, brief (scannable sentences), counter-thesis, stacked radar + watchlist, research queue |
+| `/value-chain` | Value Chain | Static AI infra stack: phase map, risk overlays, ticker grid, tier explorer with phase chrome; shareable URL filters |
 | `/mastery-guide` | Learning Hub | Static curriculum; Reference and Practice modes (quiz, flashcards, scenarios) |
 
 ## Scripts
@@ -35,9 +35,10 @@ Value Chain and Learning Hub are fully static — no API calls.
 
 ## Main files
 
-- `src/App.jsx` - routing, dashboard composition, sync state, signal strip placement.
+- `src/App.jsx` - routing, dashboard composition, sync state, zone layout (stacked radar/watchlist).
 - `src/api.js` - API helpers.
 - `src/utils/thesisRadarUtils.js` - drift status merge and display labels for Thesis Radar.
+- `src/utils/stressDisplay.js` - adversarial risk type labels; stress test display helpers.
 - `src/utils/valueChainUtils.js` - tier filters, URL param parse/build, watchlist stack entries.
 - `src/pages/ValueChain.jsx` - Value Chain shell (hero, zones, URL-synced filters).
 - `src/pages/MasteryGuide.jsx` - Learning Hub shell (Reference | Practice toggle, Mental Models tab).
@@ -47,14 +48,18 @@ Value Chain and Learning Hub are fully static — no API calls.
 - `src/data/quizQuestionsExtended.js`, `scenariosExtended.js` - practice content modules.
 - `src/components/Header.jsx` - nav (Dashboard · Value Chain · Learning Hub), mode badge, sync button.
 - `src/components/ValueChainSectionNav.jsx` - sticky sub-nav on Value Chain page.
-- `src/components/value-chain/` - StackMap, TierExplorer, TierCard, WatchlistStack, RiskOverlays.
+- `src/components/value-chain/` - StackMap, TierExplorer, TierCard, PhaseSeparator, StickyPhaseNav, WatchlistStack, RiskOverlays.
+- `src/styles/value-chain.css` - tier hierarchy, ticker/risk grids, phase separators, sticky phase nav.
 - `src/components/WhatIsThis.jsx` - product explainer.
 - `src/components/SignalStrip.jsx` - page-level signal clusters from thesis drift.
-- `src/components/WeeklyBrief.jsx` - analyst brief.
-- `src/components/ChallengeThesis.jsx` - adversarial counter-thesis panel.
-- `src/components/ThesisRadar.jsx` - 7-pillar drift table with expandable evidence.
-- `src/components/Watchlist.jsx` - ticker list, filters, price/context rows, IPO spotlight.
-- `src/components/ResearchQueue.jsx` - follow-up analyst checklist.
+- `src/components/EditorialSpotlight.jsx` - SPCX / counter-thesis editorial spotlight.
+- `src/components/DashboardZone.jsx` - chapter zone wrapper and labels.
+- `src/components/StressTestZone.jsx` - counter-thesis tabs (live headlines vs scenarios).
+- `src/components/WeeklyBrief.jsx` - analyst brief; decimal-safe sentence split, lead highlight.
+- `src/components/ChallengeThesis.jsx` - adversarial counter-thesis, Thesis gap, risk cards.
+- `src/components/ThesisRadar.jsx` - 7-pillar drift table; `stackedLayout` for compact mode.
+- `src/components/Watchlist.jsx` - ticker list, filters, price/context rows, IPO spotlight; `stackedLayout` for full-width mode.
+- `src/components/ResearchQueue.jsx` - follow-up analyst checklist (card grid reference).
 - `src/components/learning/` - Quiz, flashcards, scenarios, essential badges.
 
 See `docs/06_value_chain.md` for Value Chain maintenance.

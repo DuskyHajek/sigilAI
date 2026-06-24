@@ -130,12 +130,28 @@ export default function ValueChain() {
         <TipBox icon={Layers}>
           Most investors stop at NVDA. Sigil tracks all 22 tiers — from Spruce
           Pine quartz to RAG infrastructure. Select a phase to filter the tier
-          explorer below.
+          explorer.
         </TipBox>
         <StackMap
           activePhaseId={filters.phaseId}
           onPhaseSelect={handlePhaseSelect}
         />
+      </DashboardZone>
+
+      <DashboardZone id="vc-overlays" label="Risk overlays">
+        <p className="text-xs text-[#a0a0a0] mb-4 leading-relaxed">
+          Three institutional alpha signals — read these before browsing tiers.
+          Click to expand affected tiers and watch signals.
+        </p>
+        <RiskOverlays onTierSelect={handleTierSelect} />
+      </DashboardZone>
+
+      <DashboardZone id="vc-holdings" label="Holdings on the stack">
+        <p className="text-xs text-[#a0a0a0] mb-4 leading-relaxed">
+          {WATCHLIST_STACK_ENTRIES.length} Sigil watchlist names mapped to
+          physical stack positions. Click a ticker to jump to its tier.
+        </p>
+        <WatchlistStack onTierSelect={handleTierSelect} />
       </DashboardZone>
 
       <DashboardZone id="vc-tiers" label="Tier explorer">
@@ -158,22 +174,6 @@ export default function ValueChain() {
             })
           }
         />
-      </DashboardZone>
-
-      <DashboardZone id="vc-holdings" label="Holdings on the stack">
-        <p className="text-xs text-[#a0a0a0] mb-4 leading-relaxed">
-          {WATCHLIST_STACK_ENTRIES.length} Sigil watchlist names mapped to this
-          physical value chain. Click a row to jump to its tier.
-        </p>
-        <WatchlistStack onTierSelect={handleTierSelect} />
-      </DashboardZone>
-
-      <DashboardZone id="vc-overlays" label="Risk overlays">
-        <p className="text-xs text-[#a0a0a0] mb-4 leading-relaxed">
-          Three institutional alpha signals for sizing and directional
-          decisions across the stack.
-        </p>
-        <RiskOverlays onTierSelect={handleTierSelect} />
       </DashboardZone>
     </main>
   );

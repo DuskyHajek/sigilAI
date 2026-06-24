@@ -11,20 +11,22 @@ The app has three main areas:
 Four working intelligence sections plus a signal strip:
 
 0. **Today's signals** — cross-company headline clusters from the thesis drift pass (when available).
-1. **Analyst Brief** — a 3–4 sentence summary of the strongest current signals.
-2. **Challenge the Thesis** — adversarial bear cases and blind spots per pillar.
-3. **Thesis Radar** — all 7 pillars at a glance: drift status (Accelerating / Mixed / Diverging), headline count, watchlist tickers; expand for evidence.
-4. **Watchlist** — 21 curated public names with price data, change, and a thesis-specific AI note (SPCX spotlight for SpaceX IPO).
-5. **Research Queue** — 3–7 suggested follow-up checks after each sync.
+1. **Analyst Brief** — 3–4 sentences; UI splits into scannable lines with lead sentence highlighted (decimal-safe for `$2.4T`, etc.).
+2. **Challenge the Thesis** — adversarial bear cases, **Thesis gap** (specific blindspot), source badge; headline fallback on Vercel timeout.
+3. **Thesis Radar** — all 7 pillars: drift status, headline count, tickers; compact panel above watchlist.
+4. **Watchlist** — 21 curated public names with price data, change, and thesis-specific AI note (SPCX spotlight); full-width primary panel.
+5. **Research Queue** — 3–7 suggested follow-up checks; card grid is the visual reference for other panels.
+
+**Layout:** Daily briefing → Counter-thesis & scenarios → Pillars & watchlist (stacked radar + watchlist) → Research tasks. Consistent zone spacing in `index.css`.
 
 ### Value Chain (`/value-chain`)
 
 Static map of the AI infrastructure physical stack — 7 phases, 22 tiers, watchlist placement, and 3 risk overlays. No API or sync required.
 
 - **Stack map** — phase pipeline with thesis roles; click to filter tiers.
-- **Tier explorer** — searchable tiers with players, moat, bottleneck, metric, Sigil angle.
-- **Holdings on the stack** — watchlist tickers mapped via `WATCHLIST_TIER_MAP`.
-- **Risk overlays** — institutional bear/cyclical/bull signals with affected tiers.
+- **Risk overlays** — institutional bear/cyclical/bull signals (3-column grid, above tiers).
+- **Holdings on the stack** — 2-column ticker grid; click jumps to tier with highlight pulse.
+- **Tier explorer** — searchable tiers with essential/normal hierarchy, phase separators, sticky phase nav, players, moat, bottleneck, metric, Sigil angle.
 
 Shareable URL filters: `?tier=10`, `?phase=3`, `?essential=1`, etc. See `docs/06_value_chain.md`.
 

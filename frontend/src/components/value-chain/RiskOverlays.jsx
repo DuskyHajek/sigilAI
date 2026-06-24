@@ -7,16 +7,19 @@ const TYPE_STYLES = {
     badge: "BEAR",
     badgeClass: "bg-rose-500/10 text-rose-400 border-rose-500/25",
     border: "border-rose-500/25",
+    surface: "bg-rose-500/[0.06]",
   },
   cyclical: {
     badge: "CYCLICAL",
     badgeClass: "bg-amber-500/10 text-amber-400 border-amber-500/25",
     border: "border-amber-500/25",
+    surface: "bg-amber-500/[0.06]",
   },
   bull: {
     badge: "BULL",
     badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/25",
     border: "border-emerald-500/25",
+    surface: "bg-emerald-500/[0.06]",
   },
 };
 
@@ -26,46 +29,41 @@ const OverlayCard = ({ overlay, onTierSelect }) => {
 
   return (
     <article
-      className={`glass-panel rounded-xl border ${styles.border} overflow-hidden`}
+      className={`rounded-xl border ${styles.border} ${styles.surface} overflow-hidden h-full flex flex-col`}
     >
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full text-left p-3.5 sm:p-5 group min-h-[44px]"
+        className="w-full text-left p-3.5 sm:p-4 group min-h-[44px] flex-1"
         aria-expanded={open}
       >
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-2">
           <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2 mb-1">
-              <span
-                className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${styles.badgeClass}`}
-              >
-                {styles.badge}
-              </span>
-              <span className="text-[10px] font-mono text-slate-600">
-                Overlay {overlay.number}
-              </span>
-            </div>
-            <h4 className="text-sm font-semibold text-white mb-1">
+            <span
+              className={`inline-block text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border mb-2 ${styles.badgeClass}`}
+            >
+              {styles.badge}
+            </span>
+            <h4 className="text-[13px] font-semibold text-white mb-1.5 leading-snug">
               {overlay.name}
             </h4>
-            <p className="text-xs text-[#a0a0a0] leading-relaxed">
+            <p className="text-[11px] text-[#a0a0a0] leading-relaxed line-clamp-3">
               {overlay.summary}
             </p>
           </div>
           {open ? (
-            <ChevronDown size={16} className="text-sigil-gold shrink-0 mt-1" />
+            <ChevronDown size={14} className="text-sigil-gold shrink-0 mt-0.5" />
           ) : (
             <ChevronRight
-              size={16}
-              className="text-slate-500 group-hover:text-slate-300 shrink-0 mt-1"
+              size={14}
+              className="text-slate-500 group-hover:text-slate-300 shrink-0 mt-0.5"
             />
           )}
         </div>
       </button>
 
       {open && (
-        <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-white/6 pt-4 space-y-4">
+        <div className="px-3.5 sm:px-4 pb-3.5 sm:pb-4 border-t border-white/6 pt-3 space-y-3">
           <p className="text-xs text-slate-400 leading-relaxed">{overlay.detail}</p>
 
           <div>
@@ -109,7 +107,7 @@ const OverlayCard = ({ overlay, onTierSelect }) => {
 };
 
 const RiskOverlays = ({ onTierSelect }) => (
-  <div className="space-y-3">
+  <div className="vc-risk-grid">
     {RISK_OVERLAYS.map((overlay) => (
       <OverlayCard
         key={overlay.id}
