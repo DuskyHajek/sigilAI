@@ -1,34 +1,11 @@
 import { useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import { RefreshCw, Cpu, Check, X, BookOpen, Layers, LayoutDashboard } from "lucide-react";
+import { useLocation } from "react-router-dom";
+import { RefreshCw, Cpu, Check, X } from "lucide-react";
 import { fetchHealth } from "../api";
 import SyncProgress from "./SyncProgress";
+import AppMainNav from "./AppMainNav";
 import DashboardSectionNav from "./DashboardSectionNav";
 import ValueChainSectionNav from "./ValueChainSectionNav";
-
-const APP_SECTIONS = [
-  {
-    to: "/",
-    end: true,
-    label: "Dashboard",
-    Icon: LayoutDashboard,
-    title: "Live briefing, watchlist, and thesis radar",
-  },
-  {
-    to: "/value-chain",
-    label: "Value Chain",
-    mobileLabel: "Value Chain",
-    Icon: Layers,
-    title: "22-tier AI infrastructure stack — phases, bottlenecks & holdings",
-  },
-  {
-    to: "/mastery-guide",
-    label: "Learning Hub",
-    mobileLabel: "Learning",
-    Icon: BookOpen,
-    title: "Reference curriculum, quizzes, flashcards & scenarios",
-  },
-];
 
 const Header = ({
   onSync,
@@ -107,14 +84,7 @@ const Header = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
-            {onDashboard && showSectionNav && (
-              <DashboardSectionNav variant="desktop" />
-            )}
-            {onValueChain && showValueChainNav && (
-              <ValueChainSectionNav variant="desktop" />
-            )}
-
+          <div className="flex items-center gap-2 shrink-0">
             <div
               className={`hidden sm:flex items-center gap-1 pl-2.5 pr-1 py-1 rounded-full border text-xs font-mono ${
                 isLive
@@ -136,7 +106,7 @@ const Header = ({
               disabled={syncState === "syncing"}
               title={syncTitle()}
               aria-label={syncTitle()}
-              className={`hidden sm:inline-flex btn-sigil-outline ml-1 !py-1 !px-3 !text-[11px] disabled:opacity-50 disabled:cursor-not-allowed ${
+              className={`hidden sm:inline-flex btn-sigil-outline !py-1 !px-3 !text-[11px] disabled:opacity-50 disabled:cursor-not-allowed ${
                 syncState === "error" ? "!border-rose-500/50 !text-rose-400" : ""
               }`}
             >
@@ -146,6 +116,7 @@ const Header = ({
               />
               Sync
             </button>
+
             <div
               className={`flex sm:hidden items-center gap-1 pl-2.5 pr-1 py-1 rounded-full border text-xs font-mono ${
                 isLive
@@ -184,38 +155,14 @@ const Header = ({
 
         {syncState === "syncing" && <SyncProgress />}
 
-        <nav className="app-main-nav" aria-label="Main sections">
-          <div className="app-main-nav__track">
-            {APP_SECTIONS.map(({ to, end, label, mobileLabel, Icon, title }) => (
-              <NavLink
-                key={to}
-                to={to}
-                end={end}
-                title={title}
-                className={({ isActive }) =>
-                  `app-main-nav__link${
-                    isActive
-                      ? " app-main-nav__link--active"
-                      : " app-main-nav__link--inactive"
-                  }`
-                }
-              >
-                <Icon size={18} className="app-main-nav__icon shrink-0" aria-hidden="true" />
-                <span className="app-main-nav__label">{label}</span>
-                <span className="app-main-nav__label app-main-nav__label--mobile">
-                  {mobileLabel ?? label}
-                </span>
-              </NavLink>
-            ))}
-          </div>
-        </nav>
+        <AppMainNav />
 
-        {onDashboard && showSectionNav && (
-          <DashboardSectionNav variant="mobile" />
-        )}
-        {onValueChain && showValueChainNav && (
-          <ValueChainSectionNav variant="mobile" />
-        )}
+        {(onDashboard && showSectionNav) || (onValueChain && showValueChainNav) ? (
+          <div className="app-subnav">
+            {onDashboard && showSectionNav && <DashboardSectionNav />}
+            {onValueChain && showValueChainNav && <ValueChainSectionNav />}
+          </div>
+        ) : null}
       </div>
     </header>
   );

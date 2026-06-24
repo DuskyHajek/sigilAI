@@ -25,7 +25,7 @@ const SectionNavButtons = ({ activeId, onSelect, compact = false }) => (
   </>
 );
 
-const ValueChainSectionNav = ({ variant = "desktop" }) => {
+const ValueChainSectionNav = () => {
   const [activeId, setActiveId] = useState(VALUE_CHAIN_SECTIONS[0].id);
 
   useEffect(() => {
@@ -62,23 +62,12 @@ const ValueChainSectionNav = ({ variant = "desktop" }) => {
     setActiveId(id);
   };
 
-  if (variant === "mobile") {
-    return (
-      <nav
-        className="dashboard-section-nav-mobile lg:hidden flex items-center gap-1 overflow-x-auto pb-0.5 -mx-1 px-1"
-        aria-label="Value chain sections"
-      >
-        <SectionNavButtons activeId={activeId} onSelect={scrollTo} compact />
-      </nav>
-    );
-  }
-
   return (
     <nav
-      className="dashboard-section-nav hidden lg:flex items-center gap-0.5"
+      className="dashboard-section-nav-mobile flex items-center gap-1 overflow-x-auto pb-0.5 -mx-1 px-1 sm:flex-wrap sm:overflow-visible sm:mx-0 sm:px-0"
       aria-label="Value chain sections"
     >
-      <SectionNavButtons activeId={activeId} onSelect={scrollTo} />
+      <SectionNavButtons activeId={activeId} onSelect={scrollTo} compact />
     </nav>
   );
 };
