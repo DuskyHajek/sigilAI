@@ -5,10 +5,16 @@ import {
   ArrowDownRight,
   Filter,
   ChevronDown,
+  Plus,
+  X,
 } from "lucide-react";
 import { THEMES } from "@config/thesis.js";
+import {
+  addCustomWatchlistStock,
+  removeCustomWatchlistStock,
+} from "../api";
 import { SectionHeader, SearchInput } from "./learning/LearningUI";
-import { filterBtn } from "./learning/learningStyles";
+import { actionBtn, filterBtn } from "./learning/learningStyles";
 
 const SPOTLIGHT_LABELS = {
   ipo: "IPO",
@@ -47,10 +53,24 @@ const themeBadgeStyle = (themeId) => {
   };
 };
 
-const Watchlist = ({ watchlistData, stressResult, stackedLayout = false }) => {
+const Watchlist = ({
+  watchlistData,
+  stressResult,
+  stackedLayout = false,
+  onWatchlistChange,
+}) => {
   const [selectedTheme, setSelectedTheme] = useState("all");
   const [query, setQuery] = useState("");
   const [expandedTicker, setExpandedTicker] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addForm, setAddForm] = useState({
+    ticker: "",
+    theme: "datacenters",
+    angle: "",
+  });
+  const [addError, setAddError] = useState(null);
+  const [addSubmitting, setAddSubmitting] = useState(false);
+  const [removingTicker, setRemovingTicker] = useState(null);
   const stocks = useMemo(() => watchlistData || [], [watchlistData]);
 
   const exposureMaps = useMemo(() => {
@@ -97,6 +117,43 @@ const Watchlist = ({ watchlistData, stressResult, stackedLayout = false }) => {
         a.ticker.localeCompare(b.ticker)
     );
   }, [query, selectedTheme, stocks]);
+
+  const handleAddSubmit = async (event) => {
+    event.preventDefault();
+    if (addSubmitting) return;
+
+    setAddSubmitting(true);
+    setAddError(null);
+
+    try {
+      await addCustomWatchlistStock({
+        ticker: addForm.ticker.trim(),
+        theme: addForm.theme,
+        angle: addForm.angle.trim() || undefined,
+      });
+      setShowAddModal(false);
+      setAddForm({ ticker: "", theme: "datacenters", angle: "" });
+      await onWatchlistChange?.();
+    } catch (error) {
+      setAddError(error.message || "Could not add ticker.");
+    } finally {
+      setAddSubmitting(false);
+    }
+  };
+
+  const handleRemoveCustom = async (ticker) => {
+    if (removingTicker) return;
+
+    setRemovingTicker(ticker);
+    try {
+      await removeCustomWatchlistStock(ticker);
+      await onWatchlistChange?.();
+    } catch (error) {
+      console.error("Failed to remove custom watchlist entry:", error);
+    } finally {
+      setRemovingTicker(null);
+    }
+  };
 
   if (!watchlistData) return null;
 
@@ -167,8 +224,155 @@ const Watchlist = ({ watchlistData, stressResult, stackedLayout = false }) => {
           <span className="text-[11px] font-mono text-[#a0a0a0] sm:ml-auto shrink-0 pl-1">
             {filteredData.length}/{stocks.length}
           </span>
+          <button
+            type="button"
+            onClick={() => {
+              setAddError(null);
+              setShowAddModal(true);
+            }}
+            className={`${actionBtn.secondary} !text-[10px] !px-2.5 !py-1 shrink-0 inline-flex items-center gap-1`}
+          >
+            <Plus size={12} aria-hidden="true" />
+            Add
+          </button>
         </div>
       </div>
+
+      {showAddModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70"
+          onClick={() => !addSubmitting && setShowAddModal(false)}
+          role="presentation"
+        >
+          <div
+            className="glass-panel w-full max-w-md rounded-2xl p-5 sm:p-6 border border-white/10 shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="watchlist-add-title"
+          >
+            <div className="flex items-start justify-between gap-3 mb-4">
+              <div>
+                <p className="text-[10px] font-mono text-sigil-gold uppercase tracking-widest mb-1">
+                  Shared demo
+                </p>
+                <h4
+                  id="watchlist-add-title"
+                  className="text-lg font-bold text-white"
+                >
+                  Add to watchlist
+                </h4>
+                <p className="text-xs text-[#a0a0a0] mt-1">
+                  Visible to everyone on this dashboard.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => !addSubmitting && setShowAddModal(false)}
+                className="text-slate-500 hover:text-white p-1"
+                aria-label="Close"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddSubmit} className="space-y-4">
+              <div>
+                <label
+                  htmlFor="watchlist-add-ticker"
+                  className="block text-[10px] font-mono uppercase tracking-widest text-[#a0a0a0] mb-1.5"
+                >
+                  Ticker
+                </label>
+                <input
+                  id="watchlist-add-ticker"
+                  type="text"
+                  value={addForm.ticker}
+                  onChange={(event) =>
+                    setAddForm((prev) => ({
+                      ...prev,
+                      ticker: event.target.value.toUpperCase(),
+                    }))
+                  }
+                  placeholder="PLTR, 000660.KS"
+                  required
+                  className="w-full bg-[#1a1a1a] border border-white/8 rounded-xl px-3 py-2.5 text-sm text-white placeholder-[#a0a0a0] focus:outline-none focus:border-sigil-gold/50"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="watchlist-add-theme"
+                  className="block text-[10px] font-mono uppercase tracking-widest text-[#a0a0a0] mb-1.5"
+                >
+                  Theme
+                </label>
+                <select
+                  id="watchlist-add-theme"
+                  value={addForm.theme}
+                  onChange={(event) =>
+                    setAddForm((prev) => ({
+                      ...prev,
+                      theme: event.target.value,
+                    }))
+                  }
+                  className="w-full bg-[#1a1a1a] border border-white/8 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-sigil-gold/50"
+                >
+                  {THEMES.map((theme) => (
+                    <option key={theme.id} value={theme.id}>
+                      {FILTER_SHORT_NAMES[theme.id] || theme.display_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="watchlist-add-angle"
+                  className="block text-[10px] font-mono uppercase tracking-widest text-[#a0a0a0] mb-1.5"
+                >
+                  One-line note (optional)
+                </label>
+                <input
+                  id="watchlist-add-angle"
+                  type="text"
+                  value={addForm.angle}
+                  onChange={(event) =>
+                    setAddForm((prev) => ({
+                      ...prev,
+                      angle: event.target.value,
+                    }))
+                  }
+                  placeholder="Why you're watching this name"
+                  className="w-full bg-[#1a1a1a] border border-white/8 rounded-xl px-3 py-2.5 text-sm text-white placeholder-[#a0a0a0] focus:outline-none focus:border-sigil-gold/50"
+                />
+              </div>
+
+              {addError && (
+                <p className="text-xs text-rose-400">{addError}</p>
+              )}
+
+              <div className="flex items-center justify-end gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  disabled={addSubmitting}
+                  className="text-xs font-semibold px-4 py-2 rounded-full text-white/70 hover:text-white"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={addSubmitting || !addForm.ticker.trim()}
+                  className={actionBtn.primary}
+                >
+                  {addSubmitting ? "Adding…" : "Add ticker"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <div className="overflow-y-auto flex-1 min-h-0 pr-1">
         <div className="hidden xl:grid grid-cols-[minmax(200px,0.9fr)_minmax(0,1.4fr)_minmax(110px,auto)] gap-3 px-2 pb-2 mb-1 border-b border-white/6 text-[10px] font-mono uppercase tracking-widest text-[#a0a0a0]">
@@ -225,6 +429,11 @@ const Watchlist = ({ watchlistData, stressResult, stackedLayout = false }) => {
                       >
                         {label?.name || stock.theme}
                       </span>
+                      {stock.source === "custom" && (
+                        <span className="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase tracking-wide border border-sky-500/35 text-sky-300 shrink-0">
+                          Added
+                        </span>
+                      )}
                       {spotlightLabel && (
                         <span className="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase tracking-wide border border-sigil-gold/35 text-sigil-gold shrink-0">
                           {spotlightLabel}
@@ -247,6 +456,19 @@ const Watchlist = ({ watchlistData, stressResult, stackedLayout = false }) => {
                       </p>
                     )}
                     </div>
+
+                    <div className="flex items-start gap-1 shrink-0">
+                      {stock.source === "custom" && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveCustom(stock.ticker)}
+                          disabled={removingTicker === stock.ticker}
+                          className="opacity-0 group-hover:opacity-100 focus:opacity-100 p-1 rounded text-slate-500 hover:text-rose-400 transition-opacity disabled:opacity-40"
+                          aria-label={`Remove ${stock.ticker} from watchlist`}
+                        >
+                          <X size={14} />
+                        </button>
+                      )}
 
                     <div className="shrink-0 tabular-nums text-right xl:hidden">
                       <span className="text-[15px] font-mono font-semibold text-white whitespace-nowrap block">
@@ -283,6 +505,7 @@ const Watchlist = ({ watchlistData, stressResult, stackedLayout = false }) => {
                               : "unavailable"}
                         </span>
                       )}
+                    </div>
                     </div>
                   </div>
 

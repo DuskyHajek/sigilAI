@@ -13,7 +13,8 @@ This doc explains what is in that file and how to keep it aligned with prompts a
 - `THEMES` - 7 thesis themes with display text, colors, keywords, and thesis descriptions.
 - `THEME_COLORS` - stable visual identity mapping used by theme cards.
 - `THEME_ICONS` - Tabler icon classes used by theme cards.
-- `WATCHLIST` - 21 current public names shown in the dashboard.
+- `WATCHLIST` - 21 curated Sigil thesis names (core watchlist in git).
+- Shared demo additions are merged at runtime via `backend/services/customWatchlist.js` (see below).
 - `getStockMatchTerms(item)` - company/ticker/alias terms used to match headlines.
 - `getThemeById(id)` and `getWatchlistItem(ticker)` - lookup helpers.
 
@@ -59,7 +60,26 @@ The current dashboard displays these 21 names:
 | `PANW` | Palo Alto Networks | `adversarial` | core |
 | `S` | SentinelOne | `adversarial` | watch |
 
-`priority` is included in the payload for future filtering or weighting, but the current UI shows all 21 names. Optional `spotlight: "ipo"` on a watchlist entry drives the IPO badge and watchlist pin (currently SPCX).
+`priority` is included in the payload for future filtering or weighting, but the current UI shows all core names plus any shared demo additions. Optional `spotlight: "ipo"` on a watchlist entry drives the IPO badge and watchlist pin (currently SPCX).
+
+## Shared demo watchlist (runtime layer)
+
+The **core 21** above live in `config/thesis.js`. Demo viewers can append tickers from the Watchlist **+ Add** button; those entries are **shared for everyone** on the deployment.
+
+| Layer | Source | Editable by |
+|---|---|---|
+| Core | `WATCHLIST` in `config/thesis.js` | Developers (git) |
+| Custom | `backend/data/custom_watchlist.json` or Upstash key `supernova:custom_watchlist` | UI or `POST /api/watchlist/custom` |
+
+At sync and dashboard load, `getEffectiveWatchlist()` merges core + custom. Custom payload fields:
+
+- `source: "custom"`
+- `priority: "watch"` (default)
+- `aliases` auto-generated from company/ticker for weak news matching
+
+Custom names are **not** added to `WATCHLIST_TIER_MAP` or stress-test config automatically. Full AI thesis notes for custom tickers require a **Sync live data** after add (add/remove only refreshes prices and preserves existing note text).
+
+See `docs/03_maintenance_playbook.md` for API routes and reset steps.
 
 ## Theme object shape
 

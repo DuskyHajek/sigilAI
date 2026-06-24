@@ -4,7 +4,8 @@
 
 Use the current implementation as the source of truth:
 
-- Thesis, theme, keyword, color, and watchlist runtime config: `config/thesis.js`
+- Thesis, theme, keyword, color, and curated watchlist config: `config/thesis.js`
+- Shared demo watchlist additions: `backend/services/customWatchlist.js` and `backend/data/custom_watchlist.json` (or Upstash key `supernova:custom_watchlist` on Vercel)
 - Token budgets, significance threshold, article limits, cache TTL: `config/settings.js`
 - Prompts and AI output formats: `backend/services/prompts.js`
 - Backend API and sync orchestration: `backend/server.js`
@@ -13,6 +14,8 @@ Use the current implementation as the source of truth:
 When thesis logic changes, update both `config/thesis.js` and `backend/services/prompts.js` unless the prompt is later refactored to generate directly from config.
 
 ## Add a watchlist stock
+
+### Curated Sigil list (git / config)
 
 1. Open `config/thesis.js`.
 2. Add a ticker object to `WATCHLIST`.
@@ -37,7 +40,24 @@ The current UI shows all configured watchlist names. `priority` is available in 
 
 If the name maps to the AI infrastructure physical stack, also add an entry to `WATCHLIST_TIER_MAP` in `frontend/src/data/aiInfraData.js` (integer `tier` + one-line `note`). See `docs/06_value_chain.md`.
 
+### Shared demo additions (UI / API)
+
+Demo viewers can append tickers from the Watchlist **+ Add** button. Additions are **shared for everyone** on the deployment (not per-user).
+
+- **UI:** Watchlist panel → **+ Add** → ticker, theme, optional one-line note
+- **API:** `POST /api/watchlist/custom` with JSON `{ ticker, theme, angle?, company? }`
+- **Remove:** row **×** on custom entries only, or `DELETE /api/watchlist/custom/:ticker`
+- **Storage:** `backend/data/custom_watchlist.json` locally; Upstash/KV key `supernova:custom_watchlist` when remote cache env vars are set
+- **Merge:** `getEffectiveWatchlist()` = core 21 from `config/thesis.js` + custom entries
+- **Payload:** custom rows include `source: "custom"`; core rows use `source: "core"`
+
+Custom names get live/mock prices on add. Full AI thesis notes appear after the next **Sync live data** (add/remove only refreshes prices and preserves existing note text). Curated core names cannot be removed from the UI.
+
+To reset demo additions locally, clear `backend/data/custom_watchlist.json` to `[]` and restart or reload the dashboard cache.
+
 ## Remove a watchlist stock
+
+### Curated Sigil list (git / config)
 
 1. Delete the object from `WATCHLIST` in `config/thesis.js`.
 2. Restart the backend or run a sync.

@@ -5,9 +5,13 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { SETTINGS } from "../config/settings.js";
-import { WATCHLIST } from "../config/thesis.js";
 import { buildMockDashboard } from "./services/mockData.js";
 import { fetchPrices, enrichWatchlistWithContext } from "./services/prices.js";
+import {
+  addCustomWatchlistEntry,
+  getExpectedWatchlistLength,
+  removeCustomWatchlistEntry,
+} from "./services/customWatchlist.js";
 import { fetchNewsAndProcess } from "./services/news.js";
 import { generateWeeklyBrief } from "./services/brief.js";
 import { generateResearchQueue } from "./services/researchQueue.js";
@@ -54,7 +58,7 @@ const runFullSync = async () => {
     console.log(
       "Running in MOCK MODE (No API keys provided). Loading simulated Supernova data..."
     );
-    const mockData = buildMockDashboard();
+    const mockData = await buildMockDashboard();
     await writeCache(mockData);
     return mockData;
   }
@@ -127,17 +131,62 @@ const runFullSync = async () => {
   return liveData;
 };
 
-const isCacheShapeValid = (cache) =>
-  cache?.watchlist?.length === WATCHLIST.length &&
-  Object.keys(cache?.themePulse || {}).length === 7;
+const isCacheShapeValid = async (cache) => {
+  if (!cache?.watchlist || Object.keys(cache?.themePulse || {}).length !== 7) {
+    return false;
+  }
+  const expected = await getExpectedWatchlistLength();
+  return cache.watchlist.length === expected;
+};
 
-const isUsableLiveCache = (cache) =>
-  cache && isCacheShapeValid(cache) && cache.isMock === false;
+const isUsableLiveCache = async (cache) =>
+  cache && (await isCacheShapeValid(cache)) && cache.isMock === false;
+
+const refreshWatchlistInCache = async () => {
+  const previousCache = await readCache();
+  const { watchlist, livePriceCount, total } = await fetchPrices({
+    previousWatchlist: previousCache?.watchlist,
+  });
+
+  const watchlistWithContext = watchlist.map((stock) => {
+    const prev = previousCache?.watchlist?.find(
+      (item) => item.ticker === stock.ticker
+    );
+    if (prev?.context) {
+      return { ...stock, context: prev.context };
+    }
+    return {
+      ...stock,
+      context:
+        stock.angle ||
+        (stock.source === "custom"
+          ? "Added to shared demo watchlist."
+          : "No thesis-relevant developments in the last 7 days."),
+    };
+  });
+
+  const base =
+    previousCache?.themePulse &&
+    Object.keys(previousCache.themePulse).length === 7
+      ? previousCache
+      : await buildMockDashboard();
+
+  const updated = {
+    ...base,
+    watchlist: watchlistWithContext,
+    livePriceCount,
+    pricesLive: livePriceCount === total,
+    lastUpdated: new Date().toISOString(),
+  };
+
+  await writeCache(updated);
+  return updated;
+};
 
 const getDashboardFromCache = async () => {
   const cache = await readCache();
-  if (cache && isCacheShapeValid(cache)) return cache;
-  const mockData = buildMockDashboard();
+  if (cache && (await isCacheShapeValid(cache))) return cache;
+  const mockData = await buildMockDashboard();
   await writeCache(mockData);
   return mockData;
 };
@@ -209,7 +258,7 @@ api.post("/sync", async (req, res) => {
     const cached = await readCache();
     const force = req.query.force === "true";
 
-    if (!force && isUsableLiveCache(cached) && !isCacheStale(cached)) {
+    if (!force && (await isUsableLiveCache(cached)) && !isCacheStale(cached)) {
       return res.json({
         ...cached,
         syncOk: true,
@@ -225,7 +274,7 @@ api.post("/sync", async (req, res) => {
     console.error("Sync failed:", error);
 
     const cached = await readCache();
-    if (isUsableLiveCache(cached)) {
+    if (await isUsableLiveCache(cached)) {
       return res.json({
         ...cached,
         syncOk: false,
@@ -244,6 +293,26 @@ api.post("/sync", async (req, res) => {
         ? "Vercel has a short function timeout. Retry once; if it still fails, run sync locally."
         : "Check API keys and external API availability.",
     });
+  }
+});
+
+api.post("/watchlist/custom", async (req, res) => {
+  try {
+    await addCustomWatchlistEntry(req.body);
+    const dashboard = await refreshWatchlistInCache();
+    res.json({ ok: true, watchlist: dashboard.watchlist });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+api.delete("/watchlist/custom/:ticker", async (req, res) => {
+  try {
+    await removeCustomWatchlistEntry(req.params.ticker);
+    const dashboard = await refreshWatchlistInCache();
+    res.json({ ok: true, watchlist: dashboard.watchlist });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -271,8 +340,8 @@ if (fs.existsSync(distPath)) {
 
 app.listen(PORT, async () => {
   const cache = await readCache();
-  if (!isLiveConfigured() && (!cache || !isCacheShapeValid(cache))) {
-    await writeCache(buildMockDashboard());
+  if (!isLiveConfigured() && (!cache || !(await isCacheShapeValid(cache)))) {
+    await writeCache(await buildMockDashboard());
   }
 
   console.log(`==================================================`);

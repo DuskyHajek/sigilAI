@@ -65,13 +65,14 @@ In the **Pillars & watchlist** zone, Thesis Radar sits **above** the Watchlist (
 
 ### 4. Watchlist
 
-21 curated public names across the 7 themes. Each row shows:
+21 curated Sigil thesis names across the 7 themes, plus optional **shared demo additions** via the **+ Add** button (visible to all users on the deployment). Each row shows:
 
 - ticker and company;
 - theme and investment angle;
 - live or cached price;
 - 52-week change;
-- a short thesis-specific AI note.
+- a short thesis-specific AI note;
+- **Added** badge and remove control on custom entries only (`source: "custom"`).
 
 The stock price is useful context, but the note is the product. It explains why a headline or sector signal matters for that specific thesis angle.
 

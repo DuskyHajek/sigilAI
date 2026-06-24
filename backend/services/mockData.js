@@ -1,4 +1,5 @@
-import { WATCHLIST, THEMES } from "../../config/thesis.js";
+import { THEMES } from "../../config/thesis.js";
+import { getEffectiveWatchlist } from "./customWatchlist.js";
 
 export const getMockThemePulse = () => ({
   datacenters: {
@@ -155,8 +156,9 @@ const MOCK_CONTEXTS = {
   S: "SentinelOne gains enterprise wins on AI-powered endpoint detection, challenging incumbents on autonomous response speed.",
 };
 
-export const getMockWatchlist = () =>
-  WATCHLIST.map((item) => ({
+export const getMockWatchlist = async () => {
+  const items = await getEffectiveWatchlist();
+  return items.map((item) => ({
     ticker: item.ticker,
     name: item.company,
     company: item.company,
@@ -165,13 +167,16 @@ export const getMockWatchlist = () =>
     angle: item.angle,
     priority: item.priority,
     spotlight: item.spotlight || null,
+    source: item.source || "core",
     price: mockPrice(item.ticker),
     change52w: mockChange(item.ticker),
     priceSource: "mock",
     context:
       MOCK_CONTEXTS[item.ticker] ||
+      item.angle ||
       "No thesis-relevant developments in the last 7 days.",
   }));
+};
 
 // Approximate demo prices (post-split era). Updated when Yahoo is unavailable.
 const mockPrice = (ticker) => {
@@ -400,11 +405,11 @@ export const getMockResearchQueue = () => ({
   ],
 });
 
-export const buildMockDashboard = () => ({
+export const buildMockDashboard = async () => ({
   isMock: true,
   lastUpdated: new Date().toISOString(),
   themePulse: getMockThemePulse(),
-  watchlist: getMockWatchlist(),
+  watchlist: await getMockWatchlist(),
   weeklyBrief: getMockWeeklyBrief(),
   researchQueue: getMockResearchQueue(),
   adversarialAssessment: getMockAdversarialAssessment(),

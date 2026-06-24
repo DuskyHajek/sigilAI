@@ -68,6 +68,15 @@ function App() {
     }
   };
 
+  const refreshWatchlist = async () => {
+    try {
+      const dashboardData = await fetchDashboard();
+      setData(dashboardData);
+    } catch (err) {
+      console.error("Error refreshing watchlist:", err);
+    }
+  };
+
   const handleSync = async () => {
     if (syncState === "syncing") return;
     try {
@@ -280,6 +289,7 @@ function App() {
                           watchlistData={data?.watchlist}
                           stressResult={stressState.result}
                           stackedLayout
+                          onWatchlistChange={refreshWatchlist}
                         />
                       </div>
                     </div>

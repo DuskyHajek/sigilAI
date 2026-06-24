@@ -82,3 +82,30 @@ export const triggerSync = async () => {
     clearTimeout(timeout);
   }
 };
+
+export const addCustomWatchlistStock = async ({ ticker, theme, angle, company }) => {
+  const response = await fetch("/api/watchlist/custom", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ticker, theme, angle, company }),
+  });
+
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(body.error || `Failed to add ticker (${response.status})`);
+  }
+  return body;
+};
+
+export const removeCustomWatchlistStock = async (ticker) => {
+  const response = await fetch(
+    `/api/watchlist/custom/${encodeURIComponent(ticker)}`,
+    { method: "DELETE" }
+  );
+
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(body.error || `Failed to remove ticker (${response.status})`);
+  }
+  return body;
+};

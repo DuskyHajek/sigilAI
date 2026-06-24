@@ -17,7 +17,7 @@ Three frontend routes:
 1. **Analyst Brief** — 3–4 sentence CIO note; UI splits into scannable lines with the lead sentence emphasized (decimal-safe — `$2.4T` stays intact).
 2. **Challenge the Thesis** — adversarial bear cases, **Thesis gap** (specific blindspot, not meta-advice), source badge; headline fallback when Claude times out.
 3. **Thesis Radar** — 7-pillar table: drift status, headline count, tickers; expand for evidence. Compact panel in stacked layout.
-4. **Watchlist** — 21 curated names with price data, change, thesis notes, and IPO spotlight (SPCX). Full-width primary panel below Thesis Radar.
+4. **Watchlist** — 21 curated Sigil names (+ shared demo additions via **+ Add**) with price data, change, thesis notes, and IPO spotlight (SPCX). Full-width primary panel below Thesis Radar.
 5. **Research Queue** — follow-up checks for an analyst after sync (visual reference for card styling across the dashboard).
 
 ### Value Chain (`/value-chain`)
@@ -60,7 +60,8 @@ Regenerate offline HTML after data edits: `node scripts/generate-learning-hub-ex
 The runtime product configuration lives in `config/thesis.js`:
 
 - `THEMES`: display names, descriptions, colors, keywords, bull/bear signals.
-- `WATCHLIST`: 21 currently displayed tickers, aliases, theme mapping, investment angles, priorities, optional `spotlight` (e.g. SPCX IPO).
+- `WATCHLIST`: 21 curated tickers, aliases, theme mapping, investment angles, priorities, optional `spotlight` (e.g. SPCX IPO).
+- Shared demo additions: `backend/services/customWatchlist.js` merges runtime custom tickers (`source: "custom"`) with the core list.
 - helper functions for theme and ticker lookup.
 
 Operational settings live in `config/settings.js`:
@@ -93,7 +94,7 @@ Claude article classification
   ↓
 Theme pulse scoring
   ↓
-Yahoo price fetch for 20 watchlist names
+Yahoo price fetch for effective watchlist (core 21 + custom demo adds)
   ↓
 Claude watchlist context lines
   ↓
@@ -136,6 +137,8 @@ Color hierarchy (unchanged): neon green `ACCELERATING`, rose `DRIFTING`, dark `#
 | `GET` | `/api/health` | Health, mode, API key presence, Vercel flag, cache backend, cache age, price status. |
 | `GET` | `/api/dashboard` | Full cached dashboard payload. |
 | `POST` | `/api/sync` | Runs full sync and returns the new payload with `syncOk: true`. |
+| `POST` | `/api/watchlist/custom` | Append a shared demo ticker (`{ ticker, theme, angle?, company? }`); returns `{ ok, watchlist }`. |
+| `DELETE` | `/api/watchlist/custom/:ticker` | Remove a custom demo ticker only; returns `{ ok, watchlist }`. |
 | `POST` | `/api/refresh` | Legacy alias for full sync. |
 
 ## Dashboard payload shape
@@ -161,6 +164,7 @@ Color hierarchy (unchanged): neon green `ACCELERATING`, rose `DRIFTING`, dark `#
       theme: "datacenters",
       angle: "GPU monopoly — the unavoidable pick-and-shovel",
       priority: "core",
+      source: "core",
       price: 214,
       currency: "USD",
       change52w: 14.2,

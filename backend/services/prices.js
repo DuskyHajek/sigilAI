@@ -1,4 +1,5 @@
 import { WATCHLIST } from "../../config/thesis.js";
+import { getEffectiveWatchlist } from "./customWatchlist.js";
 import { SETTINGS } from "../../config/settings.js";
 import { buildStockContextPrompt } from "./prompts.js";
 import { callClaude } from "./llm.js";
@@ -82,6 +83,8 @@ const headlineFallbackContext = (stockNews, matchType) => {
 
 export const fetchPrices = async (options = {}) => {
   const previousWatchlist = options.previousWatchlist || [];
+  const watchlistItems =
+    options.watchlistItems || (await getEffectiveWatchlist());
 
   const fetchStock = async (item) => {
     try {
@@ -96,6 +99,7 @@ export const fetchPrices = async (options = {}) => {
         angle: item.angle,
         priority: item.priority,
         spotlight: item.spotlight || null,
+        source: item.source || "core",
         price: quote.price,
         currency: quote.currency,
         change52w: quote.change52w,
@@ -124,6 +128,7 @@ export const fetchPrices = async (options = {}) => {
           angle: item.angle,
           priority: item.priority,
           spotlight: item.spotlight || cached.spotlight || null,
+          source: item.source || cached.source || "core",
           priceSource: "yahoo_cached",
           context: "",
         };
@@ -138,6 +143,7 @@ export const fetchPrices = async (options = {}) => {
         angle: item.angle,
         priority: item.priority,
         spotlight: item.spotlight || null,
+        source: item.source || "core",
         price: 0,
         change52w: 0,
         priceSource: "unavailable",
@@ -146,7 +152,7 @@ export const fetchPrices = async (options = {}) => {
     }
   };
 
-  const watchlist = await mapWithConcurrency(WATCHLIST, 5, fetchStock);
+  const watchlist = await mapWithConcurrency(watchlistItems, 5, fetchStock);
   const livePriceCount = watchlist.filter((stock) =>
     ["yahoo", "yahoo_cached"].includes(stock.priceSource)
   ).length;
