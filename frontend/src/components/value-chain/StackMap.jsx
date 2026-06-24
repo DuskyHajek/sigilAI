@@ -3,36 +3,26 @@ import { PHASES } from "../../data/aiInfraData.js";
 
 const PhaseCard = ({ phase, active, onSelect }) => {
   const tierLabel = `T${phase.tierRange[0]}–${phase.tierRange[1]}`;
+  const tierCount = phase.tierRange[1] - phase.tierRange[0] + 1;
 
   return (
     <button
       type="button"
       onClick={() => onSelect(phase.id)}
-      className={`vc-phase-card text-left rounded-xl p-3 sm:p-4 border min-w-[min(280px,82vw)] sm:min-w-[240px] lg:min-w-0 snap-center shrink-0 lg:shrink ${
-        active
-          ? "vc-phase-card--active border-white/25 bg-white/[0.05]"
-          : "border-white/8 bg-[#121212]"
-      }`}
-      style={{ borderLeftWidth: 3, borderLeftColor: phase.color }}
+      className={`vc-phase-card${active ? " vc-phase-card--active" : ""}`}
+      style={{ "--vc-phase-color": phase.color }}
       aria-pressed={active}
+      aria-label={`${phase.label}: ${phase.name}, tiers ${tierLabel}`}
     >
-      <div className="flex items-center justify-between gap-2 mb-1.5">
-        <span
-          className="text-[10px] font-mono font-bold uppercase tracking-widest"
-          style={{ color: phase.color }}
-        >
-          {phase.label}
-        </span>
-        <span className="text-[10px] font-mono text-white/40 shrink-0">
-          {tierLabel}
-        </span>
+      <div className="vc-phase-card__head">
+        <span className="vc-phase-card__label">{phase.label}</span>
+        <span className="vc-phase-card__tiers">{tierLabel}</span>
       </div>
-      <p className="text-xs font-semibold text-white leading-snug mb-1 line-clamp-2">
-        {phase.name}
-      </p>
-      <p className="text-[11px] text-[#a0a0a0] leading-relaxed line-clamp-2">
-        {phase.thesisRole}
-      </p>
+      <p className="vc-phase-card__name">{phase.name}</p>
+      <p className="vc-phase-card__focus">{phase.focus}</p>
+      <span className="vc-phase-card__count">
+        {tierCount} tier{tierCount === 1 ? "" : "s"}
+      </span>
     </button>
   );
 };
@@ -43,7 +33,7 @@ const StackMap = ({ activePhaseId, onPhaseSelect }) => {
   return (
     <div className="space-y-3">
       <div className="vc-phase-track-wrap">
-        <div className="vc-phase-track lg:grid lg:grid-cols-4 lg:gap-3 lg:overflow-visible">
+        <div className="vc-phase-track" role="list">
           {PHASES.map((phase) => (
             <PhaseCard
               key={phase.id}
@@ -61,23 +51,17 @@ const StackMap = ({ activePhaseId, onPhaseSelect }) => {
 
       {activePhase ? (
         <div
-          className="vc-phase-insight rounded-xl border border-white/8 bg-white/[0.02] px-3 sm:px-4 py-3"
-          style={{ borderLeftWidth: 3, borderLeftColor: activePhase.color }}
+          className="vc-phase-insight"
+          style={{ "--vc-phase-color": activePhase.color }}
         >
-          <p
-            className="text-[10px] font-mono font-bold uppercase tracking-widest mb-1.5"
-            style={{ color: activePhase.color }}
-          >
+          <p className="vc-phase-insight__label">
             {activePhase.label} · insight
           </p>
-          <p className="text-xs text-slate-400 leading-relaxed">
-            {activePhase.insight}
-          </p>
+          <p className="vc-phase-insight__text">{activePhase.insight}</p>
         </div>
       ) : (
         <p className="text-[11px] text-slate-600 leading-relaxed px-0.5">
-          Select a phase above to see its strategic insight and filter tiers
-          below.
+          Select a phase to see its strategic insight and filter tiers below.
         </p>
       )}
     </div>

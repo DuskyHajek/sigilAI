@@ -30,9 +30,9 @@ Scroll order (top → bottom):
 
 ### 1. Stack map (`#vc-map`)
 
-Seven macro phases (Phase 0 → Phase VI). Desktop: 4-column grid (4 + 3 rows). Mobile: horizontal scroll with snap.
+Seven macro phases (Phase 0 → Phase VI). Desktop: uniform cards in a 4+3 flex grid (equal width, fixed min-height). Mobile: horizontal scroll with snap.
 
-Click a phase → filters Tier Explorer and scrolls to `#vc-tiers`.
+Each card shows: phase label, tier range badge, name, focus areas, tier count. Click → filter tiers + insight panel below.
 
 ### 2. Risk overlays (`#vc-overlays`)
 
