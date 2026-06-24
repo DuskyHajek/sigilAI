@@ -21,6 +21,7 @@ import {
   MENTAL_MODELS,
   ESSENTIAL_CONCEPT_COUNT,
 } from "../data/masteryGuideData";
+import { THEMES as THESIS_THEMES } from "@config/thesis.js";
 import { QUIZ_QUESTIONS, SCENARIOS } from "../data/academyData";
 import QuizSection from "../components/learning/QuizSection";
 import FlashcardSection from "../components/learning/FlashcardSection";
@@ -35,6 +36,23 @@ const PRACTICE_TABS = [
   { id: "flashcards", label: "Flashcards", shortLabel: "Cards", icon: Layers },
   { id: "scenarios", label: "Scenarios", shortLabel: "Scenarios", icon: Sparkles },
 ];
+
+const THESIS_TO_MASTERY_TAB = {
+  datacenters: "datacentres",
+  application: "application",
+  robotics: "robotics",
+  warfare: "defence",
+  space: "space",
+  biotech: "biotech",
+  adversarial: "cybersecurity",
+};
+
+const pillarWhy = (theme) => {
+  const keyMatch = theme.long_description.match(/Key insight: ([^.]+\.?)/);
+  if (keyMatch) return keyMatch[1].trim();
+  const first = theme.long_description.split(".")[0]?.trim();
+  return first ? `${first}.` : theme.short_description;
+};
 
 // ─── Level badge ─────────────────────────────────────────────────────────────
 
@@ -80,6 +98,78 @@ function SubSection({ title, count, hint, children, defaultOpen = false }) {
         </div>
       </button>
       {open && <div className="pb-4">{children}</div>}
+    </div>
+  );
+}
+
+// ─── Overview: pillars first, frameworks below ───────────────────────────────
+
+function PillarsAtGlance({ onSelectPillar }) {
+  return (
+    <div className="space-y-2">
+      {THESIS_THEMES.map((theme, index) => (
+        <button
+          key={theme.id}
+          type="button"
+          onClick={() => onSelectPillar?.(THESIS_TO_MASTERY_TAB[theme.id])}
+          className="w-full text-left glass-panel rounded-xl p-4 hover:border-sigil-gold/20 transition-colors group border border-transparent"
+        >
+          <div className="flex gap-3">
+            <span
+              className="text-sm font-mono font-bold shrink-0 w-5"
+              style={{ color: theme.color_hex }}
+            >
+              {index + 1}
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-semibold text-white group-hover:text-sigil-gold transition-colors">
+                {theme.display_name}
+              </p>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                <span className="text-slate-500 font-mono text-[10px] uppercase tracking-wide mr-1.5">
+                  Thesis
+                </span>
+                {theme.short_description}
+              </p>
+              <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+                <span className="text-slate-600 font-mono text-[10px] uppercase tracking-wide mr-1.5">
+                  Why
+                </span>
+                {pillarWhy(theme)}
+              </p>
+            </div>
+            <ChevronRight
+              size={14}
+              className="text-slate-600 group-hover:text-sigil-gold shrink-0 mt-1"
+            />
+          </div>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function OverviewSection({ data, onSelectPillar }) {
+  const frameworkCount =
+    data.concepts.length +
+    data.books.length +
+    data.courses.length +
+    data.voices.length +
+    data.mentalModels.length;
+
+  return (
+    <div className="space-y-0">
+      <div className="pb-4 mb-1 border-b border-slate-800/40">
+        <PillarsAtGlance onSelectPillar={onSelectPillar} />
+      </div>
+      <SubSection
+        title="Investment Frameworks"
+        count={frameworkCount}
+        hint="Hype cycle, moats, capital cycles — go deeper when ready"
+        defaultOpen={false}
+      >
+        <ThemeSection data={data} />
+      </SubSection>
     </div>
   );
 }
@@ -631,7 +721,26 @@ export default function MasteryGuide() {
           </>
         )}
 
-        {mode === "reference" && activeTheme && (
+        {mode === "reference" && activeTab === "overview" && activeTheme && (
+          <>
+            <SectionHeader
+              eyebrow="Start Here"
+              title="7 Pillars at a glance"
+              description="The Supernova thesis in one screen — what each pillar bets on and why it matters. Frameworks and reading lists below when you're ready to go deeper."
+              icon={BookOpen}
+            />
+            <TipBox icon={ClipboardList}>
+              Tap a pillar to jump to its full curriculum. Expand Investment
+              Frameworks below for hype cycle, moats, and capital cycle thinking.
+            </TipBox>
+            <OverviewSection
+              data={activeTheme}
+              onSelectPillar={(tabId) => setActiveTab(tabId)}
+            />
+          </>
+        )}
+
+        {mode === "reference" && activeTheme && activeTab !== "overview" && (
           <>
             <SectionHeader
               eyebrow={activeTheme.label}

@@ -1,13 +1,80 @@
+import { useMemo } from "react";
 import { ShieldAlert } from "lucide-react";
 import { THEMES } from "@config/thesis.js";
 
 const getTheme = (themeId) => THEMES.find((theme) => theme.id === themeId);
 
+const GENERIC_EMPTY_BLINDSPOT =
+  "No meaningful counter-signals detected in today's headline sample.";
+
+/** Curated structural bear watches — first bear_signal per pillar from thesis config. */
+const STANDING_RISKS = THEMES.map((theme) => ({
+  targetTheme: theme.id,
+  headlineRisk: theme.bear_signals?.[0] ?? "Structural downside scenario",
+  adversarialArgument: theme.short_description,
+  counterIndicatorToWatch:
+    "Always on radar — watch headlines and thesis drift for this trigger",
+}));
+
 const SOURCE_LABELS = {
   claude: "Claude · adversarial pass",
   headlines: "High-sig bearish headlines only",
-  none: "No counter-signals today",
+  none: "Standing risks · always on radar",
   unavailable: "Unavailable this sync",
+};
+
+const RiskCard = ({ risk, index, embedded, standing = false }) => {
+  const theme = getTheme(risk.targetTheme);
+  const themeColor = theme?.color_hex || "#f43f5e";
+
+  return (
+    <li
+      className={`relative overflow-hidden rounded-xl border p-4 ${
+        embedded
+          ? "border-slate-800/80 bg-transparent"
+          : standing
+            ? "border-slate-800 bg-slate-950/30"
+            : "border-slate-900 bg-slate-950/40"
+      }`}
+    >
+      <div
+        className="absolute left-0 top-0 h-full w-1"
+        style={{ backgroundColor: themeColor }}
+      />
+      <div className="pl-2 space-y-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-[11px] font-mono text-rose-400/80">
+            {standing ? "Standing" : `Risk ${String(index + 1).padStart(2, "0")}`}
+          </span>
+          {theme && (
+            <span
+              className="px-2 py-0.5 rounded-full text-[10px] font-mono border"
+              style={{
+                color: themeColor,
+                borderColor: `${themeColor}55`,
+                backgroundColor: `${themeColor}12`,
+              }}
+            >
+              {theme.display_name}
+            </span>
+          )}
+        </div>
+
+        <p className="text-sm font-semibold text-slate-100 leading-snug">
+          {risk.headlineRisk}
+        </p>
+        <p className="text-sm text-slate-300 leading-relaxed">
+          {risk.adversarialArgument}
+        </p>
+        <p className="text-[11px] font-mono text-slate-500 leading-relaxed">
+          <span className="text-rose-400/90 uppercase tracking-wide">
+            Watch ·{" "}
+          </span>
+          {risk.counterIndicatorToWatch}
+        </p>
+      </div>
+    </li>
+  );
 };
 
 const ChallengeThesis = ({
@@ -25,13 +92,30 @@ const ChallengeThesis = ({
     source === "unavailable" ||
     (!hasRisks && blindspotAlert === "Analysis temporarily unavailable.");
 
+  const showStandingRisks = !hasRisks && !isUnavailable;
+
+  const enrichedBlindspot =
+    blindspotAlert && blindspotAlert !== GENERIC_EMPTY_BLINDSPOT
+      ? blindspotAlert
+      : "";
+
   const showBlindspotAlert =
-    blindspotAlert && !suppressBlindspotAlert;
+    enrichedBlindspot && !suppressBlindspotAlert && (hasRisks || showStandingRisks);
 
   const sourceLabel = isMock
     ? "Demo adversarial pass"
-    : SOURCE_LABELS[source] ||
-      (hasRisks ? "Claude · adversarial pass" : "No counter-signals today");
+    : showStandingRisks
+      ? SOURCE_LABELS.none
+      : SOURCE_LABELS[source] ||
+        (hasRisks ? "Claude · adversarial pass" : SOURCE_LABELS.none);
+
+  const standingIntro = useMemo(() => {
+    if (!showStandingRisks) return "";
+    if (isCleanEmpty) {
+      return "No live counter-signals in today's headline sample — these structural bear watches from the thesis config stay on radar regardless.";
+    }
+    return "Live adversarial pass returned no risk cards — structural bear watches from the thesis config remain on radar.";
+  }, [showStandingRisks, isCleanEmpty]);
 
   const wrapperClass = embedded
     ? "flex flex-col"
@@ -62,7 +146,7 @@ const ChallengeThesis = ({
             className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded border ${
               isMock
                 ? "text-amber-400/90 border-amber-500/20 bg-amber-500/5"
-                : isCleanEmpty
+                : showStandingRisks
                   ? "text-slate-400 border-slate-700/50 bg-slate-900/40"
                   : "text-rose-400/90 border-rose-500/20 bg-rose-500/5"
             }`}
@@ -78,87 +162,57 @@ const ChallengeThesis = ({
           </p>
         )}
 
-        {!hasRisks ? (
+        {isUnavailable ? (
           <div
             className={`mt-4 rounded-xl border p-4 ${
               embedded
                 ? "border-slate-800/80 bg-transparent"
-                : isCleanEmpty
-                  ? "border-slate-800 bg-slate-950/30"
-                  : source === "claude"
-                    ? "border-rose-500/15 bg-rose-500/5"
-                    : "border-slate-800 bg-slate-950/40"
+                : "border-slate-800 bg-slate-950/40"
             }`}
           >
-            {source === "claude" && showBlindspotAlert && (
-              <p className="text-[10px] font-mono uppercase tracking-wide text-rose-400/90 mb-2">
-                Adversarial read
-              </p>
-            )}
             <p className="text-sm text-slate-400 leading-relaxed">
-              {isUnavailable
-                ? "Adversarial analysis could not run this sync — usually a timeout or API error. Retry Sync once."
-                : showBlindspotAlert
-                  ? blindspotAlert
-                  : suppressBlindspotAlert
-                    ? "Counter-thesis watch is highlighted above — expand risk cards below when present."
-                    : "No meaningful counter-signals detected in today's headline sample."}
+              Adversarial analysis could not run this sync — usually a timeout or
+              API error. Retry Sync once.
             </p>
+          </div>
+        ) : showStandingRisks ? (
+          <div className="mt-4 space-y-3">
+            {showBlindspotAlert && (
+              <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-4">
+                <p className="text-[10px] font-mono uppercase tracking-wide text-rose-400/90 mb-1">
+                  Today&apos;s read
+                </p>
+                <p className="text-sm text-slate-200 leading-relaxed">
+                  {enrichedBlindspot}
+                </p>
+              </div>
+            )}
+            <p className="text-xs text-slate-500 leading-relaxed">{standingIntro}</p>
+            <p className="text-[10px] font-mono uppercase tracking-wide text-rose-400/90">
+              Standing risks — always on radar
+            </p>
+            <ol className="space-y-3">
+              {STANDING_RISKS.map((risk, index) => (
+                <RiskCard
+                  key={risk.targetTheme}
+                  risk={risk}
+                  index={index}
+                  embedded={embedded}
+                  standing
+                />
+              ))}
+            </ol>
           </div>
         ) : (
           <ol className="mt-4 space-y-3">
-            {risks.map((risk, index) => {
-              const theme = getTheme(risk.targetTheme);
-              const themeColor = theme?.color_hex || "#f43f5e";
-
-              return (
-                <li
-                  key={`${risk.targetTheme}-${index}`}
-                  className={`relative overflow-hidden rounded-xl border p-4 ${
-                    embedded
-                      ? "border-slate-800/80 bg-transparent"
-                      : "border-slate-900 bg-slate-950/40"
-                  }`}
-                >
-                  <div
-                    className="absolute left-0 top-0 h-full w-1"
-                    style={{ backgroundColor: themeColor }}
-                  />
-                  <div className="pl-2 space-y-2">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-[11px] font-mono text-rose-400/80">
-                        Risk {String(index + 1).padStart(2, "0")}
-                      </span>
-                      {theme && (
-                        <span
-                          className="px-2 py-0.5 rounded-full text-[10px] font-mono border"
-                          style={{
-                            color: themeColor,
-                            borderColor: `${themeColor}55`,
-                            backgroundColor: `${themeColor}12`,
-                          }}
-                        >
-                          {theme.display_name}
-                        </span>
-                      )}
-                    </div>
-
-                    <p className="text-sm font-semibold text-slate-100 leading-snug">
-                      {risk.headlineRisk}
-                    </p>
-                    <p className="text-sm text-slate-300 leading-relaxed">
-                      {risk.adversarialArgument}
-                    </p>
-                    <p className="text-[11px] font-mono text-slate-500 leading-relaxed">
-                      <span className="text-rose-400/90 uppercase tracking-wide">
-                        Watch ·{" "}
-                      </span>
-                      {risk.counterIndicatorToWatch}
-                    </p>
-                  </div>
-                </li>
-              );
-            })}
+            {risks.map((risk, index) => (
+              <RiskCard
+                key={`${risk.targetTheme}-${index}`}
+                risk={risk}
+                index={index}
+                embedded={embedded}
+              />
+            ))}
           </ol>
         )}
 
@@ -168,7 +222,7 @@ const ChallengeThesis = ({
               Thesis gap
             </p>
             <p className="text-sm text-slate-200 leading-relaxed">
-              {blindspotAlert}
+              {enrichedBlindspot}
             </p>
           </div>
         )}

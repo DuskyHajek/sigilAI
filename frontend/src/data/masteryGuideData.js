@@ -27,9 +27,9 @@ export const THEME_ID_TO_SLUG = {
 export const THEMES = [
   {
     id: "overview",
-    label: "Overview & Investment Frameworks",
-    tagline: "The meta-layer — how to think before what to think",
-    description: "Before diving into the 7 specific themes, master the thinking frameworks Sigil applies across all bets. Disruptive technology investing requires a different toolkit than traditional value or growth investing. These mental models are the foundation for everything else.",
+    label: "Overview",
+    tagline: "7 Pillars at a glance — then frameworks when you're ready",
+    description: "Start with the seven Supernova pillars: what each bets on and why it matters. Investment frameworks (hype cycle, moats, capital cycles) sit below for when you want the meta-layer.",
     concepts: [
       { term: "Gartner Hype Cycle", essential: true, definition: "5-stage tech adoption model: Innovation Trigger → Peak of Inflated Expectations → Trough of Disillusionment → Slope of Enlightenment → Plateau of Productivity. Sigil explicitly builds their AI portfolio to navigate this cycle — critical for timing entries and exits in each of the 7 themes." },
       { term: "Technology S-Curve", definition: "Adoption curve: slow start (early adopters) → rapid growth (mainstream) → plateau (saturation). Stacked S-curves drive sequential investment waves. Knowing where a technology sits on its S-curve determines risk/reward." },

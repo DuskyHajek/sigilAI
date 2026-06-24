@@ -116,6 +116,17 @@ export default function ValueChain() {
       </div>
 
       <DashboardZone id="vc-map" label="Stack map" className="mt-0">
+        <div className="mb-4 rounded-xl border border-sigil-gold/25 bg-sigil-gold/[0.06] px-4 py-3.5">
+          <p className="text-[10px] font-mono uppercase tracking-widest text-sigil-gold mb-2">
+            Start here
+          </p>
+          <p className="text-sm text-slate-300 leading-relaxed">
+            Every tier is a potential single point of failure. If one link jams,
+            the global AI engine halts. This map traces the full physical stack —
+            so you know where bottlenecks and holdings sit before diving into 22
+            tiers.
+          </p>
+        </div>
         <TipBox icon={Layers}>
           Most investors stop at NVDA. Sigil tracks all 22 tiers — from Spruce
           Pine quartz to RAG infrastructure. Select a phase to filter the tier
