@@ -52,7 +52,7 @@ Tier chips navigate to the Tier Explorer with `?tier=N` (scroll + expand + brief
 
 Maps Sigil watchlist tickers to tiers via `WATCHLIST_TIER_MAP`.
 
-- **2-column ticker grid** on `sm+`: `[ticker] [Tier N badge] [note]`
+- **2-column ticker card grid** on `sm+`: ticker, tier badge, tier name, note; wrapped in featured green panel
 - Click a ticker → jump to its tier in the explorer (scroll, expand, 2s highlight)
 
 Not every watchlist name appears here — only names mapped to the physical stack (currently 8). Robotics, space, cyber, and biotech names live outside this map.
@@ -61,7 +61,7 @@ Not every watchlist name appears here — only names mapped to the physical stac
 
 All 22 tiers with filters:
 
-- Phase pills (filter)
+- Phase pills (filter — shown when a phase filter or search is active; use Stack map to filter from all-phases view)
 - ⚡ Essentials only (`tier.essential === true`)
 - 🔖 Watchlist only (tiers with `WATCHLIST_TIER_MAP` or `watchlistTickers`)
 - Full-text search
