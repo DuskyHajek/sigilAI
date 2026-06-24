@@ -23,9 +23,22 @@ Sticky sub-nav: **Map · Holdings · Tiers**
 
 Scroll order (top → bottom):
 
-1. **Stack map** — orientation and phase selection
-2. **Holdings on the stack** — ticker → tier mapping (unique Sigil insight)
-3. **Tier explorer** — full 22-tier reference with filters and phase chrome
+1. **Hero** — title, stats, Learning Hub cross-link
+2. **Full stack at a glance** — static infographic (7 phases · 22 tiers); mobile horizontal scroll + tap-to-enlarge lightbox
+3. **Stack map** — orientation and phase selection
+4. **Holdings on the stack** — ticker → tier mapping (unique Sigil insight)
+5. **Tier explorer** — full 22-tier reference with filters and phase chrome
+
+### Full stack infographic (hero → map)
+
+Wide reference diagram shown immediately below the hero. Gives the full physical stack in one view before the interactive sections.
+
+- **Source asset:** `docs/AIchain.jpg` (design reference) · **Served at:** `frontend/public/images/ai-infra-value-chain.jpg`
+- **Component:** `ValueChainInfographic.jsx`
+- **Desktop:** full-width image in a framed panel; **Enlarge** opens lightbox
+- **Mobile:** horizontal swipe (readable min-width, fade hint on right edge); tap image or **Enlarge** for scrollable lightbox
+
+To replace the diagram: update both `docs/AIchain.jpg` and `frontend/public/images/ai-infra-value-chain.jpg`, then rebuild frontend.
 
 ### 1. Stack map (`#vc-map`)
 
@@ -116,11 +129,13 @@ export const WATCHLIST_TIER_MAP = {
 frontend/src/
 ├── data/aiInfraData.js
 ├── utils/valueChainUtils.js       # filter, parse/build URL params, watchlist stack
-├── styles/value-chain.css         # tier hierarchy, ticker grid, phase chrome
+├── styles/value-chain.css         # infographic, tier hierarchy, ticker grid, phase chrome
 ├── pages/ValueChain.jsx
+├── public/images/ai-infra-value-chain.jpg
 ├── components/
 │   ├── ValueChainSectionNav.jsx
 │   └── value-chain/
+│       ├── ValueChainInfographic.jsx
 │       ├── StackMap.jsx
 │       ├── TierExplorer.jsx
 │       ├── TierCard.jsx
@@ -159,6 +174,13 @@ Local dev: `http://localhost:5173/value-chain`
 2. Update the parent `PHASES[].tierRange`.
 
 Keep `PHASES.length`, `TIERS.length`, and hero stat pills in sync if counts change.
+
+### Replace the stack infographic
+
+1. Export or save the new diagram as `docs/AIchain.jpg` (design reference).
+2. Copy the same file to `frontend/public/images/ai-infra-value-chain.jpg` (served at `/images/ai-infra-value-chain.jpg`).
+3. Run `npm run build --prefix frontend`.
+4. No code changes unless layout or alt text needs updating (`ValueChainInfographic.jsx`).
 
 ## Archived sizing lenses (reference only)
 

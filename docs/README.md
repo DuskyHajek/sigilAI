@@ -23,6 +23,14 @@ Read these in order when onboarding to the repo.
 | Doc | Purpose |
 |-----|---------|
 | [06_value_chain.md](./06_value_chain.md) | AI Infrastructure Value Chain explorer (`/value-chain`) |
+| [07_value_chain_visualization_data.md](./07_value_chain_visualization_data.md) | Visualization data reference + infographic asset notes |
+
+## Design assets
+
+| File | Purpose |
+|------|---------|
+| [AIchain.jpg](./AIchain.jpg) | Source design for the full-stack infographic on `/value-chain` |
+| `frontend/public/images/ai-infra-value-chain.jpg` | Deployed copy served by Vite / Vercel |
 
 ## Offline exports (generated — do not edit by hand)
 

@@ -24,8 +24,8 @@ Three frontend routes:
 
 Static AI infrastructure stack reference. No API dependency.
 
+- **Full stack infographic** — 7 phases · 22 tiers; mobile swipe + lightbox.
 - **Stack map** — 7 phases; click to filter tiers.
-- **Risk overlays** — 3 institutional alpha signals (compact grid, above tiers).
 - **Holdings** — watchlist tickers mapped to tiers (`WATCHLIST_TIER_MAP`); click-to-jump grid.
 - **Tier explorer** — 22 tiers with essential hierarchy, phase separators, sticky phase nav.
 
@@ -245,13 +245,14 @@ frontend/src/data/quizQuestionsExtended.js
 frontend/src/data/scenariosExtended.js
 frontend/src/utils/valueChainUtils.js
 frontend/src/components/ValueChainSectionNav.jsx
+frontend/src/components/value-chain/ValueChainInfographic.jsx
 frontend/src/components/value-chain/StackMap.jsx
 frontend/src/components/value-chain/TierExplorer.jsx
 frontend/src/components/value-chain/TierCard.jsx
 frontend/src/components/value-chain/PhaseSeparator.jsx
 frontend/src/components/value-chain/StickyPhaseNav.jsx
 frontend/src/components/value-chain/WatchlistStack.jsx
-frontend/src/components/value-chain/RiskOverlays.jsx
+frontend/public/images/ai-infra-value-chain.jpg
 frontend/src/components/Header.jsx
 frontend/src/components/WhatIsThis.jsx
 frontend/src/components/SignalStrip.jsx

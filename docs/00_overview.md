@@ -103,9 +103,9 @@ Route: `/value-chain`. Header nav: **VALUE CHAIN** (mobile: **Stack**).
 
 A static structural map of the AI infrastructure physical stack. No backend or sync dependency.
 
-**Stack map** — 7 phases from pre-silicon inputs to compute monetisation; click to filter tiers.
+**Full stack infographic** — wide 7-phase · 22-tier diagram below the hero; mobile swipe + tap-to-enlarge lightbox.
 
-**Risk overlays** — 3 institutional sizing signals (obsolescence trap, CapEx air pocket, power arbitrage); compact 3-column grid above the tier list.
+**Stack map** — 7 phases from pre-silicon inputs to compute monetisation; click to filter tiers.
 
 **Holdings on the stack** — watchlist tickers mapped via `WATCHLIST_TIER_MAP` (8 names); 2-column grid with click-to-jump and tier highlight.
 

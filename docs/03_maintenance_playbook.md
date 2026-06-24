@@ -73,6 +73,12 @@ To reset demo additions locally, clear `backend/data/custom_watchlist.json` to `
 
 Full reference: `docs/06_value_chain.md`.
 
+### Replace the stack infographic
+
+1. Save the updated diagram as `docs/AIchain.jpg`.
+2. Copy to `frontend/public/images/ai-infra-value-chain.jpg`.
+3. Run `npm run build --prefix frontend`.
+
 ## Change theme thesis or keywords
 
 1. Open `config/thesis.js`.

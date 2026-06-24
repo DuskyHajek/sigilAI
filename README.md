@@ -21,10 +21,10 @@ Four working intelligence sections plus a signal strip:
 
 ### Value Chain (`/value-chain`)
 
-Static map of the AI infrastructure physical stack — 7 phases, 22 tiers, watchlist placement, and 3 risk overlays. No API or sync required.
+Static map of the AI infrastructure physical stack — 7 phases, 22 tiers, watchlist placement. No API or sync required.
 
+- **Full stack infographic** — wide reference diagram below hero; mobile swipe + lightbox.
 - **Stack map** — phase pipeline with thesis roles; click to filter tiers.
-- **Risk overlays** — institutional bear/cyclical/bull signals (3-column grid, above tiers).
 - **Holdings on the stack** — 2-column ticker grid; click jumps to tier with highlight pulse.
 - **Tier explorer** — searchable tiers with essential/normal hierarchy, phase separators, sticky phase nav, players, moat, bottleneck, metric, Sigil angle.
 

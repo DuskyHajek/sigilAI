@@ -7,7 +7,7 @@ React + Vite frontend for the Sigil Supernova dashboard.
 | Path | Page | Notes |
 |---|---|---|
 | `/` | Dashboard | Live/cached intelligence: spotlight, brief (scannable sentences), counter-thesis, stacked radar + watchlist, research queue |
-| `/value-chain` | Value Chain | Static AI infra stack: phase map, risk overlays, ticker grid, tier explorer with phase chrome; shareable URL filters |
+| `/value-chain` | Value Chain | Static AI infra stack: full-stack infographic, phase map, ticker grid, tier explorer with phase chrome; shareable URL filters |
 | `/mastery-guide` | Learning Hub | Static curriculum; Reference and Practice modes (quiz, flashcards, scenarios) |
 
 ## Scripts
@@ -42,14 +42,15 @@ Value Chain and Learning Hub are fully static — no API calls.
 - `src/utils/valueChainUtils.js` - tier filters, URL param parse/build, watchlist stack entries.
 - `src/pages/ValueChain.jsx` - Value Chain shell (hero, zones, URL-synced filters).
 - `src/pages/MasteryGuide.jsx` - Learning Hub shell (Reference | Practice toggle, Mental Models tab).
-- `src/data/aiInfraData.js` - phases, tiers, risk overlays, watchlist tier map.
+- `src/data/aiInfraData.js` - phases, tiers, watchlist tier map.
 - `src/data/masteryGuideData.js` - themes, books, reading list, glossary, essential flags, `MENTAL_MODELS` export.
 - `src/data/academyData.js` - quiz, scenarios (merges extended modules).
 - `src/data/quizQuestionsExtended.js`, `scenariosExtended.js` - practice content modules.
 - `src/components/Header.jsx` - nav (Dashboard · Value Chain · Learning Hub), mode badge, sync button.
 - `src/components/ValueChainSectionNav.jsx` - sticky sub-nav on Value Chain page.
-- `src/components/value-chain/` - StackMap, TierExplorer, TierCard, PhaseSeparator, StickyPhaseNav, WatchlistStack, RiskOverlays.
-- `src/styles/value-chain.css` - tier hierarchy, ticker/risk grids, phase separators, sticky phase nav.
+- `src/components/value-chain/` - ValueChainInfographic, StackMap, TierExplorer, TierCard, PhaseSeparator, StickyPhaseNav, WatchlistStack.
+- `public/images/ai-infra-value-chain.jpg` - full-stack infographic served at `/images/ai-infra-value-chain.jpg`.
+- `src/styles/value-chain.css` - infographic lightbox, tier hierarchy, ticker grids, phase separators, sticky phase nav.
 - `src/components/WhatIsThis.jsx` - product explainer.
 - `src/components/SignalStrip.jsx` - page-level signal clusters from thesis drift.
 - `src/components/EditorialSpotlight.jsx` - SPCX / counter-thesis editorial spotlight.

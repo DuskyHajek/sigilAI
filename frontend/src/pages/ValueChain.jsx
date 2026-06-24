@@ -4,6 +4,7 @@ import { BookOpen, Layers } from "lucide-react";
 import "../styles/value-chain.css";
 import DashboardZone from "../components/DashboardZone";
 import StackMap from "../components/value-chain/StackMap";
+import ValueChainInfographic from "../components/value-chain/ValueChainInfographic";
 import TierExplorer from "../components/value-chain/TierExplorer";
 import WatchlistStack from "../components/value-chain/WatchlistStack";
 import { TipBox } from "../components/learning/LearningUI";
@@ -115,6 +116,8 @@ export default function ValueChain() {
           </div>
         </div>
       </div>
+
+      <ValueChainInfographic />
 
       <DashboardZone id="vc-map" label="Stack map" className="mt-0">
         <div className="mb-4 rounded-xl border border-sigil-gold/25 bg-sigil-gold/[0.06] px-4 py-3.5">
