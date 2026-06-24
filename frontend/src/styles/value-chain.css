@@ -427,12 +427,12 @@
 }
 
 .value-chain-page .dashboard-zone {
-  scroll-margin-top: 7rem;
+  scroll-margin-top: 7.5rem;
 }
 
 @media (min-width: 640px) {
   .value-chain-page .dashboard-zone {
-    scroll-margin-top: 8.5rem;
+    scroll-margin-top: 9rem;
   }
 }
 
@@ -643,7 +643,7 @@
 
 .vc-explorer-sticky {
   position: sticky;
-  top: 7rem;
+  top: 7.5rem;
   z-index: 20;
   display: flex;
   flex-direction: column;
@@ -659,7 +659,7 @@
 
 @media (min-width: 640px) {
   .vc-explorer-sticky {
-    top: 8.5rem;
+    top: 9rem;
   }
 }
 

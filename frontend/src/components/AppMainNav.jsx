@@ -7,6 +7,7 @@ const SECTIONS = [
     end: true,
     label: "Dashboard",
     shortLabel: "Dashboard",
+    hint: "Briefing & watchlist",
     Icon: LayoutDashboard,
     title: "Live briefing, watchlist, and thesis radar",
   },
@@ -14,6 +15,7 @@ const SECTIONS = [
     to: "/value-chain",
     label: "Value Chain",
     shortLabel: "Stack",
+    hint: "22-tier stack map",
     Icon: Layers,
     title: "22-tier AI infrastructure stack — phases, bottlenecks & holdings",
   },
@@ -21,6 +23,7 @@ const SECTIONS = [
     to: "/mastery-guide",
     label: "Learning Hub",
     shortLabel: "Learn",
+    hint: "Curriculum & practice",
     Icon: BookOpen,
     title: "Reference curriculum, quizzes, flashcards & scenarios",
   },
@@ -29,24 +32,30 @@ const SECTIONS = [
 export default function AppMainNav() {
   return (
     <nav className="app-main-nav" aria-label="Main sections">
-      <div className="app-main-nav__track" role="tablist">
-        {SECTIONS.map(({ to, end, label, shortLabel, Icon, title }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={end}
-            title={title}
-            role="tab"
-            className={({ isActive }) =>
-              `app-main-nav__tab${isActive ? " app-main-nav__tab--active" : ""}`
-            }
-          >
-            <Icon size={16} className="shrink-0" aria-hidden="true" />
-            <span className="hidden min-[420px]:inline">{label}</span>
-            <span className="min-[420px]:hidden">{shortLabel}</span>
-          </NavLink>
-        ))}
-      </div>
+      {SECTIONS.map(({ to, end, label, shortLabel, hint, Icon, title }) => (
+        <NavLink
+          key={to}
+          to={to}
+          end={end}
+          title={title}
+          className={({ isActive }) =>
+            `app-main-nav__dest${isActive ? " app-main-nav__dest--active" : ""}`
+          }
+        >
+          <span className="app-main-nav__icon-wrap" aria-hidden="true">
+            <Icon size={17} strokeWidth={2.25} />
+          </span>
+          <span className="app-main-nav__copy">
+            <span className="app-main-nav__title app-main-nav__title--full">
+              {label}
+            </span>
+            <span className="app-main-nav__title app-main-nav__title--short">
+              {shortLabel}
+            </span>
+            <span className="app-main-nav__hint">{hint}</span>
+          </span>
+        </NavLink>
+      ))}
     </nav>
   );
 }
