@@ -25,19 +25,28 @@
 }
 
 .vc-infographic__scroll {
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
   padding: 0.5rem;
   background: #161616;
 }
 
-.vc-infographic__scroll::-webkit-scrollbar {
-  display: none;
+@media (max-width: 1023px) {
+  .vc-infographic__scroll {
+    overflow: hidden;
+  }
 }
 
-@media (max-width: 1023px) {
+@media (min-width: 1024px) {
+  .vc-infographic__scroll {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .vc-infographic__scroll::-webkit-scrollbar {
+    display: none;
+  }
+
   .vc-infographic__scroll-wrap::after {
     content: "";
     position: absolute;
@@ -82,9 +91,9 @@
 
 @media (max-width: 1023px) {
   .vc-infographic__img {
-    width: 44rem;
-    min-width: 44rem;
-    max-width: none;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
   }
 }
 
@@ -204,8 +213,8 @@
 
 @media (max-width: 1023px) {
   .vc-infographic-lightbox__img {
-    width: 56rem;
-    min-width: 56rem;
+    width: auto;
+    min-width: max(100%, 56rem);
     max-width: none;
   }
 }

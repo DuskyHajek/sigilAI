@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ChevronRight, Maximize2, X } from "lucide-react";
+import { Maximize2, X } from "lucide-react";
 
 const INFOGRAPHIC_SRC = "/images/ai-infra-value-chain.jpg";
 const INFOGRAPHIC_ALT =
@@ -58,8 +58,8 @@ export default function ValueChainInfographic() {
             </div>
           </div>
           <p className="text-[10px] font-mono text-slate-600 mt-2 flex items-center gap-1 lg:hidden px-1">
-            <ChevronRight size={10} aria-hidden="true" />
-            Swipe to explore · tap to enlarge
+            <Maximize2 size={10} aria-hidden="true" />
+            Tap to enlarge · scroll for detail
           </p>
           <button
             type="button"
