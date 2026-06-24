@@ -36,7 +36,7 @@ export const tierHasWatchlistExposure = (tier) => {
 
 export const filterTiers = ({
   phaseId = null,
-  essentialOnly = false,
+  essentialOnly = true,
   watchlistOnly = false,
   query = "",
 }) => {
@@ -80,7 +80,7 @@ export const parseSearchParams = (searchParams) => {
   return {
     phaseId: phase?.id ?? null,
     tierNumber,
-    essentialOnly: searchParams.get("essential") === "1",
+    essentialOnly: searchParams.get("essential") !== "0",
     watchlistOnly: searchParams.get("watchlist") === "1",
     query: searchParams.get("q") ?? "",
   };
@@ -96,7 +96,7 @@ export const buildSearchParams = (state) => {
   if (state.tierNumber != null) {
     params.set("tier", String(state.tierNumber));
   }
-  if (state.essentialOnly) params.set("essential", "1");
+  if (!state.essentialOnly) params.set("essential", "0");
   if (state.watchlistOnly) params.set("watchlist", "1");
   if (state.query?.trim()) params.set("q", state.query.trim());
 

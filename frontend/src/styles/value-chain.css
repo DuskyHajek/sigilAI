@@ -262,7 +262,7 @@
 /* ── Tier card hierarchy ─────────────────────────────────────────────────── */
 
 .vc-tier-card--essential {
-  border-left: 3px solid rgba(0, 255, 136, 0.8);
+  border-left: 3px solid #1d9e75;
 }
 
 .vc-tier-card--normal {
@@ -278,7 +278,7 @@
 }
 
 .vc-tier-card--watchlist.vc-tier-card--essential {
-  border-left-color: rgba(0, 255, 136, 1);
+  border-left-color: #1d9e75;
 }
 
 @keyframes vc-tier-highlight {

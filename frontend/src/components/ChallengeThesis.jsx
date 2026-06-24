@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { ShieldAlert } from "lucide-react";
+import { buildActionBlindspotAlert } from "@config/blindspot.js";
 import { THEMES } from "@config/thesis.js";
 import { RISK_TYPE_LABELS, RISK_TYPE_HINTS } from "../utils/stressDisplay.js";
 
@@ -11,28 +12,7 @@ const GENERIC_EMPTY_BLINDSPOT =
 const GENERIC_HEADLINE_BLINDSPOT =
   "High-significance bearish headlines are present — verify whether risks are already priced in before adding conviction.";
 
-const getThemeDisplayName = (themeId) =>
-  getTheme(themeId)?.display_name || themeId;
-
-const synthesizeBlindspotFromRisks = (risks) => {
-  if (risks.length === 0) return "";
-
-  const themeNames = [
-    ...new Set(risks.map((risk) => getThemeDisplayName(risk.targetTheme))),
-  ];
-
-  if (risks.length === 1) {
-    const hook = risks[0].headlineRisk.replace(/\.$/, "");
-    return `Today's headline flow challenges the ${themeNames[0]} pillar — ${hook}.`;
-  }
-
-  const themeList =
-    themeNames.length === 2
-      ? `${themeNames[0]} and ${themeNames[1]}`
-      : `${themeNames.slice(0, -1).join(", ")}, and ${themeNames.at(-1)}`;
-
-  return `${risks.length} high-sig bearish headlines cluster across ${themeList} — the brief's constructive read may underweight ${themeNames[0]} if these events persist.`;
-};
+const synthesizeBlindspotFromRisks = buildActionBlindspotAlert;
 
 /** Curated structural bear watches — first bear_signal per pillar from thesis config. */
 const STANDING_RISKS = THEMES.map((theme) => ({

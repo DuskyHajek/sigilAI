@@ -146,7 +146,7 @@ On Vercel, the backend uses lighter sync limits and the frontend aborts after 55
 
 - `backend/services/adversarial.js` — Challenge the Thesis panel.
   - Primary: Claude JSON pass → `source: "claude"`. Each risk includes `riskType`: `structural` | `timing` | `execution` | `exogenous` (badge in UI).
-  - Fallback: `buildStrictHeadlineFallback()` — high-sig bearish headlines (merges sig≥2 when &lt;2 at sig≥3); `buildHeadlineBlindspotAlert()` for specific Thesis gap copy; fallback cards use `riskType: "timing"`; `source: "headlines"`.
+  - Fallback: `buildStrictHeadlineFallback()` — high-sig bearish headlines (merges sig≥2 when &lt;2 at sig≥3); `buildActionBlindspotAlert()` for actionable Thesis gap copy; fallback cards use `riskType: "timing"`; `source: "headlines"`.
   - Empty feed: standing risks from `config/thesis.js` on frontend; programmatic `blindspotAlert` when no bearish flow.
   - Prompt rule 9: `blindspotAlert` must name theme-specific gaps, not meta-advice.
 - `backend/services/thesisDrift.js` — Signal clustering plus drift status for Thesis Radar. Always returns 7 theme rows (merges Claude output with programmatic fallback from `themePulse.thesis_score`). Clusters may be empty on timeout.
@@ -210,7 +210,7 @@ Never commit `.env`.
 | Prices show `unavailable` | Yahoo endpoint failed | Retry later; cached Yahoo values are used when available. |
 | Watchlist notes are generic | Weak headline match or no direct company news | Improve `aliases` in `WATCHLIST` or theme keywords. |
 | Brief shows `$2.` and `4T` on separate lines | Naive sentence split on decimal point | Use decimal-safe split in `WeeklyBrief.jsx` (see `docs/02_prompt_library.md` Prompt 4). |
-| Thesis gap says “verify whether risks are priced in” | Old cache or generic fallback copy | Re-sync; ensure `buildHeadlineBlindspotAlert` / prompt rule 9; frontend re-synthesizes legacy strings. |
+| Thesis gap restates the headline (“challenges the X pillar”) | Old cache or pre-action builder | Re-sync; `buildActionBlindspotAlert` in `config/blindspot.js`; prompt rule 9; frontend re-synthesizes legacy generic strings. |
 | Counter-thesis shows 1 risk but plural badge | Stale UI before count-aware labels | Badge is now singular/plural by risk count (`headlineSourceLabel`). |
 | Theme pulse feels noisy | Significance threshold too low | Raise `significance_threshold` in `config/settings.js`. |
 | Deployed data disappears | No remote KV configured | Add Vercel KV or Upstash REST env vars. |

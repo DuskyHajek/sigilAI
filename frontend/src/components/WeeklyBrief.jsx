@@ -21,6 +21,13 @@ const splitBriefSentences = (text) => {
   return sentences.length > 0 ? sentences : [trimmed];
 };
 
+const BRIEF_LABELS = [
+  "Primary Signal",
+  "Secondary",
+  "Counter",
+  "Watch",
+];
+
 const WeeklyBrief = ({ weeklyBriefText, isMock, generatedAt }) => {
   const formatGeneratedAt = (isoString) => {
     if (!isoString) return "N/A";
@@ -58,18 +65,24 @@ const WeeklyBrief = ({ weeklyBriefText, isMock, generatedAt }) => {
       />
 
       {hasContent ? (
-        <div className="space-y-3 pl-3 sm:pl-4 -mt-2 border-l-2 border-white/10">
+        <div className="space-y-4 pl-3 sm:pl-4 -mt-2 border-l-2 border-white/10">
           {sentences.map((sentence, index) => (
-            <p
-              key={`${index}-${sentence.slice(0, 24)}`}
-              className={
-                index === 0
-                  ? "text-base sm:text-[17px] font-semibold text-white leading-snug tracking-tight"
-                  : "text-sm sm:text-[15px] text-[#b8b8b8] leading-relaxed"
-              }
-            >
-              {sentence}
-            </p>
+            <div key={`${index}-${sentence.slice(0, 24)}`}>
+              {index < BRIEF_LABELS.length && (
+                <p className="text-[9px] font-mono uppercase tracking-[0.14em] text-sigil-gold/75 mb-1">
+                  {BRIEF_LABELS[index]}
+                </p>
+              )}
+              <p
+                className={
+                  index === 0
+                    ? "text-base sm:text-[17px] font-semibold text-sigil-gold leading-snug tracking-tight"
+                    : "text-sm sm:text-[15px] text-[#b8b8b8] leading-relaxed"
+                }
+              >
+                {sentence}
+              </p>
+            </div>
           ))}
         </div>
       ) : (

@@ -26,7 +26,8 @@ A short Claude-generated brief that starts the page. It summarizes the strongest
 **UI rendering** (`WeeklyBrief.jsx`):
 
 - Backend returns plain text (3–4 sentences, no bullets).
-- Frontend splits into visually separate lines for scannability: **sentence 1** is larger and bold (lead signal); sentences 2–4 are smaller and muted.
+- Frontend splits into visually separate lines for scannability with **semantic labels**: Primary Signal / Secondary / Counter / Watch (first four sentences).
+- **Sentence 1** is larger, bold, and green (lead signal); sentences 2–4 are smaller and muted.
 - Sentence splitting is **decimal-safe** — periods inside values like `$2.4T`, `15.5x`, or `€1.2B` must not break the text (regex: split only on `.` / `!` / `?` that are not between digits).
 
 ### 2. Challenge the Thesis
@@ -41,7 +42,7 @@ Structured adversarial pass: 2–3 bear cases with counter-indicators to watch, 
   - `Claude · adversarial pass` — full LLM pass succeeded.
   - `High-sig bearish headline` / `High-sig bearish headlines` — headline fallback (count-aware label).
   - `Standing risks · always on radar` — no live risks; shows curated `bear_signals[0]` per pillar from `config/thesis.js`.
-- **Thesis gap** (`blindspotAlert`) must name a **specific portfolio contradiction** (which theme, what assumption is untested) — not generic process advice like “verify whether risks are priced in”. When Claude times out, `buildHeadlineBlindspotAlert()` in `adversarial.js` synthesizes this from the displayed risk cards.
+- **Thesis gap** (`blindspotAlert`) must be a **concrete next step** for the CIO — e.g. “Verify whether RHM.DE supply chain exposure is disclosed in latest earnings” — not a restatement of the headline or generic process advice. Shared builder: `config/blindspot.js` (`buildActionBlindspotAlert`). When Claude times out, the headline fallback uses the same builder from displayed risk cards.
 
 **Headline fallback** (when Claude adversarial pass fails on Vercel timeout):
 
@@ -107,9 +108,9 @@ A static structural map of the AI infrastructure physical stack. No backend or s
 
 **Holdings on the stack** — watchlist tickers mapped via `WATCHLIST_TIER_MAP` (8 names); 2-column grid with click-to-jump and tier highlight.
 
-**Tier explorer** — 22 tiers with visual hierarchy (essential vs normal), phase separators, sticky phase nav while scrolling, players, moat, bottleneck, key metric, and Sigil angle. Filters: phase, essentials, watchlist exposure, search.
+**Tier explorer** — 22 tiers with visual hierarchy (essential vs normal), phase separators, sticky phase nav while scrolling, players, moat, bottleneck, key metric, and Sigil angle. Filters: phase, essentials, watchlist exposure, search. **Essentials-only defaults ON** on first visit (~8–10 tiers); use `?essential=0` to show all 22.
 
-URL params are shareable: `?tier=10`, `?phase=3`, `?essential=1`. Full reference: `docs/06_value_chain.md`.
+URL params are shareable: `?tier=10`, `?phase=3`, `?essential=0` (show all). Full reference: `docs/06_value_chain.md`.
 
 Data source: `frontend/src/data/aiInfraData.js`.
 
@@ -121,6 +122,7 @@ A static study companion for the 7 Supernova themes. No backend or sync dependen
 
 **Reference mode**
 
+- **Tab groups:** Overview / Models / Reading / Glossary (meta) visually separated from the 7 pillar curriculum tabs (AI Infra → Cyber).
 - Per-theme tabs: key concepts (⚡ Essential badges + filter), essential books, courses, voices, mental models.
 - **Mental Models** tab: all 26 frameworks, filterable by theme.
 - Master reading list (34 books, filterable by level and theme).

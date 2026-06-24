@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 import {
   THEMES,
-  NAV_TABS,
+  NAV_TAB_GROUPS,
   READING_LIST,
   GLOSSARY,
   MENTAL_MODELS,
@@ -640,26 +641,42 @@ export default function MasteryGuide() {
         />
       </div>
 
-      {/* Tab navigation — wrapping grid, no horizontal scroll */}
+      {/* Tab navigation — meta vs pillar groups with visual separator */}
       <nav
         aria-label={mode === "reference" ? "Reference sections" : "Practice sections"}
-        className={`grid gap-1.5 mb-4 sm:mb-6 ${
+        className={`mb-4 sm:mb-6 ${
           mode === "reference"
-            ? "grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-11"
-            : "grid-cols-3"
+            ? "flex flex-wrap items-center gap-1.5"
+            : "grid grid-cols-3 gap-1.5"
         }`}
       >
         {mode === "reference"
-          ? NAV_TABS.map(tab => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className={tabBtn(activeTab === tab.id)}
-                title={tab.label}
-              >
-                {tab.shortLabel}
-              </button>
+          ? NAV_TAB_GROUPS.map((group, groupIndex) => (
+              <Fragment key={group.id}>
+                {groupIndex > 0 && (
+                  <span
+                    className="hidden md:block w-px h-6 bg-slate-700/70 mx-0.5 shrink-0 self-center"
+                    aria-hidden
+                  />
+                )}
+                <div
+                  className={`flex flex-wrap gap-1.5 ${
+                    group.id === "pillars" ? "flex-1 min-w-0" : ""
+                  }`}
+                >
+                  {group.tabs.map((tab) => (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => setActiveTab(tab.id)}
+                      className={tabBtn(activeTab === tab.id)}
+                      title={tab.label}
+                    >
+                      {tab.shortLabel}
+                    </button>
+                  ))}
+                </div>
+              </Fragment>
             ))
           : PRACTICE_TABS.map(tab => {
               const Icon = tab.icon;

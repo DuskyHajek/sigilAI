@@ -12,6 +12,30 @@ export const NAV_TABS = [
   { id: "glossary",      label: "Glossary",              shortLabel: "Glossary" },
 ];
 
+/** Reference nav: meta tabs vs 7-pillar curriculum tabs (visual grouping in UI). */
+export const NAV_TAB_GROUPS = [
+  {
+    id: "meta",
+    tabs: NAV_TABS.filter((tab) =>
+      ["overview", "mental-models", "reading", "glossary"].includes(tab.id)
+    ),
+  },
+  {
+    id: "pillars",
+    tabs: NAV_TABS.filter((tab) =>
+      [
+        "datacentres",
+        "application",
+        "robotics",
+        "defence",
+        "space",
+        "biotech",
+        "cybersecurity",
+      ].includes(tab.id)
+    ),
+  },
+];
+
 /** Maps theme section ids to academy/quiz slug for badges and filters */
 export const THEME_ID_TO_SLUG = {
   overview: "overview",

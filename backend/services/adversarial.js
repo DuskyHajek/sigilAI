@@ -1,3 +1,4 @@
+import { buildActionBlindspotAlert } from "../../config/blindspot.js";
 import { SETTINGS } from "../../config/settings.js";
 import { THEMES } from "../../config/thesis.js";
 import { buildChallengeTheCioPrompt, buildThesisConfig } from "./prompts.js";
@@ -224,29 +225,7 @@ const mergeBearishArticles = (primary, secondary) => {
   return merged;
 };
 
-const getThemeDisplayName = (themeId) =>
-  THEMES.find((theme) => theme.id === themeId)?.display_name || themeId;
-
-const buildHeadlineBlindspotAlert = (risks) => {
-  if (risks.length === 0) return "";
-
-  const themeNames = [
-    ...new Set(risks.map((risk) => getThemeDisplayName(risk.targetTheme))),
-  ];
-
-  if (risks.length === 1) {
-    const themeName = themeNames[0];
-    const hook = risks[0].headlineRisk.replace(/\.$/, "");
-    return `Today's headline flow challenges the ${themeName} pillar — ${hook}.`;
-  }
-
-  const themeList =
-    themeNames.length === 2
-      ? `${themeNames[0]} and ${themeNames[1]}`
-      : `${themeNames.slice(0, -1).join(", ")}, and ${themeNames.at(-1)}`;
-
-  return `${risks.length} high-sig bearish headlines cluster across ${themeList} — the brief's constructive read may underweight ${themeNames[0]} if these events persist.`;
-};
+const buildHeadlineBlindspotAlert = buildActionBlindspotAlert;
 
 const buildStrictHeadlineFallback = (classifiedArticles, themePulse) => {
   const assigned = assignArticlesForAdversarial(classifiedArticles, themePulse);

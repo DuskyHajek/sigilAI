@@ -408,7 +408,7 @@ CRITICAL INSTRUCTIONS:
 6. riskType MUST classify how a CIO should respond — one of: "structural" (thesis invalidation — reduce conviction), "timing" (cycle/positioning — adjust sizing not thesis), "execution" (specific company or implementation risk within a valid theme), "exogenous" (macro/geopolitical shock outside portfolio control — monitor, do not overreact).
 7. If the feed has no material bear cases, return asymmetricRisks: [] and explain why in blindspotAlert. Do not invent generic risks.
 8. Even when headlines read bullish for the thesis, extract how a skeptical CIO could still be wrong — contrarian reads on supportive news are valid.
-9. blindspotAlert MUST name the specific portfolio gap or untested assumption (which theme(s), what contradiction) — never generic process advice like "verify whether risks are priced in" or "before adding conviction".
+9. blindspotAlert MUST be a concrete next step for the CIO — start with "Verify whether [ticker]..." or "Cross-check [theme] watchlist..." — name the disclosure, filing, or assumption to test. Never restate the headline or say "today's headline flow challenges the X pillar". Never generic process advice like "verify whether risks are priced in".
 
 Return your response strictly as a valid JSON object matching this TypeScript interface:
 interface AdversarialBrief {
@@ -443,7 +443,7 @@ JSON Output:
 ```
 
 - 2–3 risks when signal exists; empty array + `blindspotAlert` when none.
-- `blindspotAlert` is shown as **Thesis gap** in the UI — must be analytical and theme-specific, not meta-instructions to the analyst.
+- `blindspotAlert` is shown as **Thesis gap** in the UI — must be an actionable verification step (ticker + disclosure/filing), not a headline restatement.
 - `riskType` displayed as badge in `ChallengeThesis.jsx` (defaults to `structural` if missing).
 - Frontend shows **standing risks** from `config/thesis.js` when no live risks return (see `ChallengeThesis.jsx`).
 
@@ -455,7 +455,7 @@ When Claude fails (common on Vercel timeout), `adversarial.js`:
 2. Takes bearish articles with `significance >= adversarial_min_significance` (default 3).
 3. If fewer than 2, merges additional bearish articles at `significance_threshold` (default 2) from distinct themes.
 4. Builds up to 3 deduped risk cards with `riskType: "timing"` and synthesized `headlineRisk`.
-5. Sets `blindspotAlert` via `buildHeadlineBlindspotAlert(risks)` — names affected pillar(s) and the contradiction.
+5. Sets `blindspotAlert` via `buildActionBlindspotAlert(risks)` in `config/blindspot.js` — maps primary watchlist ticker + counter-indicator into a verify step.
 6. Sets `source: "headlines"`.
 
 Source badge in UI: `High-sig bearish headline` (1 risk) or `High-sig bearish headlines` (2+). Legacy generic blindspot strings in cache are re-synthesized on the frontend.
@@ -728,6 +728,7 @@ Prompts should still say "Return ONLY valid JSON" because malformed output fails
 | 2026-06-24 | All prompts | Phase 1 quality pass: SYSTEM_PROMPT voice, one_line bar, brief/CIO split, adversarial riskType, stock context | Upstream output quality |
 | 2026-06-24 | Prompt 6 + adversarial.js | Rule 9 (specific blindspotAlert); headline fallback merges sig≥2 when &lt;2 high-sig bearish hits; `buildHeadlineBlindspotAlert` | Counter-thesis content quality |
 | 2026-06-24 | Dashboard UI | Brief sentence layout, stacked watchlist, zone spacing, Research Tasks card parity | Readability & layout consistency |
+| 2026-06-24 | Demo polish pass | Brief labels (Primary Signal / Secondary / Counter / Watch); essentials-only default ON; Space pillar WHY one-liner; action-oriented Thesis gap (`config/blindspot.js`); essential tier border `#1D9E75`; Learning Hub tab grouping | Fund-manager scan UX before demo |
 
 ---
 
@@ -741,7 +742,7 @@ After prompt changes, run a sync and inspect:
 - Does the analyst brief include a real counter-signal?
 - Does the brief UI split sentences correctly (no break at `$2.4T` or other decimals)?
 - Does Challenge the CIO surface distinct asymmetric risks (not duplicate brief copy)?
-- Is the **Thesis gap** specific to themes and assumptions (not “verify whether risks are priced in”)?
+- Is the **Thesis gap** an actionable verify step (ticker + filing/disclosure), not a headline restatement?
 - Does the headline fallback badge match risk count (singular vs plural)?
 - Do thesis drift badges and clusters match today's headline flow?
 - Does the research queue give concrete next actions?

@@ -62,7 +62,7 @@ Not every watchlist name appears here — only names mapped to the physical stac
 All 22 tiers with filters:
 
 - Phase pills (filter — shown when a phase filter or search is active; use Stack map to filter from all-phases view)
-- ⚡ Essentials only (`tier.essential === true`)
+- ⚡ Essentials only (`tier.essential === true`) — **ON by default** on first visit; toggle “Show all tiers” writes `?essential=0`
 - 🔖 Watchlist only (tiers with `WATCHLIST_TIER_MAP` or `watchlistTickers`)
 - Full-text search
 
@@ -70,7 +70,7 @@ All 22 tiers with filters:
 
 | Class | When | Effect |
 |-------|------|--------|
-| Essential | `tier.essential === true` | Green left border, full opacity |
+| Essential | `tier.essential === true` | Green left border (`#1D9E75`), full opacity |
 | Normal | `tier.essential === false` | Muted border, ~72% opacity |
 | Watchlist | Mapped ticker or `watchlistTickers` | Stronger green border glow on essential tiers |
 
@@ -91,11 +91,11 @@ Filters sync to the URL with `replace: true`:
 |-------|---------|--------|
 | `tier` | `?tier=10` | Expand and scroll to tier 10 (+ highlight pulse) |
 | `phase` | `?phase=3` | Filter to Phase III (`PHASES[].number`) |
-| `essential` | `?essential=1` | Essentials-only |
+| `essential` | *(default ON)* | Essentials-only; omit param or use `?essential=0` to show all 22 tiers |
 | `watchlist` | `?watchlist=1` | Watchlist-exposed tiers only |
 | `q` | `?q=hbm` | Search query |
 
-Example: `/value-chain?phase=3&tier=10&essential=1`
+Example: `/value-chain?phase=3&tier=10` (essentials on by default) or `/value-chain?essential=0` (all tiers)
 
 ## Data module
 
