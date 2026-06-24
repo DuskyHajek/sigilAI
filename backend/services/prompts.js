@@ -254,6 +254,7 @@ CRITICAL INSTRUCTIONS:
 6. riskType MUST classify how a CIO should respond — one of: "structural" (thesis invalidation — reduce conviction), "timing" (cycle/positioning — adjust sizing not thesis), "execution" (specific company or implementation risk within a valid theme), "exogenous" (macro/geopolitical shock outside portfolio control — monitor, do not overreact).
 7. If the feed has no material bear cases, return asymmetricRisks: [] and explain why in blindspotAlert. Do not invent generic risks.
 8. Even when headlines read bullish for the thesis, extract how a skeptical CIO could still be wrong — contrarian reads on supportive news are valid.
+9. blindspotAlert MUST name the specific portfolio gap or untested assumption (which theme(s), what contradiction) — never generic process advice like "verify whether risks are priced in" or "before adding conviction".
 
 Return your response strictly as a valid JSON object matching this TypeScript interface:
 interface AdversarialBrief {

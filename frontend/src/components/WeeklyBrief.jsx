@@ -1,6 +1,16 @@
 import { FileText } from "lucide-react";
 import { SectionHeader } from "./learning/LearningUI";
 
+const splitBriefSentences = (text) => {
+  const trimmed = String(text || "").trim();
+  if (!trimmed) return [];
+
+  const parts = trimmed.match(/[^.!?]+(?:[.!?]+|$)/g);
+  if (!parts) return [trimmed];
+
+  return parts.map((part) => part.trim()).filter(Boolean);
+};
+
 const WeeklyBrief = ({ weeklyBriefText, isMock, generatedAt }) => {
   const formatGeneratedAt = (isoString) => {
     if (!isoString) return "N/A";
@@ -11,6 +21,9 @@ const WeeklyBrief = ({ weeklyBriefText, isMock, generatedAt }) => {
       minute: "2-digit",
     });
   };
+
+  const sentences = splitBriefSentences(weeklyBriefText);
+  const hasContent = sentences.length > 0;
 
   const badge = (
     <span
@@ -34,9 +47,26 @@ const WeeklyBrief = ({ weeklyBriefText, isMock, generatedAt }) => {
         action={badge}
       />
 
-      <p className="text-sm sm:text-[15px] text-[#d4d4d4] leading-[1.65] whitespace-pre-wrap pl-3 sm:pl-4 py-0.5 font-sans -mt-2 border-l-2 border-white/10">
-        {weeklyBriefText || "Click Sync to generate the latest brief."}
-      </p>
+      {hasContent ? (
+        <div className="space-y-3 pl-3 sm:pl-4 -mt-2 border-l-2 border-white/10">
+          {sentences.map((sentence, index) => (
+            <p
+              key={`${index}-${sentence.slice(0, 24)}`}
+              className={
+                index === 0
+                  ? "text-base sm:text-[17px] font-semibold text-white leading-snug tracking-tight"
+                  : "text-sm sm:text-[15px] text-[#b8b8b8] leading-relaxed"
+              }
+            >
+              {sentence}
+            </p>
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-[#a0a0a0] pl-3 sm:pl-4 -mt-2 border-l-2 border-white/10">
+          Click Sync to generate the latest brief.
+        </p>
+      )}
     </div>
   );
 };

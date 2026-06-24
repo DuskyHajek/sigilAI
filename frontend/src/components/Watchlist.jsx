@@ -47,7 +47,7 @@ const themeBadgeStyle = (themeId) => {
   };
 };
 
-const Watchlist = ({ watchlistData, stressResult }) => {
+const Watchlist = ({ watchlistData, stressResult, stackedLayout = false }) => {
   const [selectedTheme, setSelectedTheme] = useState("all");
   const [query, setQuery] = useState("");
   const [expandedTicker, setExpandedTicker] = useState(null);
@@ -127,7 +127,13 @@ const Watchlist = ({ watchlistData, stressResult }) => {
   };
 
   return (
-    <div className="glass-panel p-4 sm:p-5 md:p-6 rounded-2xl flex flex-col h-full min-h-[320px] sm:min-h-[420px] max-h-[min(720px,70vh)] sm:max-h-[min(720px,75vh)]">
+    <div
+      className={`glass-panel p-4 sm:p-5 md:p-6 rounded-2xl flex flex-col ${
+        stackedLayout
+          ? "min-h-[420px] max-h-[min(900px,85vh)]"
+          : "h-full min-h-[320px] sm:min-h-[420px] max-h-[min(720px,70vh)] sm:max-h-[min(720px,75vh)]"
+      }`}
+    >
       <SectionHeader
         eyebrow="Portfolio"
         title="Watchlist"

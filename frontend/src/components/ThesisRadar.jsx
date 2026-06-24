@@ -55,6 +55,7 @@ const ThesisRadar = ({
   highlightThemeId,
   stressResult,
   stressViewMode = "live",
+  stackedLayout = false,
 }) => {
   const [expandedTheme, setExpandedTheme] = useState(null);
 
@@ -91,7 +92,13 @@ const ThesisRadar = ({
   if (!themeData) return null;
 
   return (
-    <div className="glass-panel p-4 sm:p-5 rounded-2xl h-full flex flex-col min-h-[320px] sm:min-h-[420px] max-h-[min(720px,70vh)] sm:max-h-[min(720px,75vh)]">
+    <div
+      className={`glass-panel p-4 sm:p-5 rounded-2xl flex flex-col ${
+        stackedLayout
+          ? "max-h-[min(480px,55vh)]"
+          : "h-full min-h-[320px] sm:min-h-[420px] max-h-[min(720px,70vh)] sm:max-h-[min(720px,75vh)]"
+      }`}
+    >
       <div className="mb-3 shrink-0">
         <p className="text-[10px] font-mono uppercase tracking-widest text-sigil-gold mb-0.5">
           Pillars

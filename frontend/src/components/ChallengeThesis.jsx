@@ -8,6 +8,32 @@ const getTheme = (themeId) => THEMES.find((theme) => theme.id === themeId);
 const GENERIC_EMPTY_BLINDSPOT =
   "No meaningful counter-signals detected in today's headline sample.";
 
+const GENERIC_HEADLINE_BLINDSPOT =
+  "High-significance bearish headlines are present — verify whether risks are already priced in before adding conviction.";
+
+const getThemeDisplayName = (themeId) =>
+  getTheme(themeId)?.display_name || themeId;
+
+const synthesizeBlindspotFromRisks = (risks) => {
+  if (risks.length === 0) return "";
+
+  const themeNames = [
+    ...new Set(risks.map((risk) => getThemeDisplayName(risk.targetTheme))),
+  ];
+
+  if (risks.length === 1) {
+    const hook = risks[0].headlineRisk.replace(/\.$/, "");
+    return `Today's headline flow challenges the ${themeNames[0]} pillar — ${hook}.`;
+  }
+
+  const themeList =
+    themeNames.length === 2
+      ? `${themeNames[0]} and ${themeNames[1]}`
+      : `${themeNames.slice(0, -1).join(", ")}, and ${themeNames.at(-1)}`;
+
+  return `${risks.length} high-sig bearish headlines cluster across ${themeList} — the brief's constructive read may underweight ${themeNames[0]} if these events persist.`;
+};
+
 /** Curated structural bear watches — first bear_signal per pillar from thesis config. */
 const STANDING_RISKS = THEMES.map((theme) => ({
   targetTheme: theme.id,
@@ -20,10 +46,14 @@ const STANDING_RISKS = THEMES.map((theme) => ({
 
 const SOURCE_LABELS = {
   claude: "Claude · adversarial pass",
-  headlines: "High-sig bearish headlines only",
   none: "Standing risks · always on radar",
   unavailable: "Unavailable this sync",
 };
+
+const headlineSourceLabel = (count) =>
+  count === 1
+    ? "High-sig bearish headline"
+    : "High-sig bearish headlines";
 
 const RiskCard = ({ risk, index, embedded, standing = false }) => {
   const theme = getTheme(risk.targetTheme);
@@ -33,12 +63,12 @@ const RiskCard = ({ risk, index, embedded, standing = false }) => {
 
   return (
     <li
-      className={`relative overflow-hidden rounded-xl border p-4 ${
+      className={`relative overflow-hidden rounded-xl border p-3.5 transition-colors ${
         embedded
-          ? "border-slate-800/80 bg-transparent"
+          ? "border-white/8 bg-[#1a1a1a] hover:border-white/15"
           : standing
-            ? "border-slate-800 bg-slate-950/30"
-            : "border-slate-900 bg-slate-950/40"
+            ? "border-white/8 bg-[#1a1a1a]"
+            : "border-white/8 bg-[#1a1a1a] hover:border-white/15"
       }`}
     >
       <div
@@ -106,10 +136,15 @@ const ChallengeThesis = ({
 
   const showStandingRisks = !hasRisks && !isUnavailable;
 
-  const enrichedBlindspot =
-    blindspotAlert && blindspotAlert !== GENERIC_EMPTY_BLINDSPOT
-      ? blindspotAlert
-      : "";
+  const enrichedBlindspot = useMemo(() => {
+    if (!blindspotAlert || blindspotAlert === GENERIC_EMPTY_BLINDSPOT) {
+      return "";
+    }
+    if (blindspotAlert === GENERIC_HEADLINE_BLINDSPOT && hasRisks) {
+      return synthesizeBlindspotFromRisks(risks);
+    }
+    return blindspotAlert;
+  }, [blindspotAlert, hasRisks, risks]);
 
   const showBlindspotAlert =
     enrichedBlindspot && !suppressBlindspotAlert && (hasRisks || showStandingRisks);
@@ -118,8 +153,10 @@ const ChallengeThesis = ({
     ? "Demo adversarial pass"
     : showStandingRisks
       ? SOURCE_LABELS.none
-      : SOURCE_LABELS[source] ||
-        (hasRisks ? "Claude · adversarial pass" : SOURCE_LABELS.none);
+      : source === "headlines"
+        ? headlineSourceLabel(risks.length)
+        : SOURCE_LABELS[source] ||
+          (hasRisks ? "Claude · adversarial pass" : SOURCE_LABELS.none);
 
   const standingIntro = useMemo(() => {
     if (!showStandingRisks) return "";

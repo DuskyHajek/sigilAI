@@ -210,19 +210,60 @@ const filterBySignificance = (articles, minSignificance) =>
     (article) => (article.significance || 0) >= minSignificance
   );
 
+const mergeBearishArticles = (primary, secondary) => {
+  const seen = new Set(primary.map(articleKey));
+  const merged = [...primary];
+
+  for (const article of secondary) {
+    const key = articleKey(article);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    merged.push(article);
+  }
+
+  return merged;
+};
+
+const getThemeDisplayName = (themeId) =>
+  THEMES.find((theme) => theme.id === themeId)?.display_name || themeId;
+
+const buildHeadlineBlindspotAlert = (risks) => {
+  if (risks.length === 0) return "";
+
+  const themeNames = [
+    ...new Set(risks.map((risk) => getThemeDisplayName(risk.targetTheme))),
+  ];
+
+  if (risks.length === 1) {
+    const themeName = themeNames[0];
+    const hook = risks[0].headlineRisk.replace(/\.$/, "");
+    return `Today's headline flow challenges the ${themeName} pillar — ${hook}.`;
+  }
+
+  const themeList =
+    themeNames.length === 2
+      ? `${themeNames[0]} and ${themeNames[1]}`
+      : `${themeNames.slice(0, -1).join(", ")}, and ${themeNames.at(-1)}`;
+
+  return `${risks.length} high-sig bearish headlines cluster across ${themeList} — the brief's constructive read may underweight ${themeNames[0]} if these events persist.`;
+};
+
 const buildStrictHeadlineFallback = (classifiedArticles, themePulse) => {
   const assigned = assignArticlesForAdversarial(classifiedArticles, themePulse);
-  let bearish = filterBySignificance(
-    assigned.filter((a) => a.sentiment === "bearish"),
+  const allBearish = assigned.filter((a) => a.sentiment === "bearish");
+  const highSigBearish = filterBySignificance(
+    allBearish,
     SETTINGS.adversarial_min_significance
   );
+  const thresholdBearish = filterBySignificance(
+    allBearish,
+    SETTINGS.significance_threshold
+  );
 
-  if (bearish.length === 0) {
-    bearish = filterBySignificance(
-      assigned.filter((a) => a.sentiment === "bearish"),
-      SETTINGS.significance_threshold
-    );
-  }
+  const bearish =
+    highSigBearish.length >= 2
+      ? highSigBearish
+      : mergeBearishArticles(highSigBearish, thresholdBearish);
 
   if (bearish.length === 0) {
     return CLEAN_EMPTY;
@@ -249,8 +290,7 @@ const buildStrictHeadlineFallback = (classifiedArticles, themePulse) => {
 
   return {
     asymmetricRisks,
-    blindspotAlert:
-      "High-significance bearish headlines are present — verify whether risks are already priced in before adding conviction.",
+    blindspotAlert: buildHeadlineBlindspotAlert(asymmetricRisks),
     source: "headlines",
   };
 };

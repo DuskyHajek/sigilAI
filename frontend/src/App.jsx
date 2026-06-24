@@ -218,11 +218,7 @@ function App() {
                 </div>
               ) : (
                 <>
-                  <DashboardZone
-                    id="zone-today"
-                    label="Daily briefing"
-                    className="mt-6"
-                  >
+                  <DashboardZone id="zone-today" label="Daily briefing">
                     <div className="dashboard-zone__stack-tight">
                     <EditorialSpotlight
                       watchlist={data?.watchlist}
@@ -266,8 +262,8 @@ function App() {
                       />
                     )}
 
-                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 items-stretch">
-                      <div id="zone-radar" className="h-full scroll-mt-28">
+                    <div className="flex flex-col gap-4">
+                      <div id="zone-radar" className="scroll-mt-28">
                         <ThesisRadar
                           themeData={data?.themePulse}
                           thesisDriftReport={data?.thesisDriftReport}
@@ -276,12 +272,14 @@ function App() {
                           highlightThemeId={highlightThemeId}
                           stressResult={stressState.result}
                           stressViewMode={stressState.viewMode}
+                          stackedLayout
                         />
                       </div>
-                      <div id="zone-watchlist" className="h-full scroll-mt-28">
+                      <div id="zone-watchlist" className="scroll-mt-28">
                         <Watchlist
                           watchlistData={data?.watchlist}
                           stressResult={stressState.result}
+                          stackedLayout
                         />
                       </div>
                     </div>
